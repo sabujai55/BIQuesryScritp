@@ -7,59 +7,59 @@ select 'PT2' as 'BU'
 		,vnp.VISITDATE as 'VisitDate'
 		,vnp.VN as 'VN'
 		,vnp.PrescriptionNo as 'PrescriptionNo'
-		,vnp.CLINIC as 'ClinicCode' -- à»ÅÕèÂ¹à»ç¹ ClinicCode ÇÑ¹·Õè 07/10/2568
-		,dbo.sysconname(vnp.Clinic,42203,2) as 'ClinicNameTH' --á¡éä¢ÇÑ¹·Õè 26/02/268
-		,dbo.sysconname(vnp.Clinic,42203,1) as 'ClinicNameEN' --à¾ÔèÁÇÑ¹·Õè 26/02/2568
-		,CAST(SUBSTRING(cndp.Com,27,13)as varchar) as 'ClinicDepartmentCode' --á¡éä¢ÇÑ¹·Õè 26/02/2568
-		,dbo.sysconname(CAST(SUBSTRING(cndp.Com,27,13)as varchar),10145,2) as 'ClinicDepartmentNameTH' --á¡éä¢ÇÑ¹·Õè 26/02/2568
-		,dbo.sysconname(CAST(SUBSTRING(cndp.Com,27,13)as varchar),10145,1) as 'ClinicDepartmentNameEN' --à¾ÔèÁÇÑ¹·Õè 26/02/2568
+		,vnp.CLINIC as 'ClinicCode' -- ï¿½ï¿½ï¿½ï¿½Â¹ï¿½ï¿½ ClinicCode ï¿½Ñ¹ï¿½ï¿½ï¿½ 07/10/2568
+		,dbo.sysconname(vnp.Clinic,42203,2) as 'ClinicNameTH' --ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ 26/02/268
+		,dbo.sysconname(vnp.Clinic,42203,1) as 'ClinicNameEN' --ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ 26/02/2568
+		,CAST(SUBSTRING(cndp.Com,27,13)as varchar) as 'ClinicDepartmentCode' --ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ 26/02/2568
+		,dbo.sysconname(CAST(SUBSTRING(cndp.Com,27,13)as varchar),10145,2) as 'ClinicDepartmentNameTH' --ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ 26/02/2568
+		,dbo.sysconname(CAST(SUBSTRING(cndp.Com,27,13)as varchar),10145,1) as 'ClinicDepartmentNameEN' --ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ 26/02/2568
 
 		,vnp.Doctor as 'DoctorCode'
 		,dbo.CutSortChar(doc.LocalName) as 'DoctorNameTH'
 		,dbo.CutSortChar(doc.EnglishName) as 'DoctorNameEN'
 		,CertifyPublicNo as 'DoctorCertificate'
 		, doc.Clinic as DoctorClinicCode
-		, dbo.sysconname(doc.Clinic,42203,2) as DoctorClinicNameTH --à¾ÔèÁÇÑ¹·Õè 07/10/2568
-		, dbo.sysconname(doc.Clinic,42203,1) as DoctorClinicNameEN --à¾ÔèÁÇÑ¹·Õè 07/10/2568
+		, dbo.sysconname(doc.Clinic,42203,2) as DoctorClinicNameTH --ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ 07/10/2568
+		, dbo.sysconname(doc.Clinic,42203,1) as DoctorClinicNameEN --ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ 07/10/2568
 		, doc.ComposeDept as DoctorDepartmentCode
-		, dbo.sysconname(doc.ComposeDept,10145,2) as DoctorDepartmentNameTH --à¾ÔèÁÇÑ¹·Õè 07/10/2568
-		, dbo.sysconname(doc.ComposeDept,10145,1) as DoctorDepartmentNameEN --à¾ÔèÁÇÑ¹·Õè 07/10/2568
+		, dbo.sysconname(doc.ComposeDept,10145,2) as DoctorDepartmentNameTH --ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ 07/10/2568
+		, dbo.sysconname(doc.ComposeDept,10145,1) as DoctorDepartmentNameEN --ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ 07/10/2568
 		, doc.Specialty as DoctorSpecialtyCode
-		, dbo.sysconname(doc.Specialty,42197,2) as DoctorSpecialtyNameTH --à¾ÔèÁÇÑ¹·Õè 07/10/2568
-		, dbo.sysconname(doc.Specialty,42197,1) as DoctorSpecialtyNameEN --à¾ÔèÁÇÑ¹·Õè 07/10/2568
+		, dbo.sysconname(doc.Specialty,42197,2) as DoctorSpecialtyNameTH --ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ 07/10/2568
+		, dbo.sysconname(doc.Specialty,42197,1) as DoctorSpecialtyNameEN --ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ 07/10/2568
 
 		,vnp.CloseVisitCode as 'CloseVisitCode'
-		,dbo.sysconname(vnp.CloseVisitCode,42261,2) as 'CloseVisitNameTH' --á¡éä¢ÇÑ¹·Õè 26/02/2568
-		,dbo.sysconname(vnp.CloseVisitCode,42261,1) as 'CloseVisitNameEN' --à¾ÔèÁÇÑ¹·Õè 26/02/2568
+		,dbo.sysconname(vnp.CloseVisitCode,42261,2) as 'CloseVisitNameTH' --ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ 26/02/2568
+		,dbo.sysconname(vnp.CloseVisitCode,42261,1) as 'CloseVisitNameEN' --ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ 26/02/2568
 		,vnp.AppointmentNo as 'AppointmentNo'
 		,case when vnp.CloseVisitCode is null then 'Active' else 'InActive' end as 'Status'
-		,vnm.InDateTime as 'RegInDateTime' --à¾ÔèÁÇÑ¹·Õè 17/02/2568
-		,vnp.DiagRms as 'DiagRms' --à¾ÔèÁÇÑ¹·Õè 17/02/2568
-		,dbo.sysconname(vnp.DiagRms,42205,4) as 'DiagRmsName' --à¾ÔèÁÇÑ¹·Õè 17/02/2568
-		,vnm.NewPatient as 'NEWPATIENT' --à¾ÔèÁÇÑ¹·Õè 17/02/2568
-		,vnm.OutDateTime as 'CloseVisitDateTime' --à¾ÔèÁÇÑ¹·Õè 17/02/2568
-		,vnp.MakeDateTime as 'MakeDateTime' --à¾ÔèÁÇÑ¹·Õè 17/02/2568
-		,vnp.DefaultRightCode as 'DefaultRightCode' --à¾ÔèÁÇÑ¹·Õè 17/02/2568
-		,dbo.sysconname(vnp.DefaultRightCode,42086,2) as 'DefaultRightNameTH' --à¾ÔèÁÇÑ¹·Õè 26/02/2568
-		,dbo.sysconname(vnp.DefaultRightCode,42086,1) as 'DefaultRightNameEN' --à¾ÔèÁÇÑ¹·Õè 26/02/2568
-		,vnm.AccidentCode as 'AccidentCode' --à¾ÔèÁÇÑ¹·Õè 17/02/2568
-		,dbo.sysconname(vnm.AccidentCode,42416,2) as 'AccidentNameTH' --à¾ÔèÁÇÑ¹·Õè 26/02/2568
-		,dbo.sysconname(vnm.AccidentCode,42416,1) as 'AccidentNameEN' --à¾ÔèÁÇÑ¹·Õè 26/02/2568
-		,CAST(SUBSTRING(cndp.Com,27,13)as varchar) as 'ComposeDept' --à¾ÔèÁÇÑ¹·Õè 26/02/2568
-		,vnp.VisitCode --à¾ÔèÁÇÑ¹·Õè 26/02/2568
-		,dbo.sysconname(vnp.VisitCode,42260,2) as 'VisitNameTH' --à¾ÔèÁÇÑ¹·Õè 26/02/2568
-		,dbo.sysconname(vnp.VisitCode,42260,1) as 'VisitNameEN' --à¾ÔèÁÇÑ¹·Õè 26/02/2568
-		,vnp.EntryByUserCode --à¾ÔèÁÇÑ¹·Õè 26/02/2568
-		,dbo.sysconname(vnp.EntryByUserCode,10031,2) as 'EntryByUserNameTH' --à¾ÔèÁÇÑ¹·Õè 26/02/2568
-		,dbo.sysconname(vnp.EntryByUserCode,10031,1) as 'EntryByUserNameEN' --à¾ÔèÁÇÑ¹·Õè 26/02/2568
-		,vnm.ReVisitCode --à¾ÔèÁÇÑ¹·Õè 26/02/2568
-		,dbo.sysconname(vnm.ReVisitCode,42259,2) as 'ReVisitNameTH' --à¾ÔèÁÇÑ¹·Õè 26/02/2568
-		,dbo.sysconname(vnm.ReVisitCode,42259,1) as 'ReVisitNameEN' --à¾ÔèÁÇÑ¹·Õè 26/02/2568
+		,vnm.InDateTime as 'RegInDateTime' --ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ 17/02/2568
+		,vnp.DiagRms as 'DiagRms' --ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ 17/02/2568
+		,dbo.sysconname(vnp.DiagRms,42205,4) as 'DiagRmsName' --ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ 17/02/2568
+		,vnm.NewPatient as 'NEWPATIENT' --ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ 17/02/2568
+		,vnm.OutDateTime as 'CloseVisitDateTime' --ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ 17/02/2568
+		,vnp.MakeDateTime as 'MakeDateTime' --ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ 17/02/2568
+		,vnp.DefaultRightCode as 'DefaultRightCode' --ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ 17/02/2568
+		,dbo.sysconname(vnp.DefaultRightCode,42086,2) as 'DefaultRightNameTH' --ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ 26/02/2568
+		,dbo.sysconname(vnp.DefaultRightCode,42086,1) as 'DefaultRightNameEN' --ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ 26/02/2568
+		,vnm.AccidentCode as 'AccidentCode' --ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ 17/02/2568
+		,dbo.sysconname(vnm.AccidentCode,42416,2) as 'AccidentNameTH' --ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ 26/02/2568
+		,dbo.sysconname(vnm.AccidentCode,42416,1) as 'AccidentNameEN' --ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ 26/02/2568
+		,CAST(SUBSTRING(cndp.Com,27,13)as varchar) as 'ComposeDept' --ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ 26/02/2568
+		,vnp.VisitCode --ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ 26/02/2568
+		,dbo.sysconname(vnp.VisitCode,42260,2) as 'VisitNameTH' --ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ 26/02/2568
+		,dbo.sysconname(vnp.VisitCode,42260,1) as 'VisitNameEN' --ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ 26/02/2568
+		,vnp.EntryByUserCode --ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ 26/02/2568
+		,dbo.sysconname(vnp.EntryByUserCode,10031,2) as 'EntryByUserNameTH' --ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ 26/02/2568
+		,dbo.sysconname(vnp.EntryByUserCode,10031,1) as 'EntryByUserNameEN' --ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ 26/02/2568
+		,vnm.ReVisitCode --ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ 26/02/2568
+		,dbo.sysconname(vnm.ReVisitCode,42259,2) as 'ReVisitNameTH' --ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ 26/02/2568
+		,dbo.sysconname(vnm.ReVisitCode,42259,1) as 'ReVisitNameEN' --ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ 26/02/2568
 
-		, vnp.PrivateCase --à¾ÔèÁÇÑ¹·Õè 07/10/2568
-		, vnm.InsuranceSalesAgent --à¾ÔèÁÇÑ¹·Õè 07/10/2568
-		, dbo.sysconname(vnm.InsuranceSalesAgent,43961,2) as InsuranceSalesAgentNameTH --à¾ÔèÁÇÑ¹·Õè 07/10/2568
-		, dbo.sysconname(vnm.InsuranceSalesAgent,43961,1) as InsuranceSalesAgentNameEN --à¾ÔèÁÇÑ¹·Õè 07/10/2568
+		, vnp.PrivateCase --ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ 07/10/2568
+		, vnm.InsuranceSalesAgent --ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ 07/10/2568
+		, dbo.sysconname(vnm.InsuranceSalesAgent,43961,2) as InsuranceSalesAgentNameTH --ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ 07/10/2568
+		, dbo.sysconname(vnm.InsuranceSalesAgent,43961,1) as InsuranceSalesAgentNameEN --ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ 07/10/2568
 		, case when vnp.NewToHere = 1  then 'NewNew' 
 		  when vnm.NewPatient = 0 then 
 			(
@@ -67,6 +67,7 @@ select 'PT2' as 'BU'
 				else 'OldOld' end 
 			)
 		  end as [OldNew] 
+		, 'new' as test_xxx
 from	HNOPD_PRESCRIP vnp
 		left join HNOPD_MASTER vnm on vnp.VN=vnm.VN and vnp.VISITDATE=vnm.VISITDATE
 		left join HNDOCTOR_MASTER doc on vnp.Doctor=doc.Doctor
