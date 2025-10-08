@@ -31,14 +31,17 @@ select 'PT2' as 'BU'
 		,vnp.CloseVisitCode as 'CloseVisitCode'
 		,dbo.sysconname(vnp.CloseVisitCode,42261,2) as 'CloseVisitNameTH' --����ѹ��� 26/02/2568
 		,dbo.sysconname(vnp.CloseVisitCode,42261,1) as 'CloseVisitNameEN' --�����ѹ��� 26/02/2568
+
 		,vnp.AppointmentNo as 'AppointmentNo'
+		, ah.AppointDateTime as AppointmentDateTime
+
 		,case when vnp.CloseVisitCode is null then 'Active' else 'InActive' end as 'Status'
 		,vnm.InDateTime as 'RegInDateTime' --�����ѹ��� 17/02/2568
 		,vnp.DiagRms as 'DiagRms' --�����ѹ��� 17/02/2568
 		,dbo.sysconname(vnp.DiagRms,42205,4) as 'DiagRmsName' --�����ѹ��� 17/02/2568
 		,vnm.NewPatient as 'NEWPATIENT' --�����ѹ��� 17/02/2568
 		,vnm.OutDateTime as 'CloseVisitDateTime' --�����ѹ��� 17/02/2568
-		,vnp.MakeDateTime as 'MakeDateTime' --�����ѹ��� 17/02/2568
+		,vnp.MakeDateTime as 'PrescriptionDateTime' --�����ѹ��� 17/02/2568
 		,vnp.DefaultRightCode as 'DefaultRightCode' --�����ѹ��� 17/02/2568
 		,dbo.sysconname(vnp.DefaultRightCode,42086,2) as 'DefaultRightNameTH' --�����ѹ��� 26/02/2568
 		,dbo.sysconname(vnp.DefaultRightCode,42086,1) as 'DefaultRightNameEN' --�����ѹ��� 26/02/2568
@@ -67,9 +70,61 @@ select 'PT2' as 'BU'
 				else 'OldOld' end 
 			)
 		  end as [OldNew] 
+        , (select top 1 l.MakeDateTime from HNOPD_LOG l where l.VisitDate = vnp.VisitDate and l.VN = vnp.VN and l.PrescriptionNo = vnp.PrescriptionNo and l.OpdMasterLogType = 14 order by MakeDateTime asc) as NurseAcknowledge
+		, (select top 1 l.MakeDateTime from HNOPD_LOG l where l.VisitDate = vnp.VisitDate and l.VN = vnp.VN and l.PrescriptionNo = vnp.PrescriptionNo and l.OpdMasterLogType = 15 order by MakeDateTime asc) as DiagRmsIn
+		, (select top 1 l.MakeDateTime from HNOPD_LOG l where l.VisitDate = vnp.VisitDate and l.VN = vnp.VN and l.PrescriptionNo = vnp.PrescriptionNo and l.OpdMasterLogType = 16 order by MakeDateTime asc) as DiagRmsOut
+        , (
+			select	top 1 
+					 ll.MakeDateTime
+			from	HNPAT_REQFAC pq 
+					inner join HNLABREQ_LOG ll on pq.FacilityRmsNo = ll.FacilityRmsNo and pq.RequestNo = ll.RequestNo
+			where	pq.VisitDate = vnp.VisitDate
+					and pq.VN = vnp.VN
+					and pq.PrescriptionNo = vnp.PrescriptionNo
+					and ll.HNLABRequestLogType = 6
+			order by ll.MakeDateTime asc
+		   ) as LabReceiveSpecimenDateTime
+		, (
+			select	top 1 
+					 ll.MakeDateTime
+			from	HNPAT_REQFAC pq 
+					inner join HNLABREQ_LOG ll on pq.FacilityRmsNo = ll.FacilityRmsNo and pq.RequestNo = ll.RequestNo
+			where	pq.VisitDate = vnp.VisitDate
+					and pq.VN = vnp.VN
+					and pq.PrescriptionNo = vnp.PrescriptionNo
+					and ll.HNLABRequestLogType = 12
+			order by ll.MakeDateTime asc
+		   ) as LabApproveDateTime
+		, (
+			select	top 1 
+					xl.MakeDateTime
+			from	HNPAT_REQFAC pq
+					inner join HNXRAYREQ_LOG xl on pq.FacilityRmsNo = xl.FacilityRmsNo and pq.RequestNo = xl.RequestNo
+			where	pq.VisitDate = vnp.VisitDate
+					and pq.VN = vnp.VN
+					and pq.PrescriptionNo = vnp.PrescriptionNo
+					and xl.HNXRayRequestLogType = 1
+			order by xl.MakeDateTime asc
+		   ) as XrayAcknowledgeDateTime
+		, (
+			select	top 1 
+					xl.MakeDateTime
+			from	HNPAT_REQFAC pq
+					inner join HNXRAYREQ_LOG xl on pq.FacilityRmsNo = xl.FacilityRmsNo and pq.RequestNo = xl.RequestNo
+			where	pq.VisitDate = vnp.VisitDate
+					and pq.VN = vnp.VN
+					and pq.PrescriptionNo = vnp.PrescriptionNo
+					and xl.HNXRayRequestLogType = 9
+			order by xl.MakeDateTime asc
+		   ) as XrayResultReadyDateTime
+		, (select top 1 l.MakeDateTime from HNOPD_LOG l where l.VisitDate = vnp.VisitDate and l.VN = vnp.VN and l.PrescriptionNo = vnp.PrescriptionNo and l.OpdMasterLogType = 22 order by MakeDateTime asc) as DrugAcknowledgeDateTime
+		, (select top 1 l.MakeDateTime from HNOPD_LOG l where l.VisitDate = vnp.VisitDate and l.VN = vnp.VN and l.PrescriptionNo = vnp.PrescriptionNo and l.OpdMasterLogType = 23 order by MakeDateTime asc) as DrugReadyDateTime
+		, (select top 1 l.MakeDateTime from HNOPD_LOG l where l.VisitDate = vnp.VisitDate and l.VN = vnp.VN and l.PrescriptionNo = vnp.PrescriptionNo and l.OpdMasterLogType = 21 order by MakeDateTime asc) as CashierReceiveDateTime
+		, (select top 1 l.MakeDateTime from HNOPD_LOG l where l.VisitDate = vnp.VisitDate and l.VN = vnp.VN and l.PrescriptionNo = vnp.PrescriptionNo and l.OpdMasterLogType = 24 order by MakeDateTime asc) as DrugCheckoutDateTime
 from	HNOPD_PRESCRIP vnp
 		left join HNOPD_MASTER vnm on vnp.VN=vnm.VN and vnp.VISITDATE=vnm.VISITDATE
 		left join HNDOCTOR_MASTER doc on vnp.Doctor=doc.Doctor
 		left join DNSYSCONFIG cndp on vnp.Clinic = cndp.Code and cndp.CtrlCode = 42203
+		left join HNAPPMNT_HEADER ah on vnp.AppointmentNo = ah.AppointmentNo
 where	vnp.VisitDate = CAST(GETDATE() as date)
 		--and vnp.NewToHere != 0
