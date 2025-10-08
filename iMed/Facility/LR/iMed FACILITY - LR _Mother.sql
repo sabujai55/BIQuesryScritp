@@ -1,0 +1,91 @@
+
+select 
+'PLR'as "BU"
+, lp.patient_id as "PatientID"
+, '' as "FacilityRmsNo"
+, '' as "RequestNo"
+, '' as "EntryDateTime"
+, bm.bed_number as "LRBedNo"
+, '' as "LRBedNameTH"
+, '' as "LRBedNameEN"
+, bm.base_service_point_id as "Ward"
+, bsp.description as "WardNameTH"
+, bsp.description as "WardNameEN"
+, vp.base_plan_group_id as "PatientType"
+, bpg.description as "PatientTypeNameTH"
+, bpg.description_en as "PatientTypeNameEN"
+, '' as "TotalBorn"
+, '' as "NoLivingChild"
+, lp.gravida as "Gravidarum"
+, p2.plan_code as "RightCode"
+, p2.description as "RightNameTH"
+, p2.description_en as "RightNameEN"
+, lp.lmp_date as "LMP"
+, lp.edc_date as "EDC"
+, '' as "NoGADay"
+, '' as "DateTimePlan"
+, '' as "IN_DateTime"
+, '' as "OUT_DateTime"
+, iap.employee_id as "RequestDoctor"
+, imed_get_employee_name(iap.employee_id) as "RequestDoctorNameTH"
+, imed_get_employee_name_en(iap.employee_id) as "RequestDoctorNameEN"
+, '' as "ANCTypeCode"
+, '' as "ANCTypeNameTH"
+, '' as "ANCTypeNameEN"
+, '' as "IndicationOfOperation1"
+, '' as "IndicationOfOperationNameTH1"
+, '' as "IndicationOfOperationNameEN1"
+, '' as "IndicationOfOperation2"
+, '' as "IndicationOfOperationNameTH2"
+, '' as "IndicationOfOperationNameEN2"
+, '' as "IndicationOfOperation3"
+, '' as "IndicationOfOperationNameTH3"
+, '' as "IndicationOfOperationNameEN3"
+, '' as "LRInductionCode"
+, '' as "LRInductionNameTH"
+, '' as "LRInductionNameEN"
+, '' as "LRInhibitCode"
+, '' as "LRInhibitNameTH"
+, '' as "LRInhibitNameEN"
+, '' as "InLabourRmsStatusCode"
+, '' as "InLabourRmsStatusNameTH"
+, '' as "InLabourRmsStatusNameEN"
+, '' as "LastAbort"
+, '' as "LastChild"
+, '' as "RefFromCode"
+, '' as "RefFromNameTH"
+, '' as "RefFromNameEN"
+, '' as "RefFromHospital"
+, '' as "RefFromHospitalNameTH"
+, '' as "RefFromHospitalNameEN"
+, '' as "HusbandFirstName"
+, '' as "HusbandLastName"
+, '' as "Clinic"
+, '' as "ClinicNameTH"
+, '' as "ClinicNameEN"
+, '' as "RequestByUserCode"
+, '' as "RequestByUserNameTH"
+, '' as "RequestByUserNameEN"
+, '' as "LRPackageCode"
+, '' as "LRPackageNameTH"
+, '' as "LRPackageNameEN"
+, '' as "HNAlready"
+, '' as "CxlDateTime"
+, '' as "CxlReasonCode"
+, '' as "CxlReasonNameTH"
+, '' as "CxlReasonNameEN"
+from lr_delivery ld
+left join lr_pregnancy lp on lp.lr_pregnancy_id = ld.lr_pregnancy_id 
+left join patient p on p.patient_id = lp.patient_id
+left join visit_payment vp on vp.visit_id = lp.visit_id
+left join plan p2 on p2.plan_id = vp.plan_id
+left join base_plan_group bpg on bpg.base_plan_group_id = vp.base_plan_group_id
+left join admit a on a.visit_id = ld.visit_id 
+left join bed_management bm on bm.admit_id = a.admit_id
+left join base_service_point bsp on bsp.base_service_point_id = bm.base_service_point_id
+left join ipd_attending_physician iap on iap.admit_id = a.admit_id and iap.priority = '1'
+where ld.record_date BETWEEN '$P!{dBeginDate}' AND '$P!{dEndDate}'
+--and p.patient_id = '630000030459'
+--limit 10
+
+

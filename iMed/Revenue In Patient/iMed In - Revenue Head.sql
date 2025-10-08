@@ -1,0 +1,31 @@
+select 	'PLC' as "BU"
+		, v.patient_id as "PatientID"
+		, a.admit_id as "AdmitID"
+		, a.admit_date || ' ' || a.admit_time as "AdmitDateTime"
+		, format_an(a.an) as "AN"
+		, format_receipt(r.receipt_number, r.fix_receipt_type_id, r.fix_receipt_status_id, r.credit_number) as "InvoiceNo"
+		, row_number() over(partition by r.visit_id order by r.receipt_id) as "InvoiceSuffixSmall"
+		, r.receive_date || '  ' || r.receive_time as "ReceiveDateTime"
+		, r.payer_id as "ARCode"
+		, p.description as "ARName"
+		, r.plan_id as "RightCode"
+		, p2.description as "RightName"
+		, '' as "HNReceiptFormCode"
+		, '' as "HNReceiptFormLocalName"
+		, '' as "HNReceiptFormEnglishName"
+		, r.template_discount_id as "HNDiscountCode"
+		, coalesce(td.description,'') as "HNDiscountLocalName"
+		, coalesce(td.description,'') as "HNDiscountEnglishName"
+		, r.paid::decimal as "FromChargeAmt"
+		, (r.discount::decimal + r.decimal_discount::decimal) as "DiscountAmt"
+		, r.last_print_date || ' ' || r.last_print_time as "PrintDateTime"
+		, coalesce(imed_get_employee_name(r.prepare_cancel_eid),'') as "CancelBy"
+		, r.prepare_cancel_date || ' ' || r.prepare_cancel_time as "CancelDateTime"
+from 	receipt r 
+		inner join visit v on r.visit_id = v.visit_id and v.fix_visit_type_id = '1'
+		INNER JOIN admit a ON v.visit_id = a.visit_id
+		inner join payer p on r.payer_id = p.payer_id 
+		inner join plan p2 on r.plan_id = p2.plan_id
+		left join template_discount td on r.template_discount_id = td.template_discount_id 
+where 	r.receive_date between '$P!{dBeginDate}' and '$P!{dEndDate}'
+		and r.fix_receipt_type_id in ('1','6','7')

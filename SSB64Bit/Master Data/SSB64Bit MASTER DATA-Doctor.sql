@@ -1,0 +1,31 @@
+select top 10
+		 'PT2' as 'BU'
+		, a.Doctor as 'Doctor'
+		, dbo.CutSortChar(a.EnglishName) as 'EnglishName'
+		, dbo.CutSortChar(a.LocalName) as 'ThaiName'
+		, a.Specialty as 'Specialty'
+		, dbo.sysconname(a.Specialty,42197,2) as 'SpecialtyNameTH'
+		, dbo.sysconname(a.Specialty,42197,1) as 'SpecialtyNameEN'
+		, '' as 'SubSpecialty'
+		, '' as 'SubSpecialtyNameTH'
+		, '' as 'SubSpecialtyNameEN'
+		, '' as 'SpecialtyGroup'
+		, '' as 'SpecialtyGroupNameTH'
+		, '' as 'SpecialtyGroupNameEN'
+		, a.Clinic as 'ClinicCode'
+		, dbo.sysconname(a.Clinic,42203,2) as 'ClinicNameTH'
+		, dbo.sysconname(a.Clinic,42203,1) as 'ClinicNameEN'
+		, a.ComposeDept as 'ComposeDept'
+		, dbo.sysconname(a.ComposeDept,10145,2) as 'ComposeDeptNameTH'
+		, dbo.sysconname(a.ComposeDept,10145,1) as 'ComposeDeptNameEN'
+		, LEFT(a.ComposeDept,3) as 'ClusterCode'
+		, dbo.sysconname(LEFT(a.ComposeDept,3),10145,2) as 'ClusterNameTH'
+		, dbo.sysconname(LEFT(a.ComposeDept,3),10145,1) as 'ClusterNameEN'
+		, RIGHT(a.ComposeDept,3) as 'DeptCode'
+		, dbo.sysconname(RIGHT(a.ComposeDept,3),42203,2) as 'DeptNameTH'
+		, dbo.sysconname(RIGHT(a.ComposeDept,3),42203,1) as 'DeptNameEN'
+		, case
+			when a.Inactive = '1' then 0
+			when a.Inactive = '0' then 1
+		  end as 'Active'
+				from HNDOCTOR_MASTER a

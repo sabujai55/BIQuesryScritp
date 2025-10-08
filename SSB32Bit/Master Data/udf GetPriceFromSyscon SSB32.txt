@@ -1,0 +1,30 @@
+USE [SSBHOSPITAL]
+GO
+
+/****** Object:  UserDefinedFunction [dbo].[GetPriceFromSyscon]    Script Date: 11/8/2568 9:54:52 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+CREATE FUNCTION [dbo].[GetPriceFromSyscon] ( @com VARBINARY(255) , @digit INT)
+RETURNS FLOAT
+AS
+BEGIN
+
+DECLARE @price FLOAT
+
+
+ Set @price = SIGN(CAST(substring(@com,@digit-0,1)+substring(@com,@digit-1,1)+substring(@com,@digit-2,1)+substring(@com,@digit-3,1)+substring(@com,@digit-4,1)+substring(@com,@digit-5,1)+substring(@com,@digit-6,1)+substring(@com,@digit-7,1) AS BIGINT))
+		  *(1.0 + (CAST(substring(@com,@digit-0,1)+substring(@com,@digit-1,1)+substring(@com,@digit-2,1)+substring(@com,@digit-3,1)+substring(@com,@digit-4,1)+substring(@com,@digit-5,1)+substring(@com,@digit-6,1)+substring(@com,@digit-7,1) AS BIGINT) & 0x000FFFFFFFFFFFFF) * POWER(CAST(2 AS FLOAT), -52))
+		  * POWER(CAST(2 AS FLOAT), (CAST(substring(@com,@digit-0,1)+substring(@com,@digit-1,1)+substring(@com,@digit-2,1)+substring(@com,@digit-3,1)+substring(@com,@digit-4,1)+substring(@com,@digit-5,1)+substring(@com,@digit-6,1)+substring(@com,@digit-7,1) AS BIGINT) & 0x7ff0000000000000) / 0x0010000000000000 - 1023)
+
+
+RETURN @price
+END
+GO
+
+

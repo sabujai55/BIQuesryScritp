@@ -1,0 +1,52 @@
+select
+		  'PLS' as BU
+		, ars.ARCODE as ARCode
+		, dbo.CutSortChar(arm.THAINAME) as ARNameTH
+		, dbo.CutSortChar(arm.ENGLISHNAME) as ARNameEN
+		, 1 as SuffixTiny
+		, '' as EffectiveDateFrom
+		, '' as EffectiveDateTo
+		, '' as HNReceiveRuleCode
+		, ars.DISCOUNTCODEOPD as DiscountCodeOPD
+		, dbo.sysconname(ars.DISCOUNTCODEOPD,20081,2) as DiscountOPDNameTH
+		, dbo.sysconname(ars.DISCOUNTCODEOPD,20081,1) as DiscountOPDNameEN
+		, ars.RECEIVECODEOPD as ReceiveCodeOPD
+		, dbo.sysconname(ars.RECEIVECODEOPD,20107,2) as ReceiveOPDNameTH
+		, dbo.sysconname(ars.RECEIVECODEOPD,20107,1) as ReceiveOPDNameEN
+		, ars.RECEIPTFORMOPD as ReceiptFormOPD
+		, dbo.sysconname(ars.RECEIPTFORMOPD,20079,2) as ReceiptFormOPDNameTH
+		, dbo.sysconname(ars.RECEIPTFORMOPD,20079,1) as ReceiptFormOPDNameEN
+		, ars.SERVICECHARGECODEOPD as ServiceChargeCodeOPD
+		, dbo.sysconname(ars.SERVICECHARGECODEOPD,20082,2) as ServiceChargeOPDNameTH
+		, dbo.sysconname(ars.SERVICECHARGECODEOPD,20082,1) as ServiceChargeOPDNameEN
+		, ars.SERVICECHARGECODENEWOPD as ServiceChargeCodeNewOPD
+		, dbo.sysconname(ars.SERVICECHARGECODENEWOPD,20082,2) as ServiceChargeNewOPDNameTH
+		, dbo.sysconname(ars.SERVICECHARGECODENEWOPD,20082,1) as ServiceChargeNewOPDNameEN
+		, ars.DISCOUNTCODEIPD as DiscountCodeIPD
+		, dbo.sysconname(ars.DISCOUNTCODEIPD,20081,2) as DiscountIPDNameTH
+		, dbo.sysconname(ars.DISCOUNTCODEIPD,20081,1) as DiscountIPDNameEN
+		, ars.RECEIVECODEIPD as ReceiveCodeIPD
+		, dbo.sysconname(ars.RECEIVECODEIPD,20107,2) as ReceiveIPDNameTH
+		, dbo.sysconname(ars.RECEIVECODEIPD,20107,1) as ReceiveIPDNameEN
+		, ars.RECEIPTFORMIPD as ReceiptFormIPD
+		, dbo.sysconname(ars.RECEIPTFORMIPD,20079,2) as ReceiptFormIPDNameTH
+		, dbo.sysconname(ars.RECEIPTFORMIPD,20079,1) as ReceiptFormIPDNameEN
+		, ars.SERVICECHARGECODEIPD as ServiceChargeCodeIPD
+		, dbo.sysconname(ars.SERVICECHARGECODEIPD,20082,2) as ServiceChargeIPDNameTH
+		, dbo.sysconname(ars.SERVICECHARGECODEIPD,20082,1) as ServiceChargeIPDNameEN
+		, ars.RIGHTCODE as RightCodeOPD
+		, dbo.sysconname(ars.RIGHTCODE,20019,2) as RightOPDNameTH
+		, dbo.sysconname(ars.RIGHTCODE,20019,1) as RightOPDNameEN
+		, '' as RightCodeIPD
+		, '' as RightIPDNameTH
+		, '' as RightIPDNameEN
+		, '' as RplGlAccCode
+		, '' as RemarksMemo
+		, ars.LOCKRECEIVECODE as LockReceiveCode
+		, ars.LOCKDISCOUNTCODE as LockDiscountCode
+		, ars.LOCKFORM as LockReceiptForm
+		, ars.NEEDCERTIFICATE as NeedCertificate
+		, ars.MUSTBEAR as MustBeAR
+		, ars.CONFIGTOBECHANGE as ConfigTobeChange
+				from SSBBACKOFFICE.dbo.ARSPONSOR ars
+				left join SSBBACKOFFICE.dbo.ARMASTER arm on ars.ARCODE=arm.ARCODE

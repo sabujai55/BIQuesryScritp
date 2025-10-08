@@ -1,0 +1,33 @@
+CREATE OR REPLACE FUNCTION public.get_all_physician_from_op_reg(character varying, character varying)
+ RETURNS character varying
+ LANGUAGE plpgsql
+AS $function$
+
+
+DECLARE 
+	v_op_registered_id ALIAS FOR $1;
+	v_op_role_id ALIAS FOR $2;
+	op_registered_physician_keys RECORD;
+	v_physician_name VARCHAR(4096) DEFAULT '';
+BEGIN
+	FOR op_registered_physician_keys IN 
+		SELECT employee.prename||' '||employee.firstname||' '||employee.lastname AS employee_name
+		FROM op_registered_physician, employee 
+		WHERE op_registered_physician.op_registered_id = v_op_registered_id 
+		AND op_registered_physician.base_op_role_id = v_op_role_id
+		AND op_registered_physician.employee_id=employee.employee_id
+		ORDER BY op_registered_physician_id
+	LOOP
+		v_physician_name := v_physician_name||op_registered_physician_keys.employee_name||', ';
+		-- RAISE NOTICE '%',op_registered_physician_keys.employee_name;
+	END LOOP;
+	-- RAISE NOTICE '%',v_physician_name;
+	IF(length(v_physician_name)>2) THEN
+		RETURN substr(v_physician_name, 1, length(v_physician_name)-2);
+	ELSE
+		RETURN '';
+	END IF;
+	RETURN '';
+END;
+$function$
+;
