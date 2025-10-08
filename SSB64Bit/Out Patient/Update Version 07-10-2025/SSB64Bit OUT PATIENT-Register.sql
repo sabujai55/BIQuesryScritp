@@ -67,7 +67,6 @@ select 'PT2' as 'BU'
 				else 'OldOld' end 
 			)
 		  end as [OldNew] 
-		, 'new' as test_xxx
 from	HNOPD_PRESCRIP vnp
 		left join HNOPD_MASTER vnm on vnp.VN=vnm.VN and vnp.VISITDATE=vnm.VISITDATE
 		left join HNDOCTOR_MASTER doc on vnp.Doctor=doc.Doctor
