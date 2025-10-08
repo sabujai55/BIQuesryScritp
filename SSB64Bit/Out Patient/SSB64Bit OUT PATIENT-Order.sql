@@ -44,30 +44,50 @@ select 'PT2' AS 'BU'
 	,null AS 'StoreCode'
 	,null AS 'StoreNameTH' --แก้ไขวันที่ 26/02/2568
 	,null AS 'StoreNameEN' --เพิ่มวันที่ 26/02/2568
-	,null AS 'DoseType'
+	,null AS 'DoseTypeCode'
+	, null as 'DoseTypeNameTH'
+	, null as 'DoseTypeNameEN'
 	,null AS 'DoseCode'
-	,null AS 'DoseQTY'
-	,null AS 'DoseUnit'
+	, null as 'DoseNameTH'
+	, null as 'DoseNameEN'
+	,null AS 'DoseQTYCode'
+	, null as 'DoseQTYNameTH'
+	, null as 'DoseQTYNameEN'
+	,null AS 'DoseUnitCode'
+	, null as 'DoseUnitNameTH'
+	, null as 'DoseUnitNameEN'
 	,null AS 'DoseFreqCode'
-	,null AS 'AuxLabel1'
-	,null AS 'AuxLabel2'
-	,null AS 'AuxLabel3'
+	, null as 'DoseFreqNameTH'
+	, null as 'DoseFreqNameEN'
+	,null AS 'AuxLabel1Code'
+	, null as 'AuxLabel1NameTH'
+	, null as 'AuxLabel1NameEN'
+	,null AS 'AuxLabel2Code'
+	, null as 'AuxLabel2NameTH'
+	, null as 'AuxLabel2NameEN'
+	,null AS 'AuxLabel3Code'
+	, null as 'AuxLabel3NameTH'
+	, null as 'AuxLabel3NameEN'
+	,null AS 'DoseMemo'
 	,a.FacilityRequestMethod AS 'EntryByFacilityMethodCode' --แก้ไขวันที่ 8/4/68
 	,dbo.sysconname(A.FacilityRequestMethod,42161,2) AS 'EntryByFacilityMethodNameTH' --แก้ไขวันที่ 8/4/68
 	,dbo.sysconname(A.FacilityRequestMethod,42161,1) AS 'EntryByFacilityMethodNameEN' --แก้ไขวันที่ 8/4/68
 	,case when A.CheckUp = 1 then 'True' else 'False' end AS 'Checkup'
-	,null AS 'DoseMemo'
 	,case when A.DFDoctor is null then 0 else 1 end as 'FlagDF' --เพิ่มวันที่ 17/02/2568
 	,cast(SUBSTRING(ACT.Com,17,3) as varchar) as 'ActivityCategoryCode' --เพิ่มวันที่ 26/02/2568
 	,dbo.sysconname(cast(SUBSTRING(ACT.Com,17,3) as varchar),42091,2) as 'ActivityCategoryNameTH' --เพิ่มวันที่ 26/02/2568
 	,dbo.sysconname(cast(SUBSTRING(ACT.Com,17,3) as varchar),42091,1) as 'ActivityCategoryNameEN' --เพิ่มวันที่ 26/02/2568
+	, (select di.ICDCode from HNOPD_PRESCRIP_DIAG di where di.VisitDate = A.VisitDate and di.VN = A.VN and di.PrescriptionNo = A.PrescriptionNo and DiagnosisRecordType = 1) as PrimaryDiagnosisCode
+	, (select dbo.ICDName(di.ICDCode,2) from HNOPD_PRESCRIP_DIAG di where di.VisitDate = A.VisitDate and di.VN = A.VN and di.PrescriptionNo = A.PrescriptionNo and DiagnosisRecordType = 1) as PrimaryDiagnosisNameTH
+	, (select dbo.ICDName(di.ICDCode,1) from HNOPD_PRESCRIP_DIAG di where di.VisitDate = A.VisitDate and di.VN = A.VN and di.PrescriptionNo = A.PrescriptionNo and DiagnosisRecordType = 1) as PrimaryDiagnosisNameEN
 
 from
 
 HNOPD_PRESCRIP_TREATMENT A
 left join HNOPD_MASTER B ON(A.visitdate = B.VisitDate and A.vn = B.VN)
 left join DNSYSCONFIG ACT ON A.HNActivityCode=ACT.Code and ACT.CtrlCode = 42093 
-where A.TreatmentCode is not null
+where	A.TreatmentCode is not null
+		and A.VisitDate = CAST(GETDATE() as date)
 
 union all
 -- ************************************** OR **************************************
@@ -115,23 +135,42 @@ select 'PT2' AS 'BU'
 	,null AS 'StoreCode'
 	,null AS 'StoreNameTH' --แก้ไขวันที่ 26/02/2568
 	,null AS 'StoreNameEN' --เพิ่มวันที่ 26/02/2568
-	,null AS 'DoseType'
+	,null AS 'DoseTypeCode'
+	, null as 'DoseTypeNameTH'
+	, null as 'DoseTypeNameEN'
 	,null AS 'DoseCode'
-	,null AS 'DoseQTY'
-	,null AS 'DoseUnit'
+	, null as 'DoseNameTH'
+	, null as 'DoseNameEN'
+	,null AS 'DoseQTYCode'
+	, null as 'DoseQTYNameTH'
+	, null as 'DoseQTYNameEN'
+	,null AS 'DoseUnitCode'
+	, null as 'DoseUnitNameTH'
+	, null as 'DoseUnitNameEN'
 	,null AS 'DoseFreqCode'
-	,null AS 'AuxLabel1'
-	,null AS 'AuxLabel2'
-	,null AS 'AuxLabel3'
+	, null as 'DoseFreqNameTH'
+	, null as 'DoseFreqNameEN'
+	,null AS 'AuxLabel1Code'
+	, null as 'AuxLabel1NameTH'
+	, null as 'AuxLabel1NameEN'
+	,null AS 'AuxLabel2Code'
+	, null as 'AuxLabel2NameTH'
+	, null as 'AuxLabel2NameEN'
+	,null AS 'AuxLabel3Code'
+	, null as 'AuxLabel3NameTH'
+	, null as 'AuxLabel3NameEN'
+	,null AS 'DoseMemo'
 	,a.FacilityRequestMethod AS 'EntryByFacilityMethodCode' --แก้ไขวันที่ 8/4/68
 	,dbo.sysconname(A.FacilityRequestMethod,42161,2) AS 'EntryByFacilityMethodNameTH' --แก้ไขวันที่ 8/4/68
 	,dbo.sysconname(A.FacilityRequestMethod,42161,1) AS 'EntryByFacilityMethodNameEN' --แก้ไขวันที่ 8/4/68
 	,case when A.CheckUp = 1 then 'True' else 'False' end AS 'Checkup'
-	,null AS 'DoseMemo'
 	,case when A.DFDoctor is null then 0 else 1 end as 'FlagDF' --เพิ่มวันที่ 17/02/2568
 	,cast(SUBSTRING(ACT.Com,17,3) as varchar) as 'ActivityCategoryCode' --เพิ่มวันที่ 26/02/2568
 	,dbo.sysconname(cast(SUBSTRING(ACT.Com,17,3) as varchar),42091,2) as 'ActivityCategoryNameTH' --เพิ่มวันที่ 26/02/2568
 	,dbo.sysconname(cast(SUBSTRING(ACT.Com,17,3) as varchar),42091,1) as 'ActivityCategoryNameEN' --เพิ่มวันที่ 26/02/2568
+	, (select di.ICDCode from HNOPD_PRESCRIP_DIAG di where di.VisitDate = A.VisitDate and di.VN = A.VN and di.PrescriptionNo = A.PrescriptionNo and DiagnosisRecordType = 1) as PrimaryDiagnosisCode
+	, (select dbo.ICDName(di.ICDCode,2) from HNOPD_PRESCRIP_DIAG di where di.VisitDate = A.VisitDate and di.VN = A.VN and di.PrescriptionNo = A.PrescriptionNo and DiagnosisRecordType = 1) as PrimaryDiagnosisNameTH
+	, (select dbo.ICDName(di.ICDCode,1) from HNOPD_PRESCRIP_DIAG di where di.VisitDate = A.VisitDate and di.VN = A.VN and di.PrescriptionNo = A.PrescriptionNo and DiagnosisRecordType = 1) as PrimaryDiagnosisNameEN
 
 from
 
@@ -140,6 +179,7 @@ left join HNOPD_MASTER B ON(A.visitdate = B.VisitDate and A.vn = B.VN)
 left join STOCKMASTER c on A.StockCode = c.StockCode
 left join DNSYSCONFIG ACT ON A.HNActivityCode=ACT.Code and ACT.CtrlCode = 42093 
 where A.StockCode is not null
+and A.VisitDate = CAST(GETDATE() as date)
 
 union all
 
@@ -186,23 +226,42 @@ select 'PT2' AS 'BU'
 	,null AS 'StoreCode' 
 	,null AS 'StoreNameTH' --แก้ไขวันที่ 26/02/2568
 	,null AS 'StoreNameEN' --เพิ่มวันที่ 26/02/2568
-	,null AS 'DoseType'
+	,null AS 'DoseTypeCode'
+	, null as 'DoseTypeNameTH'
+	, null as 'DoseTypeNameEN'
 	,null AS 'DoseCode'
-	,null AS 'DoseQTY'
-	,null AS 'DoseUnit'
+	, null as 'DoseNameTH'
+	, null as 'DoseNameEN'
+	,null AS 'DoseQTYCode'
+	, null as 'DoseQTYNameTH'
+	, null as 'DoseQTYNameEN'
+	,null AS 'DoseUnitCode'
+	, null as 'DoseUnitNameTH'
+	, null as 'DoseUnitNameEN'
 	,null AS 'DoseFreqCode'
-	,null AS 'AuxLabel1'
-	,null AS 'AuxLabel2'
-	,null AS 'AuxLabel3'
+	, null as 'DoseFreqNameTH'
+	, null as 'DoseFreqNameEN'
+	,null AS 'AuxLabel1Code'
+	, null as 'AuxLabel1NameTH'
+	, null as 'AuxLabel1NameEN'
+	,null AS 'AuxLabel2Code'
+	, null as 'AuxLabel2NameTH'
+	, null as 'AuxLabel2NameEN'
+	,null AS 'AuxLabel3Code'
+	, null as 'AuxLabel3NameTH'
+	, null as 'AuxLabel3NameEN'
+	,null AS 'DoseMemo'
 	,a.FacilityRequestMethod AS 'EntryByFacilityMethodCode' --แก้ไขวันที่ 8/4/68
 	,dbo.sysconname(A.FacilityRequestMethod,42161,2) AS 'EntryByFacilityMethodNameTH' --แก้ไขวันที่ 8/4/68
 	,dbo.sysconname(A.FacilityRequestMethod,42161,1) AS 'EntryByFacilityMethodNameEN' --แก้ไขวันที่ 8/4/68
 	,case when A.CheckUp = 1 then 'True' else 'False' end AS 'Checkup'
-	,null AS 'DoseMemo'
 	, 0 as 'FlagDF' --เพิ่มวันที่ 17/02/2568
 	,cast(SUBSTRING(ACT.Com,17,3) as varchar) as 'ActivityCategoryCode' --เพิ่มวันที่ 26/02/2568
 	,dbo.sysconname(cast(SUBSTRING(ACT.Com,17,3) as varchar),42091,2) as 'ActivityCategoryNameTH' --เพิ่มวันที่ 26/02/2568
 	,dbo.sysconname(cast(SUBSTRING(ACT.Com,17,3) as varchar),42091,1) as 'ActivityCategoryNameEN' --เพิ่มวันที่ 26/02/2568
+	, (select di.ICDCode from HNOPD_PRESCRIP_DIAG di where di.VisitDate = A.VisitDate and di.VN = A.VN and di.PrescriptionNo = A.PrescriptionNo and DiagnosisRecordType = 1) as PrimaryDiagnosisCode
+	, (select dbo.ICDName(di.ICDCode,2) from HNOPD_PRESCRIP_DIAG di where di.VisitDate = A.VisitDate and di.VN = A.VN and di.PrescriptionNo = A.PrescriptionNo and DiagnosisRecordType = 1) as PrimaryDiagnosisNameTH
+	, (select dbo.ICDName(di.ICDCode,1) from HNOPD_PRESCRIP_DIAG di where di.VisitDate = A.VisitDate and di.VN = A.VN and di.PrescriptionNo = A.PrescriptionNo and DiagnosisRecordType = 1) as PrimaryDiagnosisNameEN
 	
 from
 
@@ -210,6 +269,7 @@ HNOPD_PRESCRIP_TREATMENT A
 left join HNOPD_MASTER B ON(A.visitdate = B.VisitDate and A.vn = B.VN)
 left join DNSYSCONFIG ACT ON A.HNActivityCode=ACT.Code and ACT.CtrlCode = 42093 
 where A.LabCode is not null
+and A.VisitDate = CAST(GETDATE() as date)
 
 union all
 
@@ -256,29 +316,50 @@ select 'PT2' AS 'BU'
 	,null AS 'StoreCode'
 	,null AS 'StoreNameTH' --แก้ไขวันที่ 26/02/2568
 	,null AS 'StoreNameEN' --เพิ่มวันที่ 26/02/2568
-	,null AS 'DoseType'
+	,null AS 'DoseTypeCode'
+	, null as 'DoseTypeNameTH'
+	, null as 'DoseTypeNameEN'
 	,null AS 'DoseCode'
-	,null AS 'DoseQTY'
-	,null AS 'DoseUnit'
+	, null as 'DoseNameTH'
+	, null as 'DoseNameEN'
+	,null AS 'DoseQTYCode'
+	, null as 'DoseQTYNameTH'
+	, null as 'DoseQTYNameEN'
+	,null AS 'DoseUnitCode'
+	, null as 'DoseUnitNameTH'
+	, null as 'DoseUnitNameEN'
 	,null AS 'DoseFreqCode'
-	,null AS 'AuxLabel1'
-	,null AS 'AuxLabel2'
-	,null AS 'AuxLabel3'
+	, null as 'DoseFreqNameTH'
+	, null as 'DoseFreqNameEN'
+	,null AS 'AuxLabel1Code'
+	, null as 'AuxLabel1NameTH'
+	, null as 'AuxLabel1NameEN'
+	,null AS 'AuxLabel2Code'
+	, null as 'AuxLabel2NameTH'
+	, null as 'AuxLabel2NameEN'
+	,null AS 'AuxLabel3Code'
+	, null as 'AuxLabel3NameTH'
+	, null as 'AuxLabel3NameEN'
+	,null AS 'DoseMemo'
 	,A.FacilityRequestMethod AS 'EntryByFacilityMethodCode'
 	,dbo.sysconname(A.FacilityRequestMethod,42161,2) AS 'EntryByFacilityMethodNameTH' --แก้ไขวันที่ 26/02/2568
 	,dbo.sysconname(A.FacilityRequestMethod,42161,1) AS 'EntryByFacilityMethodNameEN' --เพิ่มวันที่ 26/02/2568
 	,case when A.CheckUp = 1 then 'True' else 'False' end AS 'Checkup'
-	,null AS 'DoseMemo'
 	, 0 as 'FlagDF' --เพิ่มวันที่ 17/02/2568
 	,cast(SUBSTRING(ACT.Com,17,3) as varchar) as 'ActivityCategoryCode' --เพิ่มวันที่ 26/02/2568
 	,dbo.sysconname(cast(SUBSTRING(ACT.Com,17,3) as varchar),42091,2) as 'ActivityCategoryNameTH' --เพิ่มวันที่ 26/02/2568
 	,dbo.sysconname(cast(SUBSTRING(ACT.Com,17,3) as varchar),42091,1) as 'ActivityCategoryNameEN' --เพิ่มวันที่ 26/02/2568
+	, (select di.ICDCode from HNOPD_PRESCRIP_DIAG di where di.VisitDate = A.VisitDate and di.VN = A.VN and di.PrescriptionNo = A.PrescriptionNo and DiagnosisRecordType = 1) as PrimaryDiagnosisCode
+	, (select dbo.ICDName(di.ICDCode,2) from HNOPD_PRESCRIP_DIAG di where di.VisitDate = A.VisitDate and di.VN = A.VN and di.PrescriptionNo = A.PrescriptionNo and DiagnosisRecordType = 1) as PrimaryDiagnosisNameTH
+	, (select dbo.ICDName(di.ICDCode,1) from HNOPD_PRESCRIP_DIAG di where di.VisitDate = A.VisitDate and di.VN = A.VN and di.PrescriptionNo = A.PrescriptionNo and DiagnosisRecordType = 1) as PrimaryDiagnosisNameEN
+
 from
 
 HNOPD_PRESCRIP_TREATMENT A
 left join HNOPD_MASTER B ON(A.visitdate = B.VisitDate and A.vn = B.VN)
 left join DNSYSCONFIG ACT ON A.HNActivityCode=ACT.Code and ACT.CtrlCode = 42093 
 where A.XrayCode is not null
+and A.VisitDate = CAST(GETDATE() as date)
 
 union all
 
@@ -325,30 +406,49 @@ select 'PT2' AS 'BU'
 	,A.Store AS 'StoreCode'
 	,dbo.sysconname(A.Store,20020,2) AS 'StoreNameTH' --แก้ไขวันที่ 26/022568
 	,dbo.sysconname(A.Store,20020,1) AS 'StoreNameEN' --เพิ่มวันที่ 26/02/2568
-	,A.DoseType AS 'DoseType'
+	,A.DoseType AS 'DoseTypeCode'
+	, dbo.sysconname(A.DoseType,42042,2) AS 'DoseTypeNameTH'
+	, dbo.sysconname(A.DoseType,42042,1) AS 'DoseTypeNameEN'
 	,A.DoseCode AS 'DoseCode'
-	,A.DoseQtyCode AS 'DoseQTY'
-	,a.DoseUnitCode AS 'DoseUnit'
+	, dbo.sysconname(A.DoseCode,42043,2) AS 'DoseNameTH'
+	, dbo.sysconname(A.DoseCode,42043,1) AS 'DoseNameEN'
+	,A.DoseQtyCode AS 'DoseQTYCode'
+	, dbo.sysconname(A.DoseQtyCode,42044,2) AS 'DoseQTYNameTH'
+	, dbo.sysconname(A.DoseQtyCode,42044,1) AS 'DoseQTYNameEN'
+	,a.DoseUnitCode AS 'DoseUnitCode'
+	, dbo.sysconname(A.DoseUnitCode,42045,2) AS 'DoseUnitNameTH'
+	, dbo.sysconname(A.DoseUnitCode,42045,1) AS 'DoseUnitNameEN'
 	,a.DoseFreqCode AS 'DoseFreqCode'
-	,a.AuxLabel1 AS 'AuxLabel1'
-	,a.AuxLabel2 AS 'AuxLabel2'
-	,a.AuxLabel3 AS 'AuxLabel3'
+	, dbo.sysconname(A.DoseFreqCode,42041,2) AS 'DoseFreqNameTH'
+	, dbo.sysconname(A.DoseFreqCode,42041,1) AS 'DoseFreqNameEN'
+	,a.AuxLabel1 AS 'AuxLabel1Code'
+	, dbo.sysconname(A.AuxLabel1,42046,2) AS 'AuxLabel1NameTH'
+	, dbo.sysconname(A.AuxLabel1,42046,1) AS 'AuxLabel1NameEN'
+	,a.AuxLabel2 AS 'AuxLabel2Code'
+	, dbo.sysconname(A.AuxLabel2,42046,2) AS 'AuxLabel2NameTH'
+	, dbo.sysconname(A.AuxLabel2,42046,1) AS 'AuxLabel2NameEN'
+	,a.AuxLabel3 AS 'AuxLabel3Code'
+	, dbo.sysconname(A.AuxLabel3,42046,2) AS 'AuxLabel3NameTH'
+	, dbo.sysconname(A.AuxLabel3,42046,1) AS 'AuxLabel3NameEN'
+	,A.DoseMemo AS 'DoseMemo'
 	,a.FacilityRequestMethod AS 'EntryByFacilityMethodCode'
 	,dbo.sysconname(A.FacilityRequestMethod,42161,2) AS 'EntryByFacilityMethodNameTH' --แก้ไขวันที่ 26/022568
 	,dbo.sysconname(A.FacilityRequestMethod,42161,1) AS 'EntryByFacilityMethodNameEN' --เพิ่มวันที่ 26/02/2568
 	,case when A.CheckUp = 1 then 'True' else 'False' end AS 'Checkup'
-	,A.DoseMemo AS 'DoseMemo'
 	, 0 as 'FlagDF' --เพิ่มวันที่ 17/02/2568
 	,cast(SUBSTRING(ACT.Com,17,3) as varchar) as 'ActivityCategoryCode' --เพิ่มวันที่ 26/02/2568
 	,dbo.sysconname(cast(SUBSTRING(ACT.Com,17,3) as varchar),42091,2) as 'ActivityCategoryNameTH' --เพิ่มวันที่ 26/02/2568
 	,dbo.sysconname(cast(SUBSTRING(ACT.Com,17,3) as varchar),42091,1) as 'ActivityCategoryNameEN' --เพิ่มวันที่ 26/02/2568
+	, (select di.ICDCode from HNOPD_PRESCRIP_DIAG di where di.VisitDate = A.VisitDate and di.VN = A.VN and di.PrescriptionNo = A.PrescriptionNo and DiagnosisRecordType = 1) as PrimaryDiagnosisCode
+	, (select dbo.ICDName(di.ICDCode,2) from HNOPD_PRESCRIP_DIAG di where di.VisitDate = A.VisitDate and di.VN = A.VN and di.PrescriptionNo = A.PrescriptionNo and DiagnosisRecordType = 1) as PrimaryDiagnosisNameTH
+	, (select dbo.ICDName(di.ICDCode,1) from HNOPD_PRESCRIP_DIAG di where di.VisitDate = A.VisitDate and di.VN = A.VN and di.PrescriptionNo = A.PrescriptionNo and DiagnosisRecordType = 1) as PrimaryDiagnosisNameEN
 from
 
 HNOPD_PRESCRIP_MEDICINE A
 left join HNOPD_MASTER B ON(A.visitdate = B.VisitDate and A.vn = B.VN)
 left join DNSYSCONFIG ACT ON A.HNActivityCode=ACT.Code and ACT.CtrlCode = 42093 
 where A.HereUsage = 0
-
+and A.VisitDate = CAST(GETDATE() as date)
 
 union all
 
@@ -395,26 +495,46 @@ select 'PT2' AS 'BU'
 	,A.Store AS 'StoreCode'
 	,dbo.sysconname(A.Store,20020,2) AS 'StoreNameTH' --แก้ไขวันที่ 26/02/2568
 	,dbo.sysconname(A.Store,20020,1) AS 'StoreNameEN' --เพิ่มวันที่ 26/02/2568
-	,A.DoseType AS 'DoseType'
+	,A.DoseType AS 'DoseTypeCode'
+	, dbo.sysconname(A.DoseType,42042,2) AS 'DoseTypeNameTH'
+	, dbo.sysconname(A.DoseType,42042,1) AS 'DoseTypeNameEN'
 	,A.DoseCode AS 'DoseCode'
-	,A.DoseQtyCode AS 'DoseQTY'
-	,a.DoseUnitCode AS 'DoseUnit'
+	, dbo.sysconname(A.DoseCode,42043,2) AS 'DoseNameTH'
+	, dbo.sysconname(A.DoseCode,42043,1) AS 'DoseNameEN'
+	,A.DoseQtyCode AS 'DoseQTYCode'
+	, dbo.sysconname(A.DoseQtyCode,42044,2) AS 'DoseQTYNameTH'
+	, dbo.sysconname(A.DoseQtyCode,42044,1) AS 'DoseQTYNameEN'
+	,a.DoseUnitCode AS 'DoseUnitCode'
+	, dbo.sysconname(A.DoseUnitCode,42045,2) AS 'DoseUnitNameTH'
+	, dbo.sysconname(A.DoseUnitCode,42045,1) AS 'DoseUnitNameEN'
 	,a.DoseFreqCode AS 'DoseFreqCode'
-	,a.AuxLabel1 AS 'AuxLabel1'
-	,a.AuxLabel2 AS 'AuxLabel2'
-	,a.AuxLabel3 AS 'AuxLabel3'
+	, dbo.sysconname(A.DoseFreqCode,42041,2) AS 'DoseFreqNameTH'
+	, dbo.sysconname(A.DoseFreqCode,42041,1) AS 'DoseFreqNameEN'
+	,a.AuxLabel1 AS 'AuxLabel1Code'
+	, dbo.sysconname(A.AuxLabel1,42046,2) AS 'AuxLabel1NameTH'
+	, dbo.sysconname(A.AuxLabel1,42046,1) AS 'AuxLabel1NameEN'
+	,a.AuxLabel2 AS 'AuxLabel2Code'
+	, dbo.sysconname(A.AuxLabel2,42046,2) AS 'AuxLabel2NameTH'
+	, dbo.sysconname(A.AuxLabel2,42046,1) AS 'AuxLabel2NameEN'
+	,a.AuxLabel3 AS 'AuxLabel3Code'
+	, dbo.sysconname(A.AuxLabel3,42046,2) AS 'AuxLabel3NameTH'
+	, dbo.sysconname(A.AuxLabel3,42046,1) AS 'AuxLabel3NameEN'
+	,A.DoseMemo AS 'DoseMemo'
 	,a.FacilityRequestMethod AS 'EntryByFacilityMethodCode'
 	,dbo.sysconname(A.FacilityRequestMethod,42161,2) AS 'EntryByFacilityMethodNameTH'
 	,dbo.sysconname(A.FacilityRequestMethod,42161,1) AS 'EntryByFacilityMethodNameEN'
 	,case when A.CheckUp = 1 then 'True' else 'False' end AS 'Checkup'
-	,A.DoseMemo AS 'DoseMemo'
 	, 0 as 'FlagDF' --เพิ่มวันที่ 17/02/2568
 	,cast(SUBSTRING(ACT.Com,17,3) as varchar) as 'ActivityCategoryCode' --เพิ่มวันที่ 26/02/2568
 	,dbo.sysconname(cast(SUBSTRING(ACT.Com,17,3) as varchar),42091,2) as 'ActivityCategoryNameTH' --เพิ่มวันที่ 26/02/2568
 	,dbo.sysconname(cast(SUBSTRING(ACT.Com,17,3) as varchar),42091,1) as 'ActivityCategoryNameEN' --เพิ่มวันที่ 26/02/2568
+	, (select di.ICDCode from HNOPD_PRESCRIP_DIAG di where di.VisitDate = A.VisitDate and di.VN = A.VN and di.PrescriptionNo = A.PrescriptionNo and DiagnosisRecordType = 1) as PrimaryDiagnosisCode
+	, (select dbo.ICDName(di.ICDCode,2) from HNOPD_PRESCRIP_DIAG di where di.VisitDate = A.VisitDate and di.VN = A.VN and di.PrescriptionNo = A.PrescriptionNo and DiagnosisRecordType = 1) as PrimaryDiagnosisNameTH
+	, (select dbo.ICDName(di.ICDCode,1) from HNOPD_PRESCRIP_DIAG di where di.VisitDate = A.VisitDate and di.VN = A.VN and di.PrescriptionNo = A.PrescriptionNo and DiagnosisRecordType = 1) as PrimaryDiagnosisNameEN
 from
 
 HNOPD_PRESCRIP_MEDICINE A
 left join HNOPD_MASTER B ON(A.visitdate = B.VisitDate and A.vn = B.VN)
 left join DNSYSCONFIG ACT ON A.HNActivityCode=ACT.Code and ACT.CtrlCode = 42093
 where A.HereUsage = 1
+and A.VisitDate = CAST(GETDATE() as date)
