@@ -1,109 +1,94 @@
-select top 10
-'PT2' as 'BU'
-,vnm.HN as 'PatientID'
-,convert(varchar,vnd.VISITDATE,112)+convert(varchar,vnd.VN)+convert(varchar,vnd.PrescriptionNo) as 'VisitID'
-,vnd.VisitDate as 'VisitDate'
-,vnd.VN as 'VN'
-,vnd.PrescriptionNo as 'PrescriptionNo'
-,vnd.SuffixSmall as 'Suffix'
-,vnp.Clinic as 'LocationCode' --แก้ไขวันที่ 27/02/2568
-,dbo.sysconname(vnp.Clinic,42203,2) as 'LocationNameTH' --เพิ่มวันที่ 27/02/2568
-,dbo.sysconname(vnp.Clinic,42203,1) as 'LocationNameEN' --เพิ่มวันที่ 27/02/2568
-,vnd.DiagDateTime as 'DiagDateTime'
-,vnd.DiagnosisRecordType as 'DiagnosisRecordType' 
-,case
-		when vnd.DiagnosisRecordType = 0 then 'None'
-		when vnd.DiagnosisRecordType = 1 then 'Principal'
-		when vnd.DiagnosisRecordType = 2 then 'Complication'
-		when vnd.DiagnosisRecordType = 3 then 'Metastasis'
-		when vnd.DiagnosisRecordType = 4 then 'Comorbidity'
-		when vnd.DiagnosisRecordType = 5 then 'Other'
-end as 'DiagnosisRecordName'  --เพิ่มวันที่ 27/02/2568
-,case when vnd.DiagnosisRecordType = 1 then vnd.ICDCode else null end as 'ICDCode' --แก้ไขวันที่ 17/02/2568
-,case when vnd.DiagnosisRecordType = 1 then ISNULL(dbo.CutSortChar(icd.englishname),dbo.CutSortChar(icd.LocalName)) else null end as 'ICDName' --แก้ไขวันที่ 17/02/2568
-,vnd.IcdCmCode1 as 'ICDCmCode1'
-,ISNULL(dbo.CutSortChar(icdcm1.englishname),dbo.CutSortChar(icdcm1.LocalName)) as 'ICDCmName1'
-,vnd.IcdCmCode2 as 'ICDCmCode2'
-,ISNULL(dbo.CutSortChar(icdcm2.englishname),dbo.CutSortChar(icdcm2.LocalName)) as 'ICDCmName2'
-,vnd.IcdCmCode3 as 'ICDCmCode3'
-,ISNULL(dbo.CutSortChar(icdcm3.englishname),dbo.CutSortChar(icdcm3.LocalName)) as 'ICDCmName3'
-,vnd.IcdCmCode4 as 'ICDCmCode4'
-,ISNULL(dbo.CutSortChar(icdcm4.englishname),dbo.CutSortChar(icdcm4.LocalName)) as 'ICDCmName4'
-,vnd.IcdCmCode5 as 'ICDCmCode5'
-,ISNULL(dbo.CutSortChar(icdcm5.englishname),dbo.CutSortChar(icdcm5.LocalName)) as 'ICDCmName5'
-,vnd.IcdCmCode6 as 'ICDCmCode6'
-,ISNULL(dbo.CutSortChar(icdcm6.englishname),dbo.CutSortChar(icdcm6.LocalName)) as 'ICDCmName6'
-,vnd.IcdCmCode7 as 'ICDCmCode7'
-,ISNULL(dbo.CutSortChar(icdcm7.englishname),dbo.CutSortChar(icdcm7.LocalName)) as 'ICDCmName7'
-,vnd.IcdCmCode8 as 'ICDCmCode8'
-,ISNULL(dbo.CutSortChar(icdcm8.englishname),dbo.CutSortChar(icdcm8.LocalName)) as 'ICDCmName8'
-,vnd.IcdCmCode9 as 'ICDCmCode9'
-,ISNULL(dbo.CutSortChar(icdcm9.englishname),dbo.CutSortChar(icdcm9.LocalName))as 'ICDCmName9'
-,vnd.IcdCmCode10 as 'ICDCmCode10'
-,ISNULL(dbo.CutSortChar(icdcm10.englishname),dbo.CutSortChar(icdcm10.LocalName)) as 'ICDCmName10'
-,vnd.EntryByUserCode as 'EntryByUserCode'
-,dbo.sysconname(vnd.EntryByUserCode,10031,2) as 'EntryByUserNameTH' --เปลี่ยน จาก Code เป็น Name
-,dbo.sysconname(vnd.EntryByUserCode,10031,1) as 'EntryByUserNameEN'
-,vnd.RegisterDate as 'RegisterDate'
-,vnd.ChronicCreteriaCode as 'ChronicCreteriaCode'
-,dbo.sysconname(vnd.ChronicCreteriaCode,43523,4) as 'ChronicCreteriaName'
-,vnd.RemarksMemo as 'RemarksMemo' --เพิ่มวันที่ 17/02/2568
-,vnd.ECode as 'ECode' --เพิ่มวันที่ 17/02/2568
-,ISNULL(SUBSTRING(icde.EnglishName,2,500),SUBSTRING(icde.LocalName,2,500)) as 'ECodeName' --เพิ่มวันที่ 17/02/2568
-,vnd1.ICDCode as 'ComobidityCode1' --เพิ่มวันที่ 17/02/2568
-,dbo.ICDname(vnd1.ICDCode,4) as 'ComobidityName1' --เพิ่มวันที่ 17/02/2568
-,vnd2.ICDCode as 'ComobidityCode2' --เพิ่มวันที่ 17/02/2568
-,dbo.ICDname(vnd2.ICDCode,4) as 'ComobidityName2' --เพิ่มวันที่ 17/02/2568
-,vnd3.ICDCode as 'ComobidityCode3' --เพิ่มวันที่ 17/02/2568
-,dbo.ICDname(vnd3.ICDCode,4) as 'ComobidityName3' --เพิ่มวันที่ 17/02/2568
-,vnd4.ICDCode as 'ComobidityCode4' --เพิ่มวันที่ 17/02/2568
-,dbo.ICDname(vnd4.ICDCode,4) as 'ComobidityName4' --เพิ่มวันที่ 17/02/2568
-,vnd5.ICDCode as 'ComobidityCode5' --เพิ่มวันที่ 17/02/2568
-,dbo.ICDname(vnd5.ICDCode,4) as 'ComobidityName5' --เพิ่มวันที่ 17/02/2568
-		from HNOPD_PRESCRIP_DIAG vnd
-		left join HNOPD_PRESCRIP vnp on vnd.VN=vnp.VN and vnd.VisitDate=vnp.VisitDate and vnd.PrescriptionNo=vnp.PrescriptionNo
-		left join HNOPD_MASTER vnm on vnd.VN=vnm.VN and vnd.VisitDate=vnm.VisitDate
-		left join HNICD_MASTER icd on vnd.ICDCode=icd.IcdCode and vnd.DiagnosisRecordType = 1
-		left join HNICDCM_MASTER icdcm1 on vnd.IcdCmCode1=icdcm1.IcdCmCode
-		left join HNICDCM_MASTER icdcm2 on vnd.IcdCmCode2=icdcm2.IcdCmCode
-		left join HNICDCM_MASTER icdcm3 on vnd.IcdCmCode3=icdcm3.IcdCmCode
-		left join HNICDCM_MASTER icdcm4 on vnd.IcdCmCode4=icdcm4.IcdCmCode
-		left join HNICDCM_MASTER icdcm5 on vnd.IcdCmCode5=icdcm5.IcdCmCode
-		left join HNICDCM_MASTER icdcm6 on vnd.IcdCmCode6=icdcm6.IcdCmCode
-		left join HNICDCM_MASTER icdcm7 on vnd.IcdCmCode7=icdcm7.IcdCmCode
-		left join HNICDCM_MASTER icdcm8 on vnd.IcdCmCode8=icdcm8.IcdCmCode
-		left join HNICDCM_MASTER icdcm9 on vnd.IcdCmCode9=icdcm9.IcdCmCode
-		left join HNICDCM_MASTER icdcm10 on vnd.IcdCmCode10=icdcm10.IcdCmCode
-		left join HNICD_MASTER icde on vnd.ECode=icde.IcdCode
-		LEFT join	( 
-						select VisitDate,VN,PrescriptionNo,SuffixSmall,ICDCode,DiagnosisRecordType
-								from HNOPD_PRESCRIP_DIAG 
-								where DiagnosisRecordType = 4
-								and SuffixSmall = 1
-					)vnd1 on vnd.VN=vnd1.VN and vnd.VisitDate=vnd1.VisitDate and vnd.PrescriptionNo=vnd1.PrescriptionNo and vnd.SuffixSmall=vnd1.SuffixSmall and vnd.DiagnosisRecordType=vnd1.DiagnosisRecordType 
-		LEFT join	( 
-						select VisitDate,VN,PrescriptionNo,SuffixSmall,ICDCode,DiagnosisRecordType
-								from HNOPD_PRESCRIP_DIAG 
-								where DiagnosisRecordType = 4
-								and SuffixSmall = 2
-					)vnd2 on vnd.VN=vnd2.VN and vnd.VisitDate=vnd2.VisitDate and vnd.PrescriptionNo=vnd2.PrescriptionNo and vnd.SuffixSmall=vnd2.SuffixSmall and vnd.DiagnosisRecordType=vnd2.DiagnosisRecordType 
-		LEFT join	( 
-						select VisitDate,VN,PrescriptionNo,SuffixSmall,ICDCode,DiagnosisRecordType
-								from HNOPD_PRESCRIP_DIAG 
-								where DiagnosisRecordType = 4
-								and SuffixSmall = 3
-					)vnd3 on vnd.VN=vnd3.VN and vnd.VisitDate=vnd3.VisitDate and vnd.PrescriptionNo=vnd3.PrescriptionNo and vnd.SuffixSmall=vnd3.SuffixSmall and vnd.DiagnosisRecordType=vnd3.DiagnosisRecordType 
-		LEFT join	( 
-						select VisitDate,VN,PrescriptionNo,SuffixSmall,ICDCode,DiagnosisRecordType
-								from HNOPD_PRESCRIP_DIAG 
-								where DiagnosisRecordType = 4
-								and SuffixSmall = 4
-					)vnd4 on vnd.VN=vnd4.VN and vnd.VisitDate=vnd4.VisitDate and vnd.PrescriptionNo=vnd4.PrescriptionNo and vnd.SuffixSmall=vnd4.SuffixSmall and vnd.DiagnosisRecordType=vnd4.DiagnosisRecordType 
-		LEFT join	( 
-						select VisitDate,VN,PrescriptionNo,SuffixSmall,ICDCode,DiagnosisRecordType
-								from HNOPD_PRESCRIP_DIAG 
-								where DiagnosisRecordType = 4
-								and SuffixSmall = 5
-					)vnd5 on vnd.VN=vnd5.VN and vnd.VisitDate=vnd5.VisitDate and vnd.PrescriptionNo=vnd5.PrescriptionNo and vnd.SuffixSmall=vnd5.SuffixSmall and vnd.DiagnosisRecordType=vnd5.DiagnosisRecordType 
+with dx_como as
+(
+	select	ROW_NUMBER() over(partition by a.visitdate, a.vn, a.prescriptionno, a.DiagnosisRecordType order by a.visitdate, a.vn, a.prescriptionno, a.SuffixSmall) as rowid
+			, a.VisitDate
+			, a.VN
+			, a.PrescriptionNo
+			, a.SuffixSmall
+			, a.ICDCode
+			, dbo.ICDname(a.ICDCode,2) as ICDNameTH
+			, dbo.ICDname(a.ICDCode,1) as ICDNameEN
+			, a.DiagnosisRecordType
+	from	HNOPD_PRESCRIP_DIAG a
+	where	a.VisitDate = CAST(GETDATE()-1 as date)
+			and a.DiagnosisRecordType = 4
+)
 
+select	'PT2' as 'BU'
+		,vnm.HN as 'PatientID'
+		,convert(varchar,vnd.VISITDATE,112)+convert(varchar,vnd.VN)+convert(varchar,vnd.PrescriptionNo) as 'VisitID'
+		,vnd.VisitDate as 'VisitDate'
+		,vnd.VN as 'VN'
+		,vnd.PrescriptionNo as 'PrescriptionNo'
+		,vnd.SuffixSmall as 'Suffix'
+		,vnp.Clinic as 'LocationCode' --แก้ไขวันที่ 27/02/2568
+		,dbo.sysconname(vnp.Clinic,42203,2) as 'LocationNameTH' --เพิ่มวันที่ 27/02/2568
+		,dbo.sysconname(vnp.Clinic,42203,1) as 'LocationNameEN' --เพิ่มวันที่ 27/02/2568
+		,vnd.DiagDateTime as 'DiagDateTime'
+		, vnd.ICDCode as PrimaryDiagnosisCode
+		, dbo.ICDname(vnd.ICDCode,2) as PrimaryDiagnosisNameTH
+		, dbo.ICDname(vnd.ICDCode,1) as PrimaryDiagnosisNameEN
+
+		,vnd.IcdCmCode1 as 'ICDCmCode1'
+		, dbo.ICDCMname(vnd.IcdCmCode1,2) as ICDCM1NameTH
+		, dbo.ICDCMname(vnd.IcdCmCode1,1) as ICDCM1NameEN
+		,vnd.IcdCmCode2 as 'ICDCmCode2'
+		, dbo.ICDCMname(vnd.IcdCmCode2,2) as ICDCM2NameTH
+		, dbo.ICDCMname(vnd.IcdCmCode2,1) as ICDCM2NameEN
+		,vnd.IcdCmCode3 as 'ICDCmCode3'
+		, dbo.ICDCMname(vnd.IcdCmCode3,2) as ICDCM3NameTH
+		, dbo.ICDCMname(vnd.IcdCmCode3,1) as ICDCM3NameEN
+		,vnd.IcdCmCode4 as 'ICDCmCode4'
+		, dbo.ICDCMname(vnd.IcdCmCode4,2) as ICDCM4NameTH
+		, dbo.ICDCMname(vnd.IcdCmCode4,1) as ICDCM4NameEN
+		,vnd.IcdCmCode5 as 'ICDCmCode5'
+		, dbo.ICDCMname(vnd.IcdCmCode5,2) as ICDCM5NameTH
+		, dbo.ICDCMname(vnd.IcdCmCode5,1) as ICDCM5NameEN
+		,vnd.IcdCmCode6 as 'ICDCmCode6'
+		, dbo.ICDCMname(vnd.IcdCmCode6,2) as ICDCM6NameTH
+		, dbo.ICDCMname(vnd.IcdCmCode6,1) as ICDCM6NameEN
+		,vnd.IcdCmCode7 as 'ICDCmCode7'
+		, dbo.ICDCMname(vnd.IcdCmCode7,2) as ICDCM7NameTH
+		, dbo.ICDCMname(vnd.IcdCmCode7,1) as ICDCM7NameEN
+		,vnd.IcdCmCode8 as 'ICDCmCode8'
+		, dbo.ICDCMname(vnd.IcdCmCode8,2) as ICDCM8NameTH
+		, dbo.ICDCMname(vnd.IcdCmCode8,1) as ICDCM8NameEN
+		,vnd.IcdCmCode9 as 'ICDCmCode9'
+		, dbo.ICDCMname(vnd.IcdCmCode9,2) as ICDCM9NameTH
+		, dbo.ICDCMname(vnd.IcdCmCode9,1) as ICDCM9NameEN
+		,vnd.IcdCmCode10 as 'ICDCmCode10'
+		, dbo.ICDCMname(vnd.IcdCmCode10,2) as ICDCM10NameTH
+		, dbo.ICDCMname(vnd.IcdCmCode10,1) as ICDCM10NameEN
+		,vnd.EntryByUserCode as 'EntryByUserCode'
+		,dbo.sysconname(vnd.EntryByUserCode,10031,2) as 'EntryByUserNameTH' --เปลี่ยน จาก Code เป็น Name
+		,dbo.sysconname(vnd.EntryByUserCode,10031,1) as 'EntryByUserNameEN'
+		,vnd.RegisterDate as 'RegisterDate'
+		,vnd.ChronicCreteriaCode as 'ChronicCreteriaCode'
+		,dbo.sysconname(vnd.ChronicCreteriaCode,43523,4) as 'ChronicCreteriaName'
+		,vnd.RemarksMemo as 'RemarksMemo' --เพิ่มวันที่ 17/02/2568
+		,vnd.ECode as 'ECode' --เพิ่มวันที่ 17/02/2568
+		, dbo.ICDname(vnd.ECode,2) as ECodeNameTH
+		, dbo.ICDname(vnd.ECode,1) as ECodeNameEN
+
+		, (select c.ICDCode from dx_como c where c.VisitDate = vnd.VisitDate and c.VN = vnd.VN and c.PrescriptionNo = vnd.PrescriptionNo and c.rowid = 1) as Comobidity1Code
+		, (select c.ICDNameTH from dx_como c where c.VisitDate = vnd.VisitDate and c.VN = vnd.VN and c.PrescriptionNo = vnd.PrescriptionNo and c.rowid = 1) as Comobidity1NameTH
+		, (select c.ICDNameEN from dx_como c where c.VisitDate = vnd.VisitDate and c.VN = vnd.VN and c.PrescriptionNo = vnd.PrescriptionNo and c.rowid = 1) as Comobidity1NameEN
+		, (select c.ICDCode from dx_como c where c.VisitDate = vnd.VisitDate and c.VN = vnd.VN and c.PrescriptionNo = vnd.PrescriptionNo and c.rowid = 2) as Comobidity2Code
+		, (select c.ICDNameTH from dx_como c where c.VisitDate = vnd.VisitDate and c.VN = vnd.VN and c.PrescriptionNo = vnd.PrescriptionNo and c.rowid = 2) as Comobidity2NameTH
+		, (select c.ICDNameEN from dx_como c where c.VisitDate = vnd.VisitDate and c.VN = vnd.VN and c.PrescriptionNo = vnd.PrescriptionNo and c.rowid = 2) as Comobidity2NameEN
+		, (select c.ICDCode from dx_como c where c.VisitDate = vnd.VisitDate and c.VN = vnd.VN and c.PrescriptionNo = vnd.PrescriptionNo and c.rowid = 3) as Comobidity3Code
+		, (select c.ICDNameTH from dx_como c where c.VisitDate = vnd.VisitDate and c.VN = vnd.VN and c.PrescriptionNo = vnd.PrescriptionNo and c.rowid = 3) as Comobidity3NameTH
+		, (select c.ICDNameEN from dx_como c where c.VisitDate = vnd.VisitDate and c.VN = vnd.VN and c.PrescriptionNo = vnd.PrescriptionNo and c.rowid = 3) as Comobidity3NameEN
+		, (select c.ICDCode from dx_como c where c.VisitDate = vnd.VisitDate and c.VN = vnd.VN and c.PrescriptionNo = vnd.PrescriptionNo and c.rowid = 4) as Comobidity4Code
+		, (select c.ICDNameTH from dx_como c where c.VisitDate = vnd.VisitDate and c.VN = vnd.VN and c.PrescriptionNo = vnd.PrescriptionNo and c.rowid = 4) as Comobidity4NameTH
+		, (select c.ICDNameEN from dx_como c where c.VisitDate = vnd.VisitDate and c.VN = vnd.VN and c.PrescriptionNo = vnd.PrescriptionNo and c.rowid = 4) as Comobidity4NameEN
+		, (select c.ICDCode from dx_como c where c.VisitDate = vnd.VisitDate and c.VN = vnd.VN and c.PrescriptionNo = vnd.PrescriptionNo and c.rowid = 5) as Comobidity5Code
+		, (select c.ICDNameTH from dx_como c where c.VisitDate = vnd.VisitDate and c.VN = vnd.VN and c.PrescriptionNo = vnd.PrescriptionNo and c.rowid = 5) as Comobidity5NameTH
+		, (select c.ICDNameEN from dx_como c where c.VisitDate = vnd.VisitDate and c.VN = vnd.VN and c.PrescriptionNo = vnd.PrescriptionNo and c.rowid = 5) as Comobidity5NameEN
+from	HNOPD_PRESCRIP_DIAG vnd
+		inner join HNOPD_PRESCRIP vnp on vnd.VN=vnp.VN and vnd.VisitDate=vnp.VisitDate and vnd.PrescriptionNo=vnp.PrescriptionNo
+		inner join HNOPD_MASTER vnm on vnd.VN=vnm.VN and vnd.VisitDate=vnm.VisitDate
+		inner join HNICD_MASTER icd on vnd.ICDCode=icd.IcdCode and vnd.DiagnosisRecordType = 1
+		left join HNICD_MASTER icde on vnd.ECode=icde.IcdCode
+where	vnd.VisitDate = CAST(GETDATE()-1 as date)
 
