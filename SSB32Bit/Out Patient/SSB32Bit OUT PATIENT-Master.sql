@@ -1,37 +1,47 @@
-select 
+select top 100
 'PLS' as 'BU'
 ,vnm.HN as 'PatientID'
 ,convert(varchar,vnp.VISITDATE,112)+convert(varchar,vnp.VN)+convert(varchar,vnp.SUFFIX) as 'VisitID'
 ,vnp.VISITDATE as 'VisitDate'
 ,vnp.VN as 'VN'
 ,vnp.SUFFIX as 'PrescriptionNo'
-,vnp.CLINIC as 'LocationCode'
-,dbo.sysconname(vnp.CLINIC,20016,2) as 'LocationNameTH' --แก้วันที่ 26/02/2568
-,dbo.sysconname(vnp.CLINIC,20016,1) as 'LocationNameEN' --เพิ่มวันที่ 26/02/2568
+,vnp.CLINIC as 'ClinicCode'
+,dbo.sysconname(vnp.CLINIC,20016,2) as 'ClinicNameTH' 
+,dbo.sysconname(vnp.CLINIC,20016,1) as 'ClinicNameEN' 
+,'' as 'ClinicDepartmentCode'
+,'' as 'ClinicDepartmentNameTH'
+,'' as 'ClinicDepartmentNameEN'
 ,vnp.DOCTOR as 'DoctorCode'
 ,dbo.CutSortChar(doc.THAINAME) as 'DoctorNameTH'
 ,dbo.CutSortChar(doc.ENGLISHNAME) as 'DoctorNameEN'
 ,doc.CERTIFYPUBLICNO as 'DoctorCertificate'
-,'' as 'ClinicDepartmentCode'
-,'' as 'ClinicDepartmentNameTH'
-,'' as 'ClinicDepartmentNameEN'
+,doc.CLINIC as 'DoctorClinicCode'
+,dbo.sysconname(doc.CLINIC,20016,2) as 'DoctorClinicNameTH'
+,dbo.sysconname(doc.CLINIC,20016,1) as 'DoctorClinicNameEN'
+, '' as 'DoctorDepartmentCode'
+, '' as 'DoctorDepartmentNameTH'
+, '' as 'DoctorDepartmentNameEN'
+,doc.SPECIALTY+doc.SUBSPECIALTY as 'DoctorSpecialtyCode'
+,dbo.CutSortChar(ssp.THAINAME) as 'DoctorSpecialtyNameTH'
+,dbo.CutSortChar(ssp.ENGLISHNAME) as 'DoctorSpecialtyNameEN'
 ,vnp.CLOSEVISITTYPE as 'CloseVisitCode'
-,dbo.sysconname(vnp.CLOSEVISITTYPE,20043,2) as 'CloseVisitNameTH' --แก้ไขวันที่ 26/02/2568
-,dbo.sysconname(vnp.CLOSEVISITTYPE,20043,1) as 'CloseVisitNameEN' --เพิ่มวันที่ 26/02/2568
+,dbo.sysconname(vnp.CLOSEVISITTYPE,20043,2) as 'CloseVisitNameTH' 
+,dbo.sysconname(vnp.CLOSEVISITTYPE,20043,1) as 'CloseVisitNameEN' 
 ,vnp.APPOINTMENTNO as 'AppointmentNo'
+,apm.APPOINTMENTDATETIME as 'AppointmentDateTime'
 ,case when CLOSEVISITTYPE is null then 'Active' else 'InActive' end as 'Status'
-,vnp.REGINDATETIME as 'RegInDateTime' --เพิ่มวันที่ 17/02/2568
-,vnp.DISGRMS as 'DiagRms' --เพิ่มวันที่ 17/02/2568
-,dbo.sysconname(vnp.DISGRMS,20042,4) as 'DiagRmsName' --เพิ่มวันที่ 17/02/2568
-,vnm.NEWPATIENT as 'NEWPATIENT' --เพิ่มวันที่ 17/02/2568
-,vnm.VISITOUTDATETIME as 'CloseVisitDateTime' --เพิ่มวันที่ 17/02/2568
-,vnm.VISITINDATETIME as 'MakeDateTime' --เพิ่มวันที่ 17/02/2568
-,vnm.USEDRIGHTCODE as 'DefaultRightCode' --เพิ่มวันที่ 17/02/2568
-,dbo.sysconname(vnm.USEDRIGHTCODE,20019,2) as 'DefaultRightNameTH' --เพิ่มวันที่ 26/02/2568
-,dbo.sysconname(vnm.USEDRIGHTCODE,20019,1) as 'DefaultRightNameEN' --เพิ่มวันที่ 26/02/2568
-,vnm.ACCIDENT as 'AccidentCode' --เพิ่มวันที่ 17/02/2568
-,'' as 'AccidentNameTH' --เพิ่มวันที่ 26/02/2568
-,'' as 'AccidentNameEN' --เพิ่มวันที่ 26/02/2568
+,vnp.REGINDATETIME as 'RegInDateTime' 
+,vnp.DISGRMS as 'DiagRms' 
+,dbo.sysconname(vnp.DISGRMS,20042,4) as 'DiagRmsName' 
+,vnm.NEWPATIENT as 'NEWPATIENT' 
+,vnm.VISITOUTDATETIME as 'CloseVisitDateTime' 
+,vnm.VISITINDATETIME as 'PrescriptionMakeDateTime' 
+,vnm.USEDRIGHTCODE as 'DefaultRightCode' 
+,dbo.sysconname(vnm.USEDRIGHTCODE,20019,2) as 'DefaultRightNameTH' 
+,dbo.sysconname(vnm.USEDRIGHTCODE,20019,1) as 'DefaultRightNameEN' 
+,vnm.ACCIDENT as 'AccidentCode' 
+,'' as 'AccidentNameTH' 
+,'' as 'AccidentNameEN' 
 ,'' as 'ComposeDept'
 ,'' as 'VisitCode'
 ,'' as 'VisitNameTH'
@@ -42,6 +52,24 @@ select
 ,'' as 'ReVisitCode'
 ,'' as 'ReVisitNameTH'
 ,'' as 'ReVisitNameEN'
+,adm.AN
+,CASE WHEN ptc.VisitCnt=1 and vnm.NewPatient=1 THEN 'NewNew'
+			 WHEN ptc.VisitCnt=1 and vnm.NewPatient=0 THEN 'OldNew'
+			 WHEN ptc.VisitCnt>1 and vnm.NewPatient=0 THEN 'OldOld'
+		END as 'OldNew'
+,vnp.PRIVATECASE
+,'' as 'AgencyCode'
+,'' as 'AgencyNameTH'
+,'' as 'AgencyNameEN'
+,vnp.DIAGACKDATETIME as 'NurseAcknowledge'
+,vnp.DIAGINDATETIME as 'DiagRmsIn'
+,vnp.DIAGOUTDATETIME as 'DiagRmsOut'
 		from VNPRES vnp
 		left join VNMST vnm on vnp.VN=vnm.VN and vnp.VISITDATE=vnm.VISITDATE
+		left join HNAPPMNT apm on vnp.APPOINTMENTNO=apm.APPOINTMENTNO
 		left join HNDOCTOR doc on vnp.DOCTOR=doc.DOCTOR
+		left join SYSCONFIG ssp on doc.SPECIALTY+doc.SUBSPECIALTY = REPLACE(ssp.CODE,' ','') and ssp.CTRLCODE = 20015
+		left join ADMMASTER adm on vnm.HN=adm.HN and CONVERT(date,vnm.VISITDATE,101) = CONVERT(date,adm.ADMDATETIME,101)
+		left join PATIENT_CLINIC ptc on vnm.HN=ptc.HN and vnp.CLINIC=ptc.CLINIC
+		where adm.ADMDATETIME is not null
+		order by vnp.visitdate desc
