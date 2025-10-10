@@ -1,5 +1,4 @@
-select top 10
-		'PT2' as 'BU'
+select 'PT2' as 'BU'
 		,a.HN as 'PatientID'
 		,CONVERT(varchar,a.ADMDATETIME,112)+a.AN as 'AdmitID'
 		,a.ADMDATETIME as 'AdmitDateTime'
@@ -9,13 +8,23 @@ select top 10
 		,a.ADMWARD as 'WardCode'
 		,dbo.sysconname(a.ADMWARD,42201,2) as 'WardNameTH' --แก้ไขวันที่ 27/02/2568
 		,dbo.sysconname(a.ADMWARD,42201,1) as 'WardNameEN' --เพิ่มวันที่ 27/02/2568
-		,a.AdmDoctor as 'DoctorCode'
-		,dbo.CutSortChar(doc.LocalName) as 'DoctorNameTH' 
-		,dbo.CutSortChar(doc.ENGLISHNAME) as 'DoctorNameEN' 
-		,doc.CERTIFYPUBLICNO as 'DoctorCertificate' 
 		,CAST(SUBSTRING(syw.Com,36,13)as varchar) as 'WardDepartmentCode'  --แก้ไขวันที่ 27/02/2568
 		,dbo.sysconname(CAST(SUBSTRING(syw.Com,36,13)as varchar),10145,2) as 'WardDepartmentNameTH' --เพิ่มวันที่ 27/02/2568
 		,dbo.sysconname(CAST(SUBSTRING(syw.Com,36,13)as varchar),10145,1) as 'WardDepartmentNameEN' --เพิ่มวันที่ 27/02/2568
+		,a.AdmDoctor as 'DoctorCode'
+		, dm.DoctorCode
+		, dm.DoctorNameTH
+		, dm.DoctorNameEN
+		, dm.DoctorCertificate
+		, dm.DoctorClinicCode
+		, dm.DoctorClinicNameTH
+		, dm.DoctorClinicNameEN
+		, dm.DoctorDepartmentCode
+		, dm.DoctorDepartmentNameTH
+		, dm.DoctorDepartmentNameEN
+		, dm.DoctorSpecialtyCode
+		, dm.DoctorSpecialtyNameTH
+		, dm.DoctorSpecialtyNameEN
 		,a.DischargeCode as 'DischargeCode'
 		,dbo.sysconname(a.DischargeCode,42262,2) as 'DischargeNameTH' --แก้ไขวันที่ 27/02/2568
 		,dbo.sysconname(a.DischargeCode,42262,1) as 'DischargeNameEN' --เพิ่มวันที่ 27/02/2568
@@ -27,14 +36,18 @@ select top 10
 		,a.AdmHNBedNo as 'HNBedNo' --เพิ่มวันที่ 27/02/2568
 		,dbo.sysconname(a.AdmHNBedNo,42421,2) as 'HNBedNameTH' --เพิ่มวันที่ 27/02/2568
 		,dbo.sysconname(a.AdmHNBedNo,42421,1) as 'HNBedNameEN' --เพิ่มวันที่ 27/02/2568
-		,a.WardAllowDischargeDateTime --เพิ่มวันที่ 27/02/2568
 		,a.ActiveWard as 'ActiveWardCode' --เพิ่มวันที่ 27/02/2568
 		,dbo.sysconname(a.ActiveWard,42201,2) as 'ActiveWardNameTH' --เพิ่มวันที่ 27/02/2568
 		,dbo.sysconname(a.ActiveWard,42201,1) as 'ActiveWardNameEN' --เพิ่มวันที่ 27/02/2568
 		,a.ActiveHNBedNo as 'ActiveHNBedNo' --เพิ่มวันที่ 27/02/2568
 		,dbo.sysconname(a.ActiveHNBedNo,42421,2) as 'ActiveHNBedNameTH' --เพิ่มวันที่ 27/02/2568
 		,dbo.sysconname(a.ActiveHNBedNo,42421,1) as 'ActiveHNBedNameEN' --เพิ่มวันที่ 27/02/2568
-		,a.DischargeDateTime --เพิ่มวันที่ 27/02/2568
+		, a.PlanDischargeDateTime as DoctorDischargeDateTime
+		, a.MedicalTakeHomeDateTime as DrugTakeHomeDateTime
+		, (select top 1 c.IPDChargeDateTime From HNIPD_CHARGE c where c.AN = a.AN and c.VoidDateTime is null order by c.IPDChargeDateTime) as LastOrderDateTime
+		, a.WardAllowDischargeDateTime
+		, a.AccountAllowReleaseDateTime as FinancialDateTime
+		, a.DischargeDateTime as WardDischargeDateTime
 		,a.DiagnosisStatusType --เพิ่มวันที่ 27/02/2568
 		,case 
 			when a.DiagnosisStatusType = 0 then 'None' 
@@ -58,6 +71,35 @@ select top 10
 		,a.FromClinic as 'AdmitLocationCode' --เพิ่มวันที่ 27/02/2568
 		,dbo.sysconname(a.FromClinic,42203,2) as 'AdmitLocationNameTH' --เพิ่มวันที่ 27/02/2568
 		,dbo.sysconname(a.FromClinic,42203,1) as 'AdmitLocationNameEN' --เพิ่มวันที่ 27/02/2568
-			from HNIPD_MASTER a
-			left join HNDOCTOR_MASTER doc on a.AdmDoctor=doc.Doctor
-			left join DNSYSCONFIG syw on a.AdmWard = syw.Code and syw.CtrlCode = 42201
+		, dm.PrivateCase
+		, a.InsuranceSalesAgent as AgencyCode
+		, dbo.sysconname(a.InsuranceSalesAgent,43961,2) as AgencyNameTH
+		, dbo.sysconname(a.InsuranceSalesAgent,43961,1) as AgencyNameEN
+from	HNIPD_MASTER a
+		left join HNDOCTOR_MASTER doc on a.AdmDoctor=doc.Doctor
+		left join DNSYSCONFIG syw on a.AdmWard = syw.Code and syw.CtrlCode = 42201
+		left join 
+		(
+			select	a.AN
+					, a.Doctor as DoctorCode
+					, dbo.CutSortChar(b.LocalName) as DoctorNameTH
+					, dbo.CutSortChar(b.EnglishName) as DoctorNameEN
+					, b.CertifyPublicNo as DoctorCertificate
+					, b.Clinic as DoctorClinicCode
+					, dbo.sysconname(b.Clinic,42203,2) as DoctorClinicNameTH
+					, dbo.sysconname(b.Clinic,42203,1) as DoctorClinicNameEN
+					, b.ComposeDept as DoctorDepartmentCode
+					, dbo.sysconname(b.ComposeDept,10145,2) as DoctorDepartmentNameTH
+					, dbo.sysconname(b.ComposeDept,10145,1) as DoctorDepartmentNameEN
+					, b.Specialty as DoctorSpecialtyCode
+					, dbo.sysconname(b.Specialty,42197,2) as DoctorSpecialtyNameTH
+					, dbo.sysconname(b.Specialty,42197,1) as DoctorSpecialtyNameEN
+					, a.PrivateCase
+			from	HNIPD_DOCTOR a
+					join HNDOCTOR_MASTER b on a.Doctor = b.doctor
+			where	a.AN in (select am.AN from HNIPD_MASTER am where am.AdmDateTime between GETDATE()-5 and GETDATE())
+					and a.HNDoctorConsultType = 2 
+					and a.OffFromDateTime is null
+		)dm on a.AN = dm.AN
+where	a.AdmDateTime between GETDATE()-5 and GETDATE()
+
