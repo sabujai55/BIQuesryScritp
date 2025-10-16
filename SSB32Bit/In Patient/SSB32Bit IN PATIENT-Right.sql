@@ -2,7 +2,7 @@ select top 10
 		'PLS' as 'BU',
 		a.HN as 'PatientID',
 		CONVERT(varchar,a.ADMDATETIME,112)+a.AN as 'AdmitID',
-		a.ADMDATETIME as 'AdmitDate',
+		a.ADMDATETIME as 'AdmitDateTime',
 		a.AN as 'AN',
 		'' as 'Suffix',
 		a.USEDRIGHTCODE as 'RightCode',

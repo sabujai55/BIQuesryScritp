@@ -1,4 +1,4 @@
-select 'PLC' as "BU"
+select 'PLR' as "BU"
 , p.patient_id as "PatientID"
 , format_hn(p.hn) as "HN"
 , p.prename as "PreNameTH"
@@ -8,8 +8,8 @@ select 'PLC' as "BU"
 , p.intername as "FirstNameEN"
 , '' as "LastNameEN"
 , p.birthdate as "BirthDateTime"
-, case when p.fix_gender_id = '1' then '���'
-  when p.fix_gender_id = '2' then '˭ԧ' else '����к�' end as "Gender"
+, case when p.fix_gender_id = '1' then 'ชาย'
+  when p.fix_gender_id = '2' then 'หญิง' else 'ไม่ระบุ' end as "Gender"
 , p.blood_group as "BloodGroup"
 , p.pid as "IDCardNo"
 , p.passport_no as "Passport"
@@ -22,12 +22,10 @@ select 'PLC' as "BU"
 , bpd_addr_changwat(p.fix_changwat_id) as "Province"
 , p.postcode as "PostalCode"
 , p.mobile as "MobilePhoneNo"
-, p.telephone as "Telephone"
+, p.telephone as "Tel2"
 , p.email as "Email"
 , bpg.description as "PatientType"
-, d.death_date || ' ' || d.death_time as "DeadDateTime"
 , fm.description as "MaritalStatus"
-, '' as "MedicalDeleteDateTime"
 , vt.description as "VIPType"
 , p.crm as "VIPRemark"
 , '' as "VisitAllow"
@@ -35,10 +33,14 @@ select 'PLC' as "BU"
 , d.death_date || ' ' || d.death_time as "DeadDateTime"
 , '' as "FileDeletedDate"
 , '' as "PrivateDoctorCode"
-, '' as "CommunicableNo"
+, '' as "Tel1"
 , p.modify_date ||' '|| p.modify_time as "CreatePatientDate"
 , p.modify_date ||' '|| p.modify_time as "LastUpdateDateTime"
 , '' as "BirthPlace"
+--����
+, p.base_patient_unit_id as "PatientStatusCode"
+, bpu.description as "PatientStatusNameTH"
+, '' as "PatientStatusNameEN"
 from patient p  
 left join fix_nationality fn on fn.fix_nationality_id = p.fix_nationality_id 
 left join base_religion br on br.base_religion_id = p.religion
@@ -48,6 +50,11 @@ left join base_patient_group bpg on bpg.base_patient_group_id = p.base_patient_g
 left join fix_race fr on fr.fix_race_id = p.fix_race_id
 left join fix_occupation fo on fo.fix_occupation_id = p.fix_occupation_id
 left join death d on d.patient_id = p.patient_id 
+left join base_patient_unit bpu on bpu.base_patient_unit_id = p.base_patient_unit_id
 --where format_hn(p.hn) = '16-67-006569'
-order by format_hn(p.hn) asc
-
+--where p.base_patient_unit_id != ''
+order by 
+--format_hn(p.hn) 
+p.hn 
+desc
+limit 100

@@ -1,4 +1,4 @@
-select top 1000 
+select
 'PLS' as 'BU'
 ,a.HN as 'PatientID'
 ,CONVERT(varchar,a.ADMDATETIME,112)+a.AN as 'AdmitID'
@@ -40,6 +40,7 @@ select top 1000
 ,CASE
 	WHEN b.Ward = 'W13' THEN 1 ELSE 0
 END as 'Observe'
+,b.PATIENTSTAY as 'PatientStay'
 		from ADMBED b
-		left join ADMMASTER a on b.AN=a.AN
-		left join HNBEDINV bi on b.BEDNO=bi.BEDNO
+		inner join ADMMASTER a on b.AN=a.AN
+		inner join HNBEDINV bi on b.BEDNO=bi.BEDNO

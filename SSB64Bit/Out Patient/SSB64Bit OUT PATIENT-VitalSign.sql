@@ -1,5 +1,7 @@
-select Distinct
-		'PT2' as 'BU'
+use SSBLIVE
+go
+
+select 'PT2' as 'BU'
 		,vnm.HN as 'PatientID'
 		,convert(varchar,a.VISITDATE,112)+convert(varchar,a.VN)+ '1' as 'VisitID'
 		,a.VISITDATE as 'VisitDate'

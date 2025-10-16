@@ -9,11 +9,11 @@ select 'PLR' as "BU"
 , e.profession_code as "DoctorCertificate"
 --����
 , bd2.base_department_id  AS "DoctorClinicCode"
-, bd2.description AS "DoctorClinicNameTH"
-, '' AS "DoctorClinicNameEN"
+, bd2.description_th AS "DoctorClinicNameTH"
+, bd2.description_en  AS "DoctorClinicNameEN"
 , e.base_med_department_id AS "DoctorDepartmentCode"
-, bmd.description AS "DoctorDepartmentNameTH"
-, '' AS "DoctorDepartmentNameEN"
+, bmd.description_th AS "DoctorDepartmentNameTH"
+, bmd.description_en AS "DoctorDepartmentNameEN"
 , e.base_clinic_id AS "DoctorSpecialtyCode"
 , bmd.description AS "DoctorSpecialtyNameTH"
 , '' AS "DoctorSpecialtyNameEN"
@@ -57,7 +57,7 @@ left join employee e on e.employee_id = a.doctor_eid
 left join base_department bd on bd.base_department_id = a.base_department_id
 left join employee e2 on a.modify_eid = e2.employee_id
 left join base_clinic bc on bc.base_clinic_id = e.base_clinic_id
-left join base_med_department bmd on bmd.base_med_department_id = e.base_med_department_id
+left join base_department bmd on bmd.base_department_id = e.base_med_department_id
 left join base_service_point bsp on e.base_service_point_id = bsp.base_service_point_id 
 left join base_department bd2 on bsp.base_department_id = bd2.base_department_id 
 --where format_hn(p.hn) = '16-67-002105'

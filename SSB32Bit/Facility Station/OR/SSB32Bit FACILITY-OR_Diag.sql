@@ -1,4 +1,4 @@
-select top 1000
+select
 		  'PLS' as 'BU'
 		, orr.HN as 'PatientID'
 		, ord.FacilityRmsNo as 'FacilityRmsNo'
@@ -16,6 +16,16 @@ select top 1000
 		, ord.DOCTOR as 'Doctor'
 		, dbo.CutSortChar(doc.THAINAME) as 'DoctorNameTH'
 		, dbo.CutSortChar(doc.ENGLISHNAME) as 'DoctorNameEN'
+		, doc.CERTIFYPUBLICNO as 'DoctorCertificate'
+		, doc.CLINIC as 'DoctorClinicCode'
+		, dbo.sysconname(doc.CLINIC,20016,2) as 'DoctorClinicNameTH'
+		, dbo.sysconname(doc.CLINIC,20016,1) as 'DoctorClinicNameEN'
+		, '' as 'DoctorDepartmentCode'
+		, '' as 'DoctorDepartmentNameTH'
+		, '' as 'DoctorDepartmentNameEN'
+		, doc.SPECIALTY+doc.SUBSPECIALTY as 'DoctorSpecialtyCode'
+		, dbo.CutSortChar(ssp.THAINAME) as 'DoctorSpecialtyNameTH'
+		, dbo.CutSortChar(ssp.ENGLISHNAME) as 'DoctorSpecialtyNameEN'
 		, ord.PROCUDUREICDCMCODE1 as 'ICDCmCode1'
 		, icdcm1.THAINAME as 'ICDCMNameTH1'
 		, icdcm1.ENGLISHNAME as 'ICDCMNameEN1'
@@ -43,8 +53,8 @@ select top 1000
 				left join ICD_MASTER icd1 on ord.IcdCode=icd1.IcdCode
 				left join ICD_MASTER icd2 on ord.IcdCode2=icd2.IcdCode
 				left join HNDOCTOR doc on ord.DOCTOR=doc.DOCTOR
+				left join SYSCONFIG ssp on doc.SPECIALTY+doc.SUBSPECIALTY = REPLACE(ssp.CODE,' ','') and ssp.CTRLCODE = 20015
 				left join ICDCM_MASTER icdcm1 on ord.PROCUDUREICDCMCODE1 = icdcm1.ICDCMCODE
 				left join ICDCM_MASTER icdcm2 on ord.PROCUDUREICDCMCODE2 = icdcm2.ICDCMCODE
 				left join ICDCM_MASTER icdcm3 on ord.PROCUDUREICDCMCODE3 = icdcm3.ICDCMCODE
 				left join ICDCM_MASTER icdcm4 on ord.PROCUDUREICDCMCODE4 = icdcm4.ICDCMCODE
-				where ord.Organ is not null

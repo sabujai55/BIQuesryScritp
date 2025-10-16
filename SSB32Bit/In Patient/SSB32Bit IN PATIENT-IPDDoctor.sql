@@ -1,4 +1,4 @@
-select top 1000
+select
 'PLS' as 'BU'
 ,a.HN as 'PatientID'
 ,CONVERT(varchar,a.ADMDATETIME,112)+a.AN as 'AdmitID'
@@ -7,6 +7,16 @@ select top 1000
 ,doc.Doctor as 'DoctorCode'
 ,dbo.CutSortChar(dm.THAINAME) as 'DoctorNameTH'
 ,dbo.CutSortChar(dm.EnglishName) as 'DoctorNameEN'
+,dm.CERTIFYPUBLICNO as 'DoctorCertificate'
+,dm.CLINIC as 'DoctorClinicCode'
+,dbo.sysconname(dm.CLINIC,20016,2) as 'DoctorClinicNameTH'
+,dbo.sysconname(dm.CLINIC,20016,1) as 'DoctorClinicNameEN'
+,'' as 'DoctorDepartmentCode'
+,'' as 'DoctorDepartmentNameTH'
+,'' as 'DoctorDepartmentNameEN'
+,dm.SPECIALTY+dm.SUBSPECIALTY as 'DoctorSpecialtyCode'
+,dbo.CutSortChar(ssp.THAINAME) as 'DoctorSpecialtyNameTH'
+,dbo.CutSortChar(ssp.ENGLISHNAME) as 'DoctorSpecialtyNameEN'
 ,doc.PRIVATECASE as 'PrivateCase'
 ,doc.SPECIALIZEDOCTORTYPE as 'DoctorType'
 ,case
@@ -22,10 +32,10 @@ select top 1000
 	when doc.SPECIALIZEDOCTORTYPE = '9' then 'NURSE_OR_CIRCULATE'
 	when doc.SPECIALIZEDOCTORTYPE = '10' then 'NONE'
 end as 'DoctorTypeName'
-,doc.THISDOCTORADM
-,doc.THISDOCTORDISCHARGE
+,doc.THISDOCTORADM as 'AdmitDoctor'
+,doc.THISDOCTORDISCHARGE as 'DischargeDoctor'
 ,doc.RemarksMemo
 		from IPDDOCTOR doc
-		left join ADMMASTER a on doc.AN=a.AN
+		inner join ADMMASTER a on doc.AN=a.AN
 		left join HNDOCTOR dm on doc.Doctor=dm.Doctor
-		order by doc.AN desc
+		left join SYSCONFIG ssp on dm.SPECIALTY+dm.SUBSPECIALTY = REPLACE(ssp.CODE,' ','') and ssp.CTRLCODE = 20015

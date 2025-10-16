@@ -214,5 +214,5 @@ from	HNOPD_PRESCRIP vnp
 		left join HNDOCTOR_MASTER doc on vnp.Doctor=doc.Doctor
 		left join DNSYSCONFIG cndp on vnp.Clinic = cndp.Code and cndp.CtrlCode = 42203
 		left join HNAPPMNT_HEADER ah on vnp.AppointmentNo = ah.AppointmentNo
-where	vnp.VisitDate = CAST(GETDATE() as date)
+--where	vnp.VisitDate = CAST(GETDATE() as date)
 )opd

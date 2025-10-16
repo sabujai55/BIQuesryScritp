@@ -4,9 +4,6 @@ select  top 10
 ,CONVERT(varchar,a.ADMDATETIME,112)+a.AN as 'AdmitID'
 ,a.ADMDATETIME as 'AdmitDateTime'
 ,ipdv.AN as 'AN'
-,a.ADMWARD as 'LocationCode'
-,dbo.sysconname(a.ADMWARD,20024,2) as 'LocationNameTH'
-,dbo.sysconname(a.ADMWARD,20024,1) as 'LocationNameEN'
 ,ipdv.ENTRYBYUSERCODE as 'EntryByUserCode'
 ,dbo.sysconname(ipdv.ENTRYBYUSERCODE,10000,2) as 'EntryByUserNameTH'
 ,dbo.sysconname(ipdv.ENTRYBYUSERCODE,10000,1) as 'EntryByUserNameEN'
@@ -25,4 +22,4 @@ select  top 10
 ,'' as 'O2Sat'
 ,ipdv.REMARKS as 'Remark'
 		from IPDVITAL ipdv
-		left join ADMMASTER a on ipdv.AN=a.AN
+		inner join ADMMASTER a on ipdv.AN=a.AN

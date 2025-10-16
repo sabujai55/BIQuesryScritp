@@ -1,3 +1,6 @@
+use SSBLIVE
+go
+
 select top 10 
 		'PT2'as 'BU'
 		,apm.HN as 'PatientID'

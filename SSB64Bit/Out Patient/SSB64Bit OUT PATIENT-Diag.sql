@@ -1,18 +1,5 @@
-with dx_como as
-(
-	select	ROW_NUMBER() over(partition by a.visitdate, a.vn, a.prescriptionno, a.DiagnosisRecordType order by a.visitdate, a.vn, a.prescriptionno, a.SuffixSmall) as rowid
-			, a.VisitDate
-			, a.VN
-			, a.PrescriptionNo
-			, a.SuffixSmall
-			, a.ICDCode
-			, dbo.ICDname(a.ICDCode,2) as ICDNameTH
-			, dbo.ICDname(a.ICDCode,1) as ICDNameEN
-			, a.DiagnosisRecordType
-	from	HNOPD_PRESCRIP_DIAG a
-	where	a.VisitDate = CAST(GETDATE()-1 as date)
-			and a.DiagnosisRecordType = 4
-)
+use SSBLIVE
+go
 
 select	'PT2' as 'BU'
 		,vnm.HN as 'PatientID'
@@ -21,13 +8,13 @@ select	'PT2' as 'BU'
 		,vnd.VN as 'VN'
 		,vnd.PrescriptionNo as 'PrescriptionNo'
 		,vnd.SuffixSmall as 'Suffix'
-		,vnp.Clinic as 'LocationCode' --แก้ไขวันที่ 27/02/2568
-		,dbo.sysconname(vnp.Clinic,42203,2) as 'LocationNameTH' --เพิ่มวันที่ 27/02/2568
-		,dbo.sysconname(vnp.Clinic,42203,1) as 'LocationNameEN' --เพิ่มวันที่ 27/02/2568
+		,vnp.Clinic as ClinicCode
+		,dbo.sysconname(vnp.Clinic,42203,2) as ClinicNameTH
+		,dbo.sysconname(vnp.Clinic,42203,1) as ClinicNameEN
 		,vnd.DiagDateTime as 'DiagDateTime'
-		, vnd.ICDCode as PrimaryDiagnosisCode
-		, dbo.ICDname(vnd.ICDCode,2) as PrimaryDiagnosisNameTH
-		, dbo.ICDname(vnd.ICDCode,1) as PrimaryDiagnosisNameEN
+		, vnd.ICDCode as PrimaryCode
+		, dbo.ICDname(vnd.ICDCode,2) as PrimaryNameTH
+		, dbo.ICDname(vnd.ICDCode,1) as PrimaryNameEN
 
 		,vnd.IcdCmCode1 as 'ICDCmCode1'
 		, dbo.ICDCMname(vnd.IcdCmCode1,2) as ICDCM1NameTH
@@ -69,22 +56,21 @@ select	'PT2' as 'BU'
 		,vnd.ECode as 'ECode' --เพิ่มวันที่ 17/02/2568
 		, dbo.ICDname(vnd.ECode,2) as ECodeNameTH
 		, dbo.ICDname(vnd.ECode,1) as ECodeNameEN
-
-		, (select c.ICDCode from dx_como c where c.VisitDate = vnd.VisitDate and c.VN = vnd.VN and c.PrescriptionNo = vnd.PrescriptionNo and c.rowid = 1) as Comobidity1Code
-		, (select c.ICDNameTH from dx_como c where c.VisitDate = vnd.VisitDate and c.VN = vnd.VN and c.PrescriptionNo = vnd.PrescriptionNo and c.rowid = 1) as Comobidity1NameTH
-		, (select c.ICDNameEN from dx_como c where c.VisitDate = vnd.VisitDate and c.VN = vnd.VN and c.PrescriptionNo = vnd.PrescriptionNo and c.rowid = 1) as Comobidity1NameEN
-		, (select c.ICDCode from dx_como c where c.VisitDate = vnd.VisitDate and c.VN = vnd.VN and c.PrescriptionNo = vnd.PrescriptionNo and c.rowid = 2) as Comobidity2Code
-		, (select c.ICDNameTH from dx_como c where c.VisitDate = vnd.VisitDate and c.VN = vnd.VN and c.PrescriptionNo = vnd.PrescriptionNo and c.rowid = 2) as Comobidity2NameTH
-		, (select c.ICDNameEN from dx_como c where c.VisitDate = vnd.VisitDate and c.VN = vnd.VN and c.PrescriptionNo = vnd.PrescriptionNo and c.rowid = 2) as Comobidity2NameEN
-		, (select c.ICDCode from dx_como c where c.VisitDate = vnd.VisitDate and c.VN = vnd.VN and c.PrescriptionNo = vnd.PrescriptionNo and c.rowid = 3) as Comobidity3Code
-		, (select c.ICDNameTH from dx_como c where c.VisitDate = vnd.VisitDate and c.VN = vnd.VN and c.PrescriptionNo = vnd.PrescriptionNo and c.rowid = 3) as Comobidity3NameTH
-		, (select c.ICDNameEN from dx_como c where c.VisitDate = vnd.VisitDate and c.VN = vnd.VN and c.PrescriptionNo = vnd.PrescriptionNo and c.rowid = 3) as Comobidity3NameEN
-		, (select c.ICDCode from dx_como c where c.VisitDate = vnd.VisitDate and c.VN = vnd.VN and c.PrescriptionNo = vnd.PrescriptionNo and c.rowid = 4) as Comobidity4Code
-		, (select c.ICDNameTH from dx_como c where c.VisitDate = vnd.VisitDate and c.VN = vnd.VN and c.PrescriptionNo = vnd.PrescriptionNo and c.rowid = 4) as Comobidity4NameTH
-		, (select c.ICDNameEN from dx_como c where c.VisitDate = vnd.VisitDate and c.VN = vnd.VN and c.PrescriptionNo = vnd.PrescriptionNo and c.rowid = 4) as Comobidity4NameEN
-		, (select c.ICDCode from dx_como c where c.VisitDate = vnd.VisitDate and c.VN = vnd.VN and c.PrescriptionNo = vnd.PrescriptionNo and c.rowid = 5) as Comobidity5Code
-		, (select c.ICDNameTH from dx_como c where c.VisitDate = vnd.VisitDate and c.VN = vnd.VN and c.PrescriptionNo = vnd.PrescriptionNo and c.rowid = 5) as Comobidity5NameTH
-		, (select c.ICDNameEN from dx_como c where c.VisitDate = vnd.VisitDate and c.VN = vnd.VN and c.PrescriptionNo = vnd.PrescriptionNo and c.rowid = 5) as Comobidity5NameEN
+		, dbo.GetDiagComorbidity(vnd.VisitDate, vnd.VN, vnd.PrescriptionNo,1) as ComobidityCode1
+		, dbo.ICDname(dbo.GetDiagComorbidity(vnd.VisitDate, vnd.VN, vnd.PrescriptionNo,1),2) as Comobidity1NameTH
+		, dbo.ICDname(dbo.GetDiagComorbidity(vnd.VisitDate, vnd.VN, vnd.PrescriptionNo,1),1) as Comobidity1NameEN
+		, dbo.GetDiagComorbidity(vnd.VisitDate, vnd.VN, vnd.PrescriptionNo,2) as ComobidityCode2
+		, dbo.ICDname(dbo.GetDiagComorbidity(vnd.VisitDate, vnd.VN, vnd.PrescriptionNo,2),2) as Comobidity2NameTH
+		, dbo.ICDname(dbo.GetDiagComorbidity(vnd.VisitDate, vnd.VN, vnd.PrescriptionNo,2),1) as Comobidity2NameEN
+		, dbo.GetDiagComorbidity(vnd.VisitDate, vnd.VN, vnd.PrescriptionNo,3) as ComobidityCode3
+		, dbo.ICDname(dbo.GetDiagComorbidity(vnd.VisitDate, vnd.VN, vnd.PrescriptionNo,3),2) as Comobidity3NameTH
+		, dbo.ICDname(dbo.GetDiagComorbidity(vnd.VisitDate, vnd.VN, vnd.PrescriptionNo,3),1) as Comobidity3NameEN
+		, dbo.GetDiagComorbidity(vnd.VisitDate, vnd.VN, vnd.PrescriptionNo,4) as ComobidityCode4
+		, dbo.ICDname(dbo.GetDiagComorbidity(vnd.VisitDate, vnd.VN, vnd.PrescriptionNo,4),2) as Comobidity4NameTH
+		, dbo.ICDname(dbo.GetDiagComorbidity(vnd.VisitDate, vnd.VN, vnd.PrescriptionNo,4),1) as Comobidity4NameEN
+		, dbo.GetDiagComorbidity(vnd.VisitDate, vnd.VN, vnd.PrescriptionNo,5) as ComobidityCode5
+		, dbo.ICDname(dbo.GetDiagComorbidity(vnd.VisitDate, vnd.VN, vnd.PrescriptionNo,5),2) as Comobidity5NameTH
+		, dbo.ICDname(dbo.GetDiagComorbidity(vnd.VisitDate, vnd.VN, vnd.PrescriptionNo,5),1) as Comobidity5NameEN
 from	HNOPD_PRESCRIP_DIAG vnd
 		inner join HNOPD_PRESCRIP vnp on vnd.VN=vnp.VN and vnd.VisitDate=vnp.VisitDate and vnd.PrescriptionNo=vnp.PrescriptionNo
 		inner join HNOPD_MASTER vnm on vnd.VN=vnm.VN and vnd.VisitDate=vnm.VisitDate

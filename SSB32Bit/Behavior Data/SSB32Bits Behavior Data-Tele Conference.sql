@@ -5,16 +5,25 @@ select top 100
 ,vnp.VISITDATE as 'VisitDate'
 ,vnp.VN as 'VN'
 ,vnp.SUFFIX as 'PrescriptionNo'
-,vnp.CLINIC as 'LocationCode'
-,dbo.sysconname(vnp.CLINIC,20016,2) as 'LocationNameTH' 
-,dbo.sysconname(vnp.CLINIC,20016,1) as 'LocationNameEN' 
+,vnp.CLINIC as 'ClinicCode'
+,dbo.sysconname(vnp.CLINIC,20016,2) as 'ClinicNameTH' 
+,dbo.sysconname(vnp.CLINIC,20016,1) as 'ClinicNameEN' 
+,'' as 'ClinicDepartmentCode'
+,'' as 'ClinicDepartmentNameTH'
+,'' as 'ClinicDepartmentNameEN'
 ,vnp.DOCTOR as 'DoctorCode'
 ,dbo.CutSortChar(doc.THAINAME) as 'DoctorNameTH'
 ,dbo.CutSortChar(doc.ENGLISHNAME) as 'DoctorNameEN'
 ,doc.CERTIFYPUBLICNO as 'DoctorCertificate'
-,'' as 'ClinicDepartmentCode'
-,'' as 'ClinicDepartmentNameTH'
-,'' as 'ClinicDepartmentNameEN'
+,doc.CLINIC as 'DoctorClinicCode'
+,dbo.sysconname(doc.CLINIC,20016,2) as 'DoctorClinicNameTH'
+,dbo.sysconname(doc.CLINIC,20016,1) as 'DoctorClinicNameEN'
+, '' as 'DoctorDepartmentCode'
+, '' as 'DoctorDepartmentNameTH'
+, '' as 'DoctorDepartmentNameEN'
+,doc.SPECIALTY+doc.SUBSPECIALTY as 'DoctorSpecialtyCode'
+,dbo.CutSortChar(ssp.THAINAME) as 'DoctorSpecialtyNameTH'
+,dbo.CutSortChar(ssp.ENGLISHNAME) as 'DoctorSpecialtyNameEN'
 ,vnp.CLOSEVISITTYPE as 'CloseVisitCode'
 ,dbo.sysconname(vnp.CLOSEVISITTYPE,20043,2) as 'CloseVisitNameTH' 
 ,dbo.sysconname(vnp.CLOSEVISITTYPE,20043,1) as 'CloseVisitNameEN' 
@@ -45,6 +54,7 @@ select top 100
 		from VNPRES vnp
 		left join VNMST vnm on vnp.VN=vnm.VN and vnp.VISITDATE=vnm.VISITDATE
 		left join HNDOCTOR doc on vnp.DOCTOR=doc.DOCTOR
+		left join SYSCONFIG ssp on doc.SPECIALTY+doc.SUBSPECIALTY = REPLACE(ssp.CODE,' ','') and ssp.CTRLCODE = 20015
 		where vnp.DISGRMS = '111' --BU = PLS
 union all
 select top 100
@@ -54,16 +64,25 @@ select top 100
 ,vnp.VISITDATE as 'VisitDate'
 ,vnp.VN as 'VN'
 ,vnp.SUFFIX as 'PrescriptionNo'
-,vnp.CLINIC as 'LocationCode'
-,dbo.sysconname(vnp.CLINIC,20016,2) as 'LocationNameTH' 
-,dbo.sysconname(vnp.CLINIC,20016,1) as 'LocationNameEN' 
+,vnp.CLINIC as 'ClinicCode'
+,dbo.sysconname(vnp.CLINIC,20016,2) as 'ClinicNameTH' 
+,dbo.sysconname(vnp.CLINIC,20016,1) as 'ClinicNameEN' 
+,'' as 'ClinicDepartmentCode'
+,'' as 'ClinicDepartmentNameTH'
+,'' as 'ClinicDepartmentNameEN'
 ,vnp.DOCTOR as 'DoctorCode'
 ,dbo.CutSortChar(doc.THAINAME) as 'DoctorNameTH'
 ,dbo.CutSortChar(doc.ENGLISHNAME) as 'DoctorNameEN'
 ,doc.CERTIFYPUBLICNO as 'DoctorCertificate'
-,'' as 'ClinicDepartmentCode'
-,'' as 'ClinicDepartmentNameTH'
-,'' as 'ClinicDepartmentNameEN'
+,doc.CLINIC as 'DoctorClinicCode'
+,dbo.sysconname(doc.CLINIC,20016,2) as 'DoctorClinicNameTH'
+,dbo.sysconname(doc.CLINIC,20016,1) as 'DoctorClinicNameEN'
+, '' as 'DoctorDepartmentCode'
+, '' as 'DoctorDepartmentNameTH'
+, '' as 'DoctorDepartmentNameEN'
+,doc.SPECIALTY+doc.SUBSPECIALTY as 'DoctorSpecialtyCode'
+,dbo.CutSortChar(ssp.THAINAME) as 'DoctorSpecialtyNameTH'
+,dbo.CutSortChar(ssp.ENGLISHNAME) as 'DoctorSpecialtyNameEN'
 ,vnp.CLOSEVISITTYPE as 'CloseVisitCode'
 ,dbo.sysconname(vnp.CLOSEVISITTYPE,20043,2) as 'CloseVisitNameTH' 
 ,dbo.sysconname(vnp.CLOSEVISITTYPE,20043,1) as 'CloseVisitNameEN' 
@@ -94,6 +113,7 @@ select top 100
 		from VNPRES vnp
 		left join VNMST vnm on vnp.VN=vnm.VN and vnp.VISITDATE=vnm.VISITDATE
 		left join HNDOCTOR doc on vnp.DOCTOR=doc.DOCTOR
+		left join SYSCONFIG ssp on doc.SPECIALTY+doc.SUBSPECIALTY = REPLACE(ssp.CODE,' ','') and ssp.CTRLCODE = 20015
 		where vnp.DISGRMS = 'T' --BU = PTP
 union all
 select top 100
@@ -103,16 +123,25 @@ select top 100
 ,vnp.VISITDATE as 'VisitDate'
 ,vnp.VN as 'VN'
 ,vnp.SUFFIX as 'PrescriptionNo'
-,vnp.CLINIC as 'LocationCode'
-,dbo.sysconname(vnp.CLINIC,20016,2) as 'LocationNameTH' 
-,dbo.sysconname(vnp.CLINIC,20016,1) as 'LocationNameEN' 
+,vnp.CLINIC as 'ClinicCode'
+,dbo.sysconname(vnp.CLINIC,20016,2) as 'ClinicNameTH' 
+,dbo.sysconname(vnp.CLINIC,20016,1) as 'ClinicNameEN' 
+,'' as 'ClinicDepartmentCode'
+,'' as 'ClinicDepartmentNameTH'
+,'' as 'ClinicDepartmentNameEN'
 ,vnp.DOCTOR as 'DoctorCode'
 ,dbo.CutSortChar(doc.THAINAME) as 'DoctorNameTH'
 ,dbo.CutSortChar(doc.ENGLISHNAME) as 'DoctorNameEN'
 ,doc.CERTIFYPUBLICNO as 'DoctorCertificate'
-,'' as 'ClinicDepartmentCode'
-,'' as 'ClinicDepartmentNameTH'
-,'' as 'ClinicDepartmentNameEN'
+,doc.CLINIC as 'DoctorClinicCode'
+,dbo.sysconname(doc.CLINIC,20016,2) as 'DoctorClinicNameTH'
+,dbo.sysconname(doc.CLINIC,20016,1) as 'DoctorClinicNameEN'
+, '' as 'DoctorDepartmentCode'
+, '' as 'DoctorDepartmentNameTH'
+, '' as 'DoctorDepartmentNameEN'
+,doc.SPECIALTY+doc.SUBSPECIALTY as 'DoctorSpecialtyCode'
+,dbo.CutSortChar(ssp.THAINAME) as 'DoctorSpecialtyNameTH'
+,dbo.CutSortChar(ssp.ENGLISHNAME) as 'DoctorSpecialtyNameEN'
 ,vnp.CLOSEVISITTYPE as 'CloseVisitCode'
 ,dbo.sysconname(vnp.CLOSEVISITTYPE,20043,2) as 'CloseVisitNameTH' 
 ,dbo.sysconname(vnp.CLOSEVISITTYPE,20043,1) as 'CloseVisitNameEN' 
@@ -143,4 +172,5 @@ select top 100
 		from VNPRES vnp
 		left join VNMST vnm on vnp.VN=vnm.VN and vnp.VISITDATE=vnm.VISITDATE
 		left join HNDOCTOR doc on vnp.DOCTOR=doc.DOCTOR
+		left join SYSCONFIG ssp on doc.SPECIALTY+doc.SUBSPECIALTY = REPLACE(ssp.CODE,' ','') and ssp.CTRLCODE = 20015
 		where vnp.DISGRMS = 'TM' --BU = PTN
