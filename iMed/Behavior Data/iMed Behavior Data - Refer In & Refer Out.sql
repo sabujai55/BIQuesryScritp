@@ -12,6 +12,16 @@ select
 , ri.refer_eid as "DoctorCode"
 , imed_get_employee_name(ri.refer_eid) as "DoctorNameTH"
 , imed_get_employee_name_en(ri.refer_eid) as "DoctorNameEN"
+, e.profession_code  as "DoctorCertificate"
+, bd3.base_department_id  AS "DoctorClinicCode"
+, bd3.description AS "DoctorClinicNameTH"
+, '' AS "DoctorClinicNameEN"
+, e.base_med_department_id AS "DoctorDepartmentCode"
+, bmd.description AS "DoctorDepartmentNameTH"
+, '' AS "DoctorDepartmentNameEN"
+, e.base_clinic_id AS "DoctorSpecialtyCode"
+, bmd.description AS "DoctorSpecialtyNameTH"
+, '' AS "DoctorSpecialtyNameEN"
 , 'ReferIn' as "Refer"
 , ri.refer_type as "ReferType"
 , CONCAT(type1.type1,' ',type2.type2,' ',type3.type3,' ',type4.type4) as "ReferTypeNameTH"
@@ -54,6 +64,12 @@ left join --type4
 			where 	ri4.refer_type like '___1%'
 		)type4 on type4.visit_id = v.visit_id
 left join base_office bo on bo.base_office_id = ri.base_office_id
+--
+left join employee e on e.employee_id = ri.refer_eid
+left join base_clinic bc on bc.base_clinic_id = e.base_clinic_id
+left join base_department bmd on bmd.base_department_id = e.base_med_department_id
+left join base_service_point bsp on e.base_service_point_id = bsp.base_service_point_id 
+left join base_department bd3 on bsp.base_department_id = bd3.base_department_id 
 where ri.refer_date between '$P!{dBeginDate}' and '$P!{dEndDate}'
 --and format_vn(v.vn) = 'O53-680302-1802' 
 union all 
@@ -66,6 +82,16 @@ select
 , ro.refer_eid as "DoctorCode"
 , imed_get_employee_name(ro.refer_eid) as "DoctorNameTH"
 , imed_get_employee_name_en(ro.refer_eid) as "DoctorNameEN"
+, e.profession_code  as "DoctorCertificate"
+, bd3.base_department_id  AS "DoctorClinicCode"
+, bd3.description AS "DoctorClinicNameTH"
+, '' AS "DoctorClinicNameEN"
+, e.base_med_department_id AS "DoctorDepartmentCode"
+, bmd.description AS "DoctorDepartmentNameTH"
+, '' AS "DoctorDepartmentNameEN"
+, e.base_clinic_id AS "DoctorSpecialtyCode"
+, bmd.description AS "DoctorSpecialtyNameTH"
+, '' AS "DoctorSpecialtyNameEN"
 , 'ReferOut' as "Refer"
 , '' as "ReferType"
 , '' as "ReferTypeNameTH"
@@ -80,6 +106,11 @@ select
 from visit v
 left join refer_out ro on ro.visit_id = v.visit_id
 left join base_office bo on bo.base_office_id = ro.base_office_id
+left join employee e on e.employee_id = ro.refer_eid
+left join base_clinic bc on bc.base_clinic_id = e.base_clinic_id
+left join base_department bmd on bmd.base_department_id = e.base_med_department_id
+left join base_service_point bsp on e.base_service_point_id = bsp.base_service_point_id 
+left join base_department bd3 on bsp.base_department_id = bd3.base_department_id 
 where ro.refer_date between '$P!{dBeginDate}' and '$P!{dEndDate}'
 --and format_vn(v.vn) = 'O53-680302-1802' 
 

@@ -5,8 +5,6 @@ select 'PT2' as 'BU'
 		,a.HN as 'PatientID'
 		,CONVERT(varchar,a.ADMDATETIME,112)+a.AN as 'AdmitID'
 		,a.ADMDATETIME as 'AdmitDateTime'
-		,a.AdmCode as 'AdmitCode'
-		,dbo.sysconname(a.AdmCode,42396,4) as 'AdmitName'
 		,a.AN as 'AN'
 		,a.ADMWARD as 'WardCode'
 		,dbo.sysconname(a.ADMWARD,42201,2) as 'WardNameTH' --แก้ไขวันที่ 27/02/2568

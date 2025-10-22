@@ -5,18 +5,18 @@ select 'PLC' as "BU"
 , format_vn(v.vn) as "VN"
 , ROW_NUMBER() OVER (PARTITION BY v.visit_id ORDER BY (v.visit_id) ) as "PrescriptionNo"
 , '' as "Suffix"
---á¡éä¢
+--ï¿½ï¿½ï¿½
 , bd.base_department_id as "ClinicCode"
 , bd.description_th as "ClinicNameTH"
 , bd.description_en as "ClinicNameEN"
 --
 , di.diagnosis_date ||' '|| di.diagnosis_time as "DiagDateTime"
---á¡é
+--ï¿½ï¿½
 , di.icd10_code as "PrimaryCode"
 , di.icd10_description as "PrimaryNameTH"
 , '' as "PrimaryNameEN"
 --
---à¾ÔèÁ
+--ï¿½ï¿½ï¿½ï¿½
 , coalesce(di9_1.icd9_code,'') as "ICDCmCode1"
 , coalesce(di9_1.icd9_description,'') as "ICDCm1NameTH"
 , '' as "ICDCm1NameEN"
@@ -52,12 +52,12 @@ select 'PLC' as "BU"
 , e.prename || e.firstname || ' ' || e.lastname as "EntryByUserNameTH"
 , e.intername as "EntryByUserNameEN"
 , di2.modify_date as "RegisterDate"
-, chonic.chronic_code as "ChronicCreteriaCode"
-, chonic.description_th as "ChronicCreteriaName"
+, '' as "ChronicCreteriaCode"
+, '' as "ChronicCreteriaName"
 , '' as "RemarksMemo"
 , coalesce(ecode.icd10_code,'') as "ECode"
 , coalesce(ecode.icd10_description,'') as "ECodeName"
---à¾ÔèÁ
+--ï¿½ï¿½ï¿½ï¿½
 , coalesce(di10_1.icd10_code,'') as "ComobidityCode1"
 , coalesce(di10_1.icd10_description,'') as "Comobidity1NameTH"
 , '' as "Comobidity1NameEN"
@@ -82,16 +82,6 @@ left join diagnosis_icd9 di2 on di2.visit_id = v.visit_id
 left join employee e on e.employee_id = di2. modify_eid
 left join employee e2 on e2.employee_code = di.doctor_eid 
 left join patient p on p.patient_id = v.patient_id
-left join
-	(
-		select 	row_number() over(partition by pi2.patient_id order by pi2.modify_date || pi2.modify_time asc) as "row"
-				, pi2.patient_id 
-				, pi2.personal_illness_id 
-				, pi2.chronic_code
-				, bcc.description_th 
-		from 	personal_illness pi2 
-		left join base_chronic_criteria bcc on bcc.base_chronic_criteria_id = pi2.chronic_code
-	)chonic on chonic.patient_id = p.patient_id and chonic."row" = 1
 --icd_9
 left join
 	(

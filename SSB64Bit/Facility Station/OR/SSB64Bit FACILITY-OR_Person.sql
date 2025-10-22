@@ -10,6 +10,17 @@ select	'PT2' as BU
 		, b.Doctor
 		, dbo.CutSortChar(d.LocalName) as DoctorNameTH
 		, dbo.CutSortChar(d.EnglishName) as DoctorNameEN
+		, CertifyPublicNo as DoctorCertificate
+		, d.Clinic as DoctorClinicCode
+		, dbo.sysconname(d.Clinic,42203,2) as DoctorClinicNameTH
+		, dbo.sysconname(d.Clinic,42203,1) as DoctorClinicNameEN
+		, d.ComposeDept as DoctorDepartmentCode
+		, dbo.sysconname(d.ComposeDept,10145,2) as DoctorDepartmentNameTH
+		, dbo.sysconname(d.ComposeDept,10145,1) as DoctorDepartmentNameEN
+		, d.Specialty as DoctorSpecialtyCode
+		, dbo.sysconname(d.Specialty,42197,2) as DoctorSpecialtyNameTH
+		, dbo.sysconname(d.Specialty,42197,1) as DoctorSpecialtyNameEN
+
 		, b.NurseCode
 		, dbo.CutSortChar(sys01.LocalName) as NurseNameTH
 		, dbo.CutSortChar(sys01.EnglishName) as NurseNameEN

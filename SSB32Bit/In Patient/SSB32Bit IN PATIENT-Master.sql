@@ -3,8 +3,6 @@ select top 10
 		,a.HN as 'PatientID'
 		,CONVERT(varchar,a.ADMDATETIME,112)+a.AN as 'AdmitID'
 		,a.ADMDATETIME as 'AdmitDateTime'
-		,a.ADMTYPE as 'AdmitCode'
-		,dbo.sysconname(a.ADMTYPE,20048,4) as 'AdmitName'
 		,a.AN as 'AN'
 		,a.ADMWARD as 'WardCode'
 		,dbo.sysconname(a.ADMWARD,20024,2) as 'WardNameTH' 

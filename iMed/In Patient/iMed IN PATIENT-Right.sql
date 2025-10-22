@@ -1,12 +1,14 @@
-select 'PLC' as "BU"
+
+
+select 'PLR' as "BU"
 ,a.patient_id as "PatientID"
 ,a.admit_id  as "AdmitID"
-,a.admit_date||' '||a.admit_time  as "AdmitDate"
+,a.admit_date||' '||a.admit_time  as "AdmitDateTime"
 ,format_an(a.an) as "AN"
 ,ROW_NUMBER() over(partition by a.admit_id  order by vp.priority ) as "Suffix"
 ,vp.plan_code as "RightCode"
 ,p.description as "RightNameTH"
-,'' as "RightNameEN"
+, '' as "RightNameEN"
 ,vp.payer_id  as "SponsorCode"
 ,p2.description as "SponsorNameTH"
 ,'' as "SponsorNameEN"
@@ -26,8 +28,10 @@ left join visit_payment vp on a.visit_id = vp.visit_id
 left join plan p on vp.plan_code = p.plan_code 
 left join payer p2 on vp.payer_id = p2.payer_id
 left join base_office bo on vp.main_hospital_code = bo.base_office_id --MainHospital
-left join base_office bo2 on vp.sub_hospital_code = bo2.base_office_id --SubHospital		
---limit 10
+left join base_office bo2 on vp.sub_hospital_code = bo2.base_office_id --SubHospital
+where a.admit_date between '$P!{dBeginDate}' and '$P!{dEndDate}'		
+limit 10
 			
-			
+	
+select * from plan p 
 		

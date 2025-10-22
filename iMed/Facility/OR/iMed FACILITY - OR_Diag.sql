@@ -16,6 +16,16 @@ select 'PLR' as "BU"
 , os.set_doctor_eid as "Doctor"
 , e.prename || e.firstname ||' '|| e.lastname as "DoctorNameTH"
 , e.intername as "DoctorNameEN"
+, e.profession_code as "DoctorCertificate"
+, bd3.base_department_id as "DoctorClinicCode"
+, bd3.description as "DoctorClinicNameTH"
+, '' as "DoctorClinicNameEN"
+, e.base_med_department_id as "DoctorDepartmentCode"
+, bmd.description as "DoctorDepartmentNameTH"
+, '' as "DoctorDepartmentNameEN"
+, e.base_clinic_id as "DoctorSpecialtyCode"
+, bmd.description as "DoctorSpecialtyNameTH"
+, '' as "DoctorSpecialtyNameEN"  
 , icdm_1.icd9_code as "ICDCmCode1"
 , icdm_1.operation_name as "ICDCMNameTH1"
 , '' as "ICDCMNameEN1"
@@ -32,11 +42,10 @@ select 'PLR' as "BU"
 , boc.description as "ORSpecialtyNameTH"
 , '' as "ORSpecialtyNameEN"
 , '' as "HNOREndoscopeType"
-, oor.record_date ||' '|| oor.record_time as "ConfirmDoctorDateTime"
+, op_result.result_date as "ConfirmDoctorDateTime"
 , '' as "DiagDateTime"
 , or2.start_date ||' '|| or2.start_time as "ORStartDateTime"
 , or2.finish_date ||' '|| or2.finish_time  as "ORFinishDateTime"
---, or2.base_op_wound_id
 , bow.description as "HNWoundType"
 , '' as "Memo"
 from op_registered or2 
@@ -44,8 +53,13 @@ left join op_set os on os.op_registered_id = or2.op_registered_id
 left join patient p on p.patient_id = or2.patient_id
 left join base_op_wound bow on bow.base_op_wound_id = or2.base_op_wound_id
 left join base_op_clinic boc on boc.base_op_clinic_id = or2.base_op_clinic_id
-left join op_operation_result oor on oor.op_registered_id = or2.op_registered_id
+--left join op_operation_result oor on oor.op_registered_id = or2.op_registered_id
 left join employee e on e.employee_id = os.set_doctor_eid
+--
+left join base_clinic bc on bc.base_clinic_id = e.base_clinic_id
+left join base_department bmd on bmd.base_department_id = e.base_med_department_id
+left join base_service_point bsp on e.base_service_point_id = bsp.base_service_point_id 
+left join base_department bd3 on bsp.base_department_id = bd3.base_department_id 
 left join 
 	(select ROW_NUMBER() OVER (PARTITION BY ord.op_registered_id ORDER BY (ord.op_registered_diagnosis_id)asc) as seq
 		, ord.op_registered_id 
@@ -82,7 +96,16 @@ left join
 		, oro.icd9_code 
 		, oro.operation_name 
 	from op_registered_operation oro) icdm_4 on or2.op_registered_id = icdm_4.op_registered_id and icdm_4.seq = 4
-where or2.registered_date between '$P!{dBeginDate}' and '$P!{dEndDate}'
+left join --op_result
+	(
+		select 	row_number() over(partition by oor2.op_registered_id order by oor2.record_date||' '||oor2.record_time desc) as "row"
+			, oor2.op_registered_id 	
+			, oor2.record_date||' '||oor2.record_time as result_date 
+		from 	op_operation_result oor2 
+	)op_result on op_result.op_registered_id = or2.op_registered_id and op_result."row" = 1
+where or2.registered_date between '$P!{dBeginDate}' and '$P!{dEndDate}' 
+--and or2.or_number = 'OR244546'
+--and or2.or_number = 'OR196524'
 --where or2.op_registered_id = '520092812554081401'
 
 

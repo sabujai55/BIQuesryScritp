@@ -5,16 +5,27 @@ select top 10
 ,vnp.VISITDATE as 'VisitDate'
 ,vnp.VN as 'VN'
 ,vnp.PrescriptionNo as 'PrescriptionNo'
-,vnp.CLINIC as 'LocationCode'
-,dbo.sysconname(vnp.Clinic,42203,2) as 'LocationNameTH' 
-,dbo.sysconname(vnp.Clinic,42203,1) as 'LocationNameEN' 
-,vnp.Doctor as 'DoctorCode'
-,dbo.CutSortChar(doc.LocalName) as 'DoctorNameTH'
-,dbo.CutSortChar(doc.EnglishName) as 'DoctorNameEN'
-,CertifyPublicNo as 'DoctorCertificate'
-,CAST(SUBSTRING(cndp.Com,27,13)as varchar) as 'ClinicDepartmentCode' 
-,dbo.sysconname(CAST(SUBSTRING(cndp.Com,27,13)as varchar),10145,2) as 'ClinicDepartmentNameTH' 
-,dbo.sysconname(CAST(SUBSTRING(cndp.Com,27,13)as varchar),10145,1) as 'ClinicDepartmentNameEN' 
+,vnp.CLINIC as ClinicCode
+,dbo.sysconname(vnp.Clinic,42203,2) as ClinicNameTH
+,dbo.sysconname(vnp.Clinic,42203,1) as ClinicNameEN
+,CAST(SUBSTRING(cndp.Com,27,13)as varchar) as ClinicDepartmentCode
+,dbo.sysconname(CAST(SUBSTRING(cndp.Com,27,13)as varchar),10145,2) as ClinicDepartmentNameTH
+,dbo.sysconname(CAST(SUBSTRING(cndp.Com,27,13)as varchar),10145,1) as ClinicDepartmentNameEN
+
+, vnp.Doctor as DoctorCode
+, dbo.Doctorname(vnp.Doctor,2) as DoctorNameTH
+, dbo.Doctorname(vnp.Doctor,1) as DoctorNameEN
+, doc.CertifyPublicNo as DoctorCertificate
+, doc.Clinic as DoctorClinicCode
+, dbo.sysconname(doc.Clinic,42203,2) as DoctorClinicNameTH
+, dbo.sysconname(doc.Clinic,42203,1) as DoctorClinicNameEN
+, doc.ComposeDept as DoctorDepartmentCode
+, dbo.sysconname(doc.ComposeDept,10145,2) as DoctorDepartmentNameTH
+, dbo.sysconname(doc.ComposeDept,10145,1) as DoctorDepartmentNameEN
+, doc.Specialty as DoctorSpecialtyCode
+, dbo.sysconname(doc.Specialty,42197,2) as DoctorSpecialtyNameTH
+, dbo.sysconname(doc.Specialty,42197,1) as DoctorSpecialtyNameEN
+
 ,vnp.CloseVisitCode as 'CloseVisitCode'
 ,dbo.sysconname(vnp.CloseVisitCode,42261,2) as 'CloseVisitNameTH' 
 ,dbo.sysconname(vnp.CloseVisitCode,42261,1) as 'CloseVisitNameEN' 
@@ -55,16 +66,27 @@ select top 10
 ,vnp.VISITDATE as 'VisitDate'
 ,vnp.VN as 'VN'
 ,vnp.PrescriptionNo as 'PrescriptionNo'
-,vnp.CLINIC as 'LocationCode'
-,dbo.sysconname(vnp.Clinic,42203,2) as 'LocationNameTH' 
-,dbo.sysconname(vnp.Clinic,42203,1) as 'LocationNameEN' 
-,vnp.Doctor as 'DoctorCode'
-,dbo.CutSortChar(doc.LocalName) as 'DoctorNameTH'
-,dbo.CutSortChar(doc.EnglishName) as 'DoctorNameEN'
-,CertifyPublicNo as 'DoctorCertificate'
-,CAST(SUBSTRING(cndp.Com,27,13)as varchar) as 'ClinicDepartmentCode' 
-,dbo.sysconname(CAST(SUBSTRING(cndp.Com,27,13)as varchar),10145,2) as 'ClinicDepartmentNameTH' 
-,dbo.sysconname(CAST(SUBSTRING(cndp.Com,27,13)as varchar),10145,1) as 'ClinicDepartmentNameEN' 
+,vnp.CLINIC as ClinicCode
+,dbo.sysconname(vnp.Clinic,42203,2) as ClinicNameTH
+,dbo.sysconname(vnp.Clinic,42203,1) as ClinicNameEN
+,CAST(SUBSTRING(cndp.Com,27,13)as varchar) as ClinicDepartmentCode
+,dbo.sysconname(CAST(SUBSTRING(cndp.Com,27,13)as varchar),10145,2) as ClinicDepartmentNameTH
+,dbo.sysconname(CAST(SUBSTRING(cndp.Com,27,13)as varchar),10145,1) as ClinicDepartmentNameEN
+
+, vnp.Doctor as DoctorCode
+, dbo.Doctorname(vnp.Doctor,2) as DoctorNameTH
+, dbo.Doctorname(vnp.Doctor,1) as DoctorNameEN
+, doc.CertifyPublicNo as DoctorCertificate
+, doc.Clinic as DoctorClinicCode
+, dbo.sysconname(doc.Clinic,42203,2) as DoctorClinicNameTH
+, dbo.sysconname(doc.Clinic,42203,1) as DoctorClinicNameEN
+, doc.ComposeDept as DoctorDepartmentCode
+, dbo.sysconname(doc.ComposeDept,10145,2) as DoctorDepartmentNameTH
+, dbo.sysconname(doc.ComposeDept,10145,1) as DoctorDepartmentNameEN
+, doc.Specialty as DoctorSpecialtyCode
+, dbo.sysconname(doc.Specialty,42197,2) as DoctorSpecialtyNameTH
+, dbo.sysconname(doc.Specialty,42197,1) as DoctorSpecialtyNameEN
+
 ,vnp.CloseVisitCode as 'CloseVisitCode'
 ,dbo.sysconname(vnp.CloseVisitCode,42261,2) as 'CloseVisitNameTH' 
 ,dbo.sysconname(vnp.CloseVisitCode,42261,1) as 'CloseVisitNameEN' 
@@ -105,16 +127,27 @@ select top 10
 ,vnp.VISITDATE as 'VisitDate'
 ,vnp.VN as 'VN'
 ,vnp.PrescriptionNo as 'PrescriptionNo'
-,vnp.CLINIC as 'LocationCode'
-,dbo.sysconname(vnp.Clinic,42203,2) as 'LocationNameTH' 
-,dbo.sysconname(vnp.Clinic,42203,1) as 'LocationNameEN' 
-,vnp.Doctor as 'DoctorCode'
-,dbo.CutSortChar(doc.LocalName) as 'DoctorNameTH'
-,dbo.CutSortChar(doc.EnglishName) as 'DoctorNameEN'
-,CertifyPublicNo as 'DoctorCertificate'
-,CAST(SUBSTRING(cndp.Com,27,13)as varchar) as 'ClinicDepartmentCode' 
-,dbo.sysconname(CAST(SUBSTRING(cndp.Com,27,13)as varchar),10145,2) as 'ClinicDepartmentNameTH' 
-,dbo.sysconname(CAST(SUBSTRING(cndp.Com,27,13)as varchar),10145,1) as 'ClinicDepartmentNameEN' 
+,vnp.CLINIC as ClinicCode
+,dbo.sysconname(vnp.Clinic,42203,2) as ClinicNameTH
+,dbo.sysconname(vnp.Clinic,42203,1) as ClinicNameEN
+,CAST(SUBSTRING(cndp.Com,27,13)as varchar) as ClinicDepartmentCode
+,dbo.sysconname(CAST(SUBSTRING(cndp.Com,27,13)as varchar),10145,2) as ClinicDepartmentNameTH
+,dbo.sysconname(CAST(SUBSTRING(cndp.Com,27,13)as varchar),10145,1) as ClinicDepartmentNameEN
+
+, vnp.Doctor as DoctorCode
+, dbo.Doctorname(vnp.Doctor,2) as DoctorNameTH
+, dbo.Doctorname(vnp.Doctor,1) as DoctorNameEN
+, doc.CertifyPublicNo as DoctorCertificate
+, doc.Clinic as DoctorClinicCode
+, dbo.sysconname(doc.Clinic,42203,2) as DoctorClinicNameTH
+, dbo.sysconname(doc.Clinic,42203,1) as DoctorClinicNameEN
+, doc.ComposeDept as DoctorDepartmentCode
+, dbo.sysconname(doc.ComposeDept,10145,2) as DoctorDepartmentNameTH
+, dbo.sysconname(doc.ComposeDept,10145,1) as DoctorDepartmentNameEN
+, doc.Specialty as DoctorSpecialtyCode
+, dbo.sysconname(doc.Specialty,42197,2) as DoctorSpecialtyNameTH
+, dbo.sysconname(doc.Specialty,42197,1) as DoctorSpecialtyNameEN
+
 ,vnp.CloseVisitCode as 'CloseVisitCode'
 ,dbo.sysconname(vnp.CloseVisitCode,42261,2) as 'CloseVisitNameTH' 
 ,dbo.sysconname(vnp.CloseVisitCode,42261,1) as 'CloseVisitNameEN' 
@@ -155,16 +188,28 @@ select top 10
 ,vnp.VISITDATE as 'VisitDate'
 ,vnp.VN as 'VN'
 ,vnp.PrescriptionNo as 'PrescriptionNo'
-,vnp.CLINIC as 'LocationCode'
-,dbo.sysconname(vnp.Clinic,42203,2) as 'LocationNameTH' 
-,dbo.sysconname(vnp.Clinic,42203,1) as 'LocationNameEN' 
-,vnp.Doctor as 'DoctorCode'
-,dbo.CutSortChar(doc.LocalName) as 'DoctorNameTH'
-,dbo.CutSortChar(doc.EnglishName) as 'DoctorNameEN'
-,CertifyPublicNo as 'DoctorCertificate'
-,CAST(SUBSTRING(cndp.Com,27,13)as varchar) as 'ClinicDepartmentCode' 
-,dbo.sysconname(CAST(SUBSTRING(cndp.Com,27,13)as varchar),10145,2) as 'ClinicDepartmentNameTH' 
-,dbo.sysconname(CAST(SUBSTRING(cndp.Com,27,13)as varchar),10145,1) as 'ClinicDepartmentNameEN' 
+
+,vnp.CLINIC as ClinicCode
+,dbo.sysconname(vnp.Clinic,42203,2) as ClinicNameTH
+,dbo.sysconname(vnp.Clinic,42203,1) as ClinicNameEN
+,CAST(SUBSTRING(cndp.Com,27,13)as varchar) as ClinicDepartmentCode
+,dbo.sysconname(CAST(SUBSTRING(cndp.Com,27,13)as varchar),10145,2) as ClinicDepartmentNameTH
+,dbo.sysconname(CAST(SUBSTRING(cndp.Com,27,13)as varchar),10145,1) as ClinicDepartmentNameEN
+
+, vnp.Doctor as DoctorCode
+, dbo.Doctorname(vnp.Doctor,2) as DoctorNameTH
+, dbo.Doctorname(vnp.Doctor,1) as DoctorNameEN
+, doc.CertifyPublicNo as DoctorCertificate
+, doc.Clinic as DoctorClinicCode
+, dbo.sysconname(doc.Clinic,42203,2) as DoctorClinicNameTH
+, dbo.sysconname(doc.Clinic,42203,1) as DoctorClinicNameEN
+, doc.ComposeDept as DoctorDepartmentCode
+, dbo.sysconname(doc.ComposeDept,10145,2) as DoctorDepartmentNameTH
+, dbo.sysconname(doc.ComposeDept,10145,1) as DoctorDepartmentNameEN
+, doc.Specialty as DoctorSpecialtyCode
+, dbo.sysconname(doc.Specialty,42197,2) as DoctorSpecialtyNameTH
+, dbo.sysconname(doc.Specialty,42197,1) as DoctorSpecialtyNameEN
+
 ,vnp.CloseVisitCode as 'CloseVisitCode'
 ,dbo.sysconname(vnp.CloseVisitCode,42261,2) as 'CloseVisitNameTH' 
 ,dbo.sysconname(vnp.CloseVisitCode,42261,1) as 'CloseVisitNameEN' 

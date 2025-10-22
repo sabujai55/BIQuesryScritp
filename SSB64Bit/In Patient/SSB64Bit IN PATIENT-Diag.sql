@@ -1,3 +1,6 @@
+use SSBLIVE
+go
+
 select 'PT2' as BU,
 		adm.HN as PatientID,
 		CONVERT(varchar,adm.AdmDateTime,112)+adm.AN as AdmitID,
@@ -12,34 +15,34 @@ select 'PT2' as BU,
 		dbo.ICDName(ipddiag.ICDCode,2) as PrimaryDiagnosisNameTH,
 		dbo.ICDName(ipddiag.ICDCode,1) as PrimaryDiagnosisNameEN,
 
-		ipddiag.IcdCmCode1 as ICDCm1Code,
+		ipddiag.IcdCmCode1,
 		dbo.ICDCMName(ipddiag.IcdCmCode1,2) as ICDCm1NameTH,
 		dbo.ICDCMName(ipddiag.IcdCmCode1,1) as ICDCm1NameEN,
-		ipddiag.IcdCmCode2 as ICDCm2Code,
+		ipddiag.IcdCmCode2,
 		dbo.ICDCMName(ipddiag.IcdCmCode2,2) as ICDCm2NameTH,
 		dbo.ICDCMName(ipddiag.IcdCmCode2,1) as ICDCm2NameEN,
-		ipddiag.IcdCmCode3 as ICDCm3Code,
+		ipddiag.IcdCmCode3,
 		dbo.ICDCMName(ipddiag.IcdCmCode3,2) as ICDCm3NameTH,
 		dbo.ICDCMName(ipddiag.IcdCmCode3,1) as ICDCm3NameEN,
-		ipddiag.IcdCmCode4 as ICDCm4Code,
+		ipddiag.IcdCmCode4,
 		dbo.ICDCMName(ipddiag.IcdCmCode4,2) as ICDCm4NameTH,
 		dbo.ICDCMName(ipddiag.IcdCmCode4,1) as ICDCm4NameEN,
-		ipddiag.IcdCmCode5 as ICDCm5Code,
+		ipddiag.IcdCmCode5,
 		dbo.ICDCMName(ipddiag.IcdCmCode5,2) as ICDCm5NameTH,
 		dbo.ICDCMName(ipddiag.IcdCmCode5,1) as ICDCm5NameEN,
-		ipddiag.IcdCmCode6 as ICDCm6Code,
+		ipddiag.IcdCmCode6,
 		dbo.ICDCMName(ipddiag.IcdCmCode6,2) as ICDCm6NameTH,
 		dbo.ICDCMName(ipddiag.IcdCmCode6,1) as ICDCm6NameEN,
-		ipddiag.IcdCmCode7 as ICDCm7Code,
+		ipddiag.IcdCmCode7,
 		dbo.ICDCMName(ipddiag.IcdCmCode7,2) as ICDCm7NameTH,
 		dbo.ICDCMName(ipddiag.IcdCmCode7,1) as ICDCm7NameEN,
-		ipddiag.IcdCmCode8 as ICDCm8Code,
+		ipddiag.IcdCmCode8,
 		dbo.ICDCMName(ipddiag.IcdCmCode8,2) as ICDCm8NameTH,
 		dbo.ICDCMName(ipddiag.IcdCmCode8,1) as ICDCm8NameEN,
-		ipddiag.IcdCmCode9 as ICDCm9Code,
+		ipddiag.IcdCmCode9,
 		dbo.ICDCMName(ipddiag.IcdCmCode9,2) as ICDCm9NameTH,
 		dbo.ICDCMName(ipddiag.IcdCmCode9,1) as ICDCm9NameEN,
-		ipddiag.IcdCmCode10 as ICDCm10Code,
+		ipddiag.IcdCmCode10,
 		dbo.ICDCMName(ipddiag.IcdCmCode10,2) as ICDCm10NameTH,
 		dbo.ICDCMName(ipddiag.IcdCmCode10,1) as ICDCm10NameEN,
 		ipddiag.EntryByUserCode as EntryByUserCode, --แก้ไขวันที่ 03/03/2568
@@ -70,52 +73,104 @@ select 'PT2' as BU,
 
 		ipddiag.RemarksMemo, --เพิ่มวันที่ 03/03/2568
 
-		ipddiag.UnderlyingICDCode1 as UnderlyingICD1Code, --เพิ่มวันที่ 03/03/2568
+		ipddiag.UnderlyingICDCode1, --เพิ่มวันที่ 03/03/2568
 		dbo.ICDName(ipddiag.UnderlyingICDCode1,2) as UnderlyingICD1NameTH,
 		dbo.ICDName(ipddiag.UnderlyingICDCode1,1) as UnderlyingICD1NameEN,
-		ipddiag.UnderlyingICDCode2 as UnderlyingICD2Code, --เพิ่มวันที่ 03/03/2568
+		ipddiag.UnderlyingICDCode2, --เพิ่มวันที่ 03/03/2568
 		dbo.ICDName(ipddiag.UnderlyingICDCode2,2) as UnderlyingICD2NameTH,
 		dbo.ICDName(ipddiag.UnderlyingICDCode2,1) as UnderlyingICD2NameEN,
-		ipddiag.UnderlyingICDCode3 as UnderlyingICD3Code, --เพิ่มวันที่ 03/03/2568
+		ipddiag.UnderlyingICDCode3, --เพิ่มวันที่ 03/03/2568
 		dbo.ICDName(ipddiag.UnderlyingICDCode3,2) as UnderlyingICD3NameTH,
-		dbo.ICDName(ipddiag.UnderlyingICDCode3,1) as UnderlyingICD3NameEN,, --เพิ่มวันที่ 03/03/2568
-		ipddiag.UnderlyingICDCode4 as UnderlyingICD4Code, --เพิ่มวันที่ 03/03/2568
+		dbo.ICDName(ipddiag.UnderlyingICDCode3,1) as UnderlyingICD3NameEN, --เพิ่มวันที่ 03/03/2568
+		ipddiag.UnderlyingICDCode4, --เพิ่มวันที่ 03/03/2568
 		dbo.ICDName(ipddiag.UnderlyingICDCode4,2) as UnderlyingICD4NameTH,
 		dbo.ICDName(ipddiag.UnderlyingICDCode4,1) as UnderlyingICD4NameEN,
-		ipddiag.UnderlyingICDCode5 as UnderlyingICD5Code, --เพิ่มวันที่ 03/03/2568
+		ipddiag.UnderlyingICDCode5, --เพิ่มวันที่ 03/03/2568
 		dbo.ICDName(ipddiag.UnderlyingICDCode5,2) as UnderlyingICD5NameTH,
 		dbo.ICDName(ipddiag.UnderlyingICDCode5,1) as UnderlyingICD5NameEN,
-		ipddiag.ComplicationsICDCode1 as ComplicationsICD1Code, --เพิ่มวันที่ 03/03/2568
+		ipddiag.UnderlyingICDCode6,
+		dbo.ICDName(ipddiag.UnderlyingICDCode6,2) as UnderlyingICD6NameTH,
+		dbo.ICDName(ipddiag.UnderlyingICDCode6,1) as UnderlyingICD6NameEN,
+		ipddiag.UnderlyingICDCode7,
+		dbo.ICDName(ipddiag.UnderlyingICDCode7,2) as UnderlyingICD7NameTH,
+		dbo.ICDName(ipddiag.UnderlyingICDCode7,1) as UnderlyingICD7NameEN,
+		ipddiag.UnderlyingICDCode8,
+		dbo.ICDName(ipddiag.UnderlyingICDCode8,2) as UnderlyingICD8NameTH,
+		dbo.ICDName(ipddiag.UnderlyingICDCode8,1) as UnderlyingICD8NameEN,
+		ipddiag.UnderlyingICDCode9,
+		dbo.ICDName(ipddiag.UnderlyingICDCode9,2) as UnderlyingICD9NameTH,
+		dbo.ICDName(ipddiag.UnderlyingICDCode9,1) as UnderlyingICD9NameEN,
+		ipddiag.UnderlyingICDCode10,
+		dbo.ICDName(ipddiag.UnderlyingICDCode10,2) as UnderlyingICD10NameTH,
+		dbo.ICDName(ipddiag.UnderlyingICDCode10,1) as UnderlyingICD10NameEN,
+
+
+		ipddiag.ComplicationsICDCode1, --เพิ่มวันที่ 03/03/2568
 		dbo.ICDName(ipddiag.ComplicationsICDCode1,2) as ComplicationsICD1NameTH,
 		dbo.ICDName(ipddiag.ComplicationsICDCode1,1) as ComplicationsICD1NameEN,
-		ipddiag.ComplicationsICDCode2 as ComplicationsICD2Code, --เพิ่มวันที่ 03/03/2568
+		ipddiag.ComplicationsICDCode2, --เพิ่มวันที่ 03/03/2568
 		dbo.ICDName(ipddiag.ComplicationsICDCode2,2) as ComplicationsICD2NameTH,
 		dbo.ICDName(ipddiag.ComplicationsICDCode2,1) as ComplicationsICD2NameEN,
-		ipddiag.ComplicationsICDCode3 as ComplicationsICD3Code, --เพิ่มวันที่ 03/03/2568
+		ipddiag.ComplicationsICDCode3, --เพิ่มวันที่ 03/03/2568
 		dbo.ICDName(ipddiag.ComplicationsICDCode3,2) as ComplicationsICD3NameTH,
-		dbo.ICDName(ipddiag.ComplicationsICDCode3,1) as ComplicationsICD3NameEN,, --เพิ่มวันที่ 03/03/2568
-		ipddiag.ComplicationsICDCode4 as ComplicationsICD4Code, --เพิ่มวันที่ 03/03/2568
+		dbo.ICDName(ipddiag.ComplicationsICDCode3,1) as ComplicationsICD3NameEN, --เพิ่มวันที่ 03/03/2568
+		ipddiag.ComplicationsICDCode4, --เพิ่มวันที่ 03/03/2568
 		dbo.ICDName(ipddiag.ComplicationsICDCode4,2) as ComplicationsICD4NameTH,
-		dbo.ICDName(ipddiag.ComplicationsICDCode4,1) as ComplicationsICD4NameEN,, --เพิ่มวันที่ 03/03/2568
-		ipddiag.ComplicationsICDCode5 as ComplicationsICD5Code, --เพิ่มวันที่ 03/03/2568
+		dbo.ICDName(ipddiag.ComplicationsICDCode4,1) as ComplicationsICD4NameEN, --เพิ่มวันที่ 03/03/2568
+		ipddiag.ComplicationsICDCode5, --เพิ่มวันที่ 03/03/2568
 		dbo.ICDName(ipddiag.ComplicationsICDCode5,2) as ComplicationsICD5NameTH,
 		dbo.ICDName(ipddiag.ComplicationsICDCode5,1) as ComplicationsICD5NameEN,
-		ipddiag.OtherICDCode1 as OtherICD1Code, --เพิ่มวันที่ 03/03/2568
+		null as ComplicationsICDCode6,
+		null as ComplicationsICD6NameTH,
+		null as ComplicationsICD6NameEN,
+		null as ComplicationsICDCode7,
+		null as ComplicationsICD7NameTH,
+		null as ComplicationsICD7NameEN,
+		null as ComplicationsICDCode8,
+		null as ComplicationsICD8NameTH,
+		null as ComplicationsICD8NameEN,
+		null as ComplicationsICDCode9,
+		null as ComplicationsICD9NameTH,
+		null as ComplicationsICD9NameEN,
+		null as ComplicationsICDCode10,
+		null as ComplicationsICD10NameTH,
+		null as ComplicationsICD10NameEN,
+
+		ipddiag.OtherICDCode1, --เพิ่มวันที่ 03/03/2568
 		dbo.ICDName(ipddiag.OtherICDCode1,2) as OtherICD1NameTH,
 		dbo.ICDName(ipddiag.OtherICDCode1,1) as OtherICD1NameEN,
-		ipddiag.OtherICDCode2 as OtherICD2Code, --เพิ่มวันที่ 03/03/2568
+		ipddiag.OtherICDCode2, --เพิ่มวันที่ 03/03/2568
 		dbo.ICDName(ipddiag.OtherICDCode2,2) as OtherICD2NameTH,
 		dbo.ICDName(ipddiag.OtherICDCode2,1) as OtherICD2NameEN,
-		ipddiag.OtherICDCode3 as OtherICD3Code, --เพิ่มวันที่ 03/03/2568
+		ipddiag.OtherICDCode3, --เพิ่มวันที่ 03/03/2568
 		dbo.ICDName(ipddiag.OtherICDCode3,2) as OtherICD3NameTH,
 		dbo.ICDName(ipddiag.OtherICDCode3,1) as OtherICD3NameEN,
-		ipddiag.OtherICDCode4 as OtherICD4Code, --เพิ่มวันที่ 03/03/2568
+		ipddiag.OtherICDCode4, --เพิ่มวันที่ 03/03/2568
 		dbo.ICDName(ipddiag.OtherICDCode4,2) as OtherICD4NameTH,
 		dbo.ICDName(ipddiag.OtherICDCode4,1) as OtherICD4NameEN,
+		null as OtherICDCode5,
+		null as OtherICD5NameTH,
+		null as OtherICD5NameEN,
+		null as OtherICDCode6,
+		null as OtherICD6NameTH,
+		null as OtherICD6NameEN,
+		null as OtherICDCode7,
+		null as OtherICD7NameTH,
+		null as OtherICD7NameEN,
+		null as OtherICDCode8,
+		null as OtherICD8NameTH,
+		null as OtherICD8NameEN,
+		null as OtherICDCode9,
+		null as OtherICD9NameTH,
+		null as OtherICD9NameEN,
+		null as OtherICDCode10,
+		null as OtherICD10NameTH,
+		null as OtherICD10NameEN,
+
 		ipddiag.OperationDoctor1 as OperationDoctor1Code, --เพิ่มวันที่ 03/03/2568
 		dbo.Doctorname(ipddiag.OperationDoctor1,2) as OperationDoctor1NameTH,
 		dbo.Doctorname(ipddiag.OperationDoctor1,1) as OperationDoctor1NameEN,
-		ipddiag.OperationDoctor2 as OperationDoctor/Code, --เพิ่มวันที่ 03/03/2568
+		ipddiag.OperationDoctor2 as OperationDoctorCode, --เพิ่มวันที่ 03/03/2568
 		dbo.Doctorname(ipddiag.OperationDoctor2,2) as OperationDoctorName2TH,
 		dbo.Doctorname(ipddiag.OperationDoctor2,1) as OperationDoctorName2EN,
 		ipddiag.OperationDoctor3, --เพิ่มวันที่ 03/03/2568
@@ -138,5 +193,5 @@ from	HNIPD_MASTER adm
 		join HNIPD_DIAG ipddiag on adm.AN=ipddiag.AN
 		left join HNDOCTOR_MASTER doc on ipddiag.Doctor = doc.Doctor
 		--where ipddiag.ChronicCreteriaCode is not null
-where	adm.AN in (select am.AN from HNIPD_MASTER am where am.AdmDateTime between GETDATE()-5 and GETDATE())
+--where	adm.AN in (select am.AN from HNIPD_MASTER am where am.AdmDateTime between GETDATE()-5 and GETDATE())
 		

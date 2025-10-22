@@ -37,6 +37,7 @@ select  'PLC' as "BU"
 	  , e2.prename || ' ' || e2.firstname || '  ' || e2.lastname as "OutByUserNameTH"
 	  , e2.intername as "OutByUserNameEN"
 	  , case when a.is_observe != '1' then 0 else 1 end as "Observe"
+	  , bm.current_bed as "PatientStay"
 from admit a 
 inner join bed_management bm on a.admit_id = bm.admit_id 
 left join base_service_point bsp on bm.base_service_point_id = bsp.base_service_point_id 

@@ -28,16 +28,6 @@ select
 ,orch.DOCTOR as 'Doctor'
 ,dbo.CutSortChar(doc.THAINAME) as 'DoctorNameTH'
 ,dbo.CutSortChar(doc.ENGLISHNAME) as 'DoctorNameEN'
-, doc.CERTIFYPUBLICNO as 'DoctorCertificate'
-, doc.CLINIC as 'DoctorClinicCode'
-, dbo.sysconname(doc.CLINIC,20016,2) as 'DoctorClinicNameTH'
-, dbo.sysconname(doc.CLINIC,20016,1) as 'DoctorClinicNameEN'
-, '' as 'DoctorDepartmentCode'
-, '' as 'DoctorDepartmentNameTH'
-, '' as 'DoctorDepartmentNameEN'
-, doc.SPECIALTY+doc.SUBSPECIALTY as 'DoctorSpecialtyCode'
-, dbo.CutSortChar(ssp.THAINAME) as 'DoctorSpecialtyNameTH'
-, dbo.CutSortChar(ssp.ENGLISHNAME) as 'DoctorSpecialtyNameEN'
 ,'' as 'DFDoctor'
 ,'' as 'DFDoctorNameTH'
 ,'' as 'DFDoctorNameEN'
@@ -57,7 +47,6 @@ select
 		from ORREQ orr
 		inner join ORCHARGE orch on orr.REQUESTNO=orch.REQUESTNO and orr.FACILITYRMSNO=orch.FACILITYRMSNO and orch.TREATMENTCODE is not null
 		left join HNDOCTOR doc on orch.DOCTOR=doc.DOCTOR
-		left join SYSCONFIG ssp on doc.SPECIALTY+doc.SUBSPECIALTY = REPLACE(ssp.CODE,' ','') and ssp.CTRLCODE = 20015
 Union All
 select 
  'PLS' as 'BU'
@@ -89,16 +78,6 @@ select
 ,oru.DOCTOR as 'Doctor'
 ,dbo.CutSortChar(doc.THAINAME) as 'DoctorNameTH'
 ,dbo.CutSortChar(doc.ENGLISHNAME) as 'DoctorNameEN'
-, doc.CERTIFYPUBLICNO as 'DoctorCertificate'
-, doc.CLINIC as 'DoctorClinicCode'
-, dbo.sysconname(doc.CLINIC,20016,2) as 'DoctorClinicNameTH'
-, dbo.sysconname(doc.CLINIC,20016,1) as 'DoctorClinicNameEN'
-, '' as 'DoctorDepartmentCode'
-, '' as 'DoctorDepartmentNameTH'
-, '' as 'DoctorDepartmentNameEN'
-, doc.SPECIALTY+doc.SUBSPECIALTY as 'DoctorSpecialtyCode'
-, dbo.CutSortChar(ssp.THAINAME) as 'DoctorSpecialtyNameTH'
-, dbo.CutSortChar(ssp.ENGLISHNAME) as 'DoctorSpecialtyNameEN'
 ,'' as 'DFDoctor'
 ,'' as 'DFDoctorNameTH'
 ,'' as 'DFDoctorNameEN'
@@ -120,4 +99,3 @@ select
 		inner join ORUSAGE oru on orch.FACILITYRMSNO=oru.FACILITYRMSNO and orch.REQUESTNO=oru.REQUESTNO and orch.IPDCHARGEMAKEDATETIME=oru.CHARGEDATETIME and orch.TREATMENTCODE is null
 		left join SSBSTOCK.dbo.STOCK_MASTER stm on oru.STOCKCODE=stm.STOCKCODE
 		left join HNDOCTOR doc on oru.DOCTOR=doc.DOCTOR
-		left join SYSCONFIG ssp on doc.SPECIALTY+doc.SUBSPECIALTY = REPLACE(ssp.CODE,' ','') and ssp.CTRLCODE = 20015

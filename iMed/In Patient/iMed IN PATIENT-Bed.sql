@@ -1,19 +1,20 @@
-select  'PLR' as "BU"
+ select  'PLR' as "BU"
 	  , a.patient_id as "PatientID"
 	  , a.admit_id as "AdmitID"
 	  , format_an(a.an) as "AN"
-	  , to_char(a.admit_date ::timestamp,'dd/mm/yyyy')|| ' ' || substring(a.admit_time,0,6) as "MakeDateTime"
-	  , to_char(a.begin_date ::timestamp,'dd/mm/yyyy')|| ' ' || substring(a.begin_time,0,6) as "InDateTime"
-	  , to_char(a.end_date::timestamp,'dd/mm/yyyy')|| ' ' || substring(a.end_time,0,6) as "OutDateTime"
-	  , '' as "AckDateTime"
+	  , bm.move_date || ' ' || bm.move_time as "MakeDateTime"
+	  , bm.move_date || ' ' || bm.move_time as "InDateTime"
+	  , bm.move_out_date || ' ' || bm.move_out_time as "OutDateTime"
+	  , bm.move_date || ' ' || bm.move_time as "AckDateTime" --> For iMed Ver.2
+-- 	  , bm.arrival_date || ' ' || bm.arrival_time  as "AckDateTime"  --> For iMedx
 	  , '' as "StartRmsFeeDateTime"
-	  , to_char(a.modify_date::timestamp,'dd/mm/yyyy')|| ' ' || substring(a.modify_time,0,6) as "LastPostDateTime"
-	  , bsp.base_service_point_id as "FromWardCode"
-	  , bsp.description as "FromWardNameTH"
-	  , bsp.description as "FromWardNameEN"
-	  , bsp.base_service_point_id as "ToWardCode"
-	  , bsp.description as "ToWardNameTH"
-	  , bsp.description as "ToWardNameEN"
+	  , '' as "LastPostDateTime"
+	  , '' as "FromWardCode"
+	  , '' as "FromWardNameTH"
+	  , '' as "FromWardNameEN"
+	  , '' as "ToWardCode"
+	  , '' as "ToWardNameTH"
+	  , '' as "ToWardNameEN"
 	  , bsp.base_service_point_id as "WardCode"
 	  , bsp.description as "WardNameTH"
 	  , bsp.description as "WardNameEN"
@@ -37,10 +38,20 @@ select  'PLR' as "BU"
 	  , e2.prename || ' ' || e2.firstname || '  ' || e2.lastname as "OutByUserNameTH"
 	  , e2.intername as "OutByUserNameEN"
 	  , case when a.is_observe != '1' then 0 else 1 end as "Observe"
+	  , bm.current_bed as "PatientStay"
 from admit a 
 inner join bed_management bm on a.admit_id = bm.admit_id 
 left join base_service_point bsp on bm.base_service_point_id = bsp.base_service_point_id 
 left join base_room_type brt on bm.base_room_type_id = brt.base_room_type_id 
 left join employee e on a.admit_eid = e.employee_id 
 left join employee e2 on a.ipd_discharge_eid = e2.employee_id 
+--order by a.admit_id desc 
+limit 100
+
+
+
+
+
+
+
 

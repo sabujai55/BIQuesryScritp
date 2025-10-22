@@ -5,17 +5,28 @@ select
 , v.visit_id as "VisitID"
 , v.visit_date ||' '|| v.visit_time as "VisitDate"
 , format_vn(v.vn) as "VN"
-, '' as "PrescriptionNo"
-, bd.base_department_id as "LocationCode"
-, bd.description as "LocationNameTH"
-, bd.description as "LocationNameEN"
-, ap.employee_id as "DoctorCode"
-, imed_get_employee_name(ap.employee_id) as "DoctorNameTH"
-, imed_get_employee_name_en(ap.employee_id) as "DoctorNameEN"
-, e.profession_code as "DoctorCertificate"
+, '1' as "PrescriptionNo"
+--เพิ่ม
+, bd.base_department_id  as "ClinicCode"
+, bd.description as "ClinicNameTH"
+, '' as "ClinicNameEN"
 , e.base_med_department_id as "ClinicDepartmentCode"
-, bd.description as "ClinicDepartmentNameTH"
-, bd.description as "ClinicDepartmentNameEN"
+, bmd.description as "ClinicDepartmentNameTH"
+, '' as "ClinicDepartmentNameEN" 
+, ap.employee_id  as "DoctorCode"
+, e.prename || e.firstname || ' ' || e.lastname  as "DoctorNameTH"
+, e.intername  as "DoctorNameEN"
+, e.profession_code  as "DoctorCertificate"
+, bd3.base_department_id  AS "DoctorClinicCode"
+, bd3.description AS "DoctorClinicNameTH"
+, '' AS "DoctorClinicNameEN"
+, e.base_med_department_id AS "DoctorDepartmentCode"
+, bmd.description AS "DoctorDepartmentNameTH"
+, '' AS "DoctorDepartmentNameEN"
+, e.base_clinic_id AS "DoctorSpecialtyCode"
+, bmd.description AS "DoctorSpecialtyNameTH"
+, '' AS "DoctorSpecialtyNameEN"
+--
 , nd."CloseVisitCode" as "CloseVisitCode"
 , nd."CloseVisitNameTH" as "CloseVisitNameTH"
 , nd."CloseVisitNameEN" as "CloseVisitNameEN"
@@ -52,6 +63,11 @@ left join visit_payment vp on vp.visit_id = v.visit_id and vp.priority = '1'
 left join plan p2 on p2.plan_id = vp.plan_id
 left join employee e2 on e2.employee_id = v.visit_eid
 left join base_patient_group bpg on bpg.base_patient_group_id = v.base_patient_group_id
+--
+left join base_clinic bc on bc.base_clinic_id = e.base_clinic_id
+left join base_department bmd on bmd.base_department_id = e.base_med_department_id
+left join base_service_point bsp on e.base_service_point_id = bsp.base_service_point_id 
+left join base_department bd3 on bsp.base_department_id = bd3.base_department_id 
 left join 
 		(
 			select 	distinct 
@@ -82,17 +98,28 @@ select
 , v.visit_id as "VisitID"
 , v.visit_date ||' '|| v.visit_time as "VisitDate"
 , format_vn(v.vn) as "VN"
-, '' as "PrescriptionNo"
-, bd.base_department_id as "LocationCode"
-, bd.description as "LocationNameTH"
-, bd.description as "LocationNameEN"
-, ap.employee_id as "DoctorCode"
-, imed_get_employee_name(ap.employee_id) as "DoctorNameTH"
-, imed_get_employee_name_en(ap.employee_id) as "DoctorNameEN"
-, e.profession_code as "DoctorCertificate"
+, '1' as "PrescriptionNo"
+--เพิ่ม
+, bd.base_department_id  as "ClinicCode"
+, bd.description as "ClinicNameTH"
+, '' as "ClinicNameEN"
 , e.base_med_department_id as "ClinicDepartmentCode"
-, bd.description as "ClinicDepartmentNameTH"
-, bd.description as "ClinicDepartmentNameEN"
+, bmd.description as "ClinicDepartmentNameTH"
+, '' as "ClinicDepartmentNameEN" 
+, ap.employee_id  as "DoctorCode"
+, e.prename || e.firstname || ' ' || e.lastname  as "DoctorNameTH"
+, e.intername  as "DoctorNameEN"
+, e.profession_code  as "DoctorCertificate"
+, bd3.base_department_id  AS "DoctorClinicCode"
+, bd3.description AS "DoctorClinicNameTH"
+, '' AS "DoctorClinicNameEN"
+, e.base_med_department_id AS "DoctorDepartmentCode"
+, bmd.description AS "DoctorDepartmentNameTH"
+, '' AS "DoctorDepartmentNameEN"
+, e.base_clinic_id AS "DoctorSpecialtyCode"
+, bmd.description AS "DoctorSpecialtyNameTH"
+, '' AS "DoctorSpecialtyNameEN"
+--
 , nd."CloseVisitCode" as "CloseVisitCode"
 , nd."CloseVisitNameTH" as "CloseVisitNameTH"
 , nd."CloseVisitNameEN" as "CloseVisitNameEN"
@@ -129,6 +156,11 @@ left join visit_payment vp on vp.visit_id = v.visit_id and vp.priority = '1'
 left join plan p2 on p2.plan_id = vp.plan_id
 left join employee e2 on e2.employee_id = v.visit_eid
 left join base_patient_group bpg on bpg.base_patient_group_id = v.base_patient_group_id
+--
+left join base_clinic bc on bc.base_clinic_id = e.base_clinic_id
+left join base_department bmd on bmd.base_department_id = e.base_med_department_id
+left join base_service_point bsp on e.base_service_point_id = bsp.base_service_point_id 
+left join base_department bd3 on bsp.base_department_id = bd3.base_department_id 
 left join 
 		(
 			select 	distinct 
@@ -159,19 +191,28 @@ select
 , v.visit_id as "VisitID"
 , v.visit_date ||' '|| v.visit_time as "VisitDate"
 , format_vn(v.vn) as "VN"
-, '' as "PrescriptionNo"
-, bd.base_department_id as "LocationCode"
-, bd.description_th as "LocationNameTH"
-, bd.description_en as "LocationNameEN"
---, bd.description as "LocationNameTH"
---, bd.description as "LocationNameEN"
-, ap.employee_id as "DoctorCode"
-, imed_get_employee_name(ap.employee_id) as "DoctorNameTH"
-, imed_get_employee_name_en(ap.employee_id) as "DoctorNameEN"
-, e.profession_code as "DoctorCertificate"
+, '1' as "PrescriptionNo"
+--เพิ่ม
+, bd.base_department_id  as "ClinicCode"
+, bd.description as "ClinicNameTH"
+, '' as "ClinicNameEN"
 , e.base_med_department_id as "ClinicDepartmentCode"
-, bd.description_th as "ClinicDepartmentNameTH"
-, bd.description_en as "ClinicDepartmentNameEN"
+, bmd.description as "ClinicDepartmentNameTH"
+, '' as "ClinicDepartmentNameEN" 
+, ap.employee_id  as "DoctorCode"
+, e.prename || e.firstname || ' ' || e.lastname  as "DoctorNameTH"
+, e.intername  as "DoctorNameEN"
+, e.profession_code  as "DoctorCertificate"
+, bd3.base_department_id  AS "DoctorClinicCode"
+, bd3.description AS "DoctorClinicNameTH"
+, '' AS "DoctorClinicNameEN"
+, e.base_med_department_id AS "DoctorDepartmentCode"
+, bmd.description AS "DoctorDepartmentNameTH"
+, '' AS "DoctorDepartmentNameEN"
+, e.base_clinic_id AS "DoctorSpecialtyCode"
+, bmd.description AS "DoctorSpecialtyNameTH"
+, '' AS "DoctorSpecialtyNameEN"
+--
 , nd."CloseVisitCode" as "CloseVisitCode"
 , nd."CloseVisitNameTH" as "CloseVisitNameTH"
 , nd."CloseVisitNameEN" as "CloseVisitNameEN"
@@ -208,6 +249,11 @@ left join visit_payment vp on vp.visit_id = v.visit_id and vp.priority = '1'
 left join plan p2 on p2.plan_id = vp.plan_id
 left join employee e2 on e2.employee_id = v.visit_eid
 left join base_patient_group bpg on bpg.base_patient_group_id = v.base_patient_group_id
+--
+left join base_clinic bc on bc.base_clinic_id = e.base_clinic_id
+left join base_department bmd on bmd.base_department_id = e.base_med_department_id
+left join base_service_point bsp on e.base_service_point_id = bsp.base_service_point_id 
+left join base_department bd3 on bsp.base_department_id = bd3.base_department_id 
 left join 
 		(
 			select 	distinct 
@@ -238,17 +284,28 @@ select
 , v.visit_id as "VisitID"
 , v.visit_date ||' '|| v.visit_time as "VisitDate"
 , format_vn(v.vn) as "VN"
-, '' as "PrescriptionNo"
-, bd.base_department_id as "LocationCode"
-, bd.description_th as  "LocationNameTH"
-, bd.description_en as "LocationNameEN"
-, ap.employee_id as "DoctorCode"
-, imed_get_employee_name(ap.employee_id) as "DoctorNameTH"
-, imed_get_employee_name_en(ap.employee_id) as "DoctorNameEN"
-, e.profession_code as "DoctorCertificate"
+, '1' as "PrescriptionNo"
+--เพิ่ม
+, bd.base_department_id  as "ClinicCode"
+, bd.description as "ClinicNameTH"
+, '' as "ClinicNameEN"
 , e.base_med_department_id as "ClinicDepartmentCode"
-, bd.description_th as "ClinicDepartmentNameTH"
-, bd.description_en as "ClinicDepartmentNameEN"
+, bmd.description as "ClinicDepartmentNameTH"
+, '' as "ClinicDepartmentNameEN" 
+, ap.employee_id  as "DoctorCode"
+, e.prename || e.firstname || ' ' || e.lastname  as "DoctorNameTH"
+, e.intername  as "DoctorNameEN"
+, e.profession_code  as "DoctorCertificate"
+, bd3.base_department_id  AS "DoctorClinicCode"
+, bd3.description AS "DoctorClinicNameTH"
+, '' AS "DoctorClinicNameEN"
+, e.base_med_department_id AS "DoctorDepartmentCode"
+, bmd.description AS "DoctorDepartmentNameTH"
+, '' AS "DoctorDepartmentNameEN"
+, e.base_clinic_id AS "DoctorSpecialtyCode"
+, bmd.description AS "DoctorSpecialtyNameTH"
+, '' AS "DoctorSpecialtyNameEN"
+--
 , nd."CloseVisitCode" as "CloseVisitCode"
 , nd."CloseVisitNameTH" as "CloseVisitNameTH"
 , nd."CloseVisitNameEN" as "CloseVisitNameEN"
@@ -285,6 +342,11 @@ left join visit_payment vp on vp.visit_id = v.visit_id and vp.priority = '1'
 left join plan p2 on p2.plan_id = vp.plan_id
 left join employee e2 on e2.employee_id = v.visit_eid
 left join base_patient_group bpg on bpg.base_patient_group_id = v.base_patient_group_id
+--
+left join base_clinic bc on bc.base_clinic_id = e.base_clinic_id
+left join base_department bmd on bmd.base_department_id = e.base_med_department_id
+left join base_service_point bsp on e.base_service_point_id = bsp.base_service_point_id 
+left join base_department bd3 on bsp.base_department_id = bd3.base_department_id 
 left join 
 		(
 			select 	distinct 
