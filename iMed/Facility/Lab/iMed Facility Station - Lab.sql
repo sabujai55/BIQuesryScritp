@@ -19,7 +19,7 @@ select 'PLC' as "BU"
 	, i.item_code as "LabCode"
 	, i.common_name as "LabNameTH"
 	, '' as "LabNameEN"
-	, '' as "ResultValue"
+	, lt.value as "ResultValue"
 	, '' as "FacilityResultType"
 	, '' as "FacilityResultName"
 	, '' as "LABResultClassifiedType"
@@ -50,8 +50,11 @@ select 'PLC' as "BU"
 	left join lab_result lr on lr.assign_lab_id = al.assign_lab_id 
 	left join employee e2 on e2.employee_id = lr.verify_specimen_eid 
 	left join employee e3 on e3.employee_id = lr.collect_specimen_eid 
+	--
+	left join lab_test lt on lt.order_item_id = oi.order_item_id
 	where oi.fix_item_type_id = '1' 
-	--and oi.verify_date BETWEEN '$P!{dBeginDate}' AND '$P!{dEndDate}'
+	--and v.patient_id = '570000944229'
+	--and lt.value != ''
 	union all
 select 'PLC' as "BU"
 	, v.patient_id as "PatientID"
@@ -72,7 +75,7 @@ select 'PLC' as "BU"
 	, i.item_code as "LabCode"
 	, i.common_name as "LabNameTH"
 	, '' as "LabNameEN"
-	, '' as "ResultValue"
+	, lt.value as "ResultValue"
 	, '' as "FacilityResultType"
 	, '' as "FacilityResultName"
 	, '' as "LABResultClassifiedType"
@@ -105,6 +108,11 @@ select 'PLC' as "BU"
 	left join employee e2 on e2.employee_id = lr.verify_specimen_eid 
 	left join employee e3 on e3.employee_id = lr.collect_specimen_eid 
 	left join employee e4 on e4.employee_id = toi.track_actor
+	--
+	left join lab_test lt on lt.order_item_id = toi.order_item_id
 	where oi.fix_item_type_id = '1'
-	--and toi.verify_date BETWEEN '$P!{dBeginDate}' AND '$P!{dEndDate}'
-) dataopd --limit 10
+	--and v.patient_id = '570000944229'
+	--and lt.value != ''
+) dataopd 
+limit 20
+

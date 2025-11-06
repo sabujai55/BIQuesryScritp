@@ -52,7 +52,7 @@ select 'PLR' as "BU"
 , p.mobile as "MobilePhoneNo"
 , p.telephone as "Telephone"
 from patient p 
-left join appointment a on a.patient_id = p.patient_id 
+inner join appointment a on a.patient_id = p.patient_id 
 left join employee e on e.employee_id = a.doctor_eid 
 left join base_department bd on bd.base_department_id = a.base_department_id
 left join employee e2 on a.modify_eid = e2.employee_id

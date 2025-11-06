@@ -46,8 +46,8 @@ select TOP 10
 from	PATIENT_INFO a
 		left join MK_HN_PATIENT b on a.HN = b.HN
 		left join SYSCONFIG c on c.CTRLCODE = 10121 and a.INITIALNAMECODE = c.CODE
-		left join SYSCONFIG d on d.CTRLCODE = 10080 and a.RACE = d.CODE
-		left join SYSCONFIG e on e.CTRLCODE = 10041 and a.NATIONALITY = e.CODE
+		left join SYSCONFIG d on d.CTRLCODE = 10072 and a.RACE = d.CODE
+		left join SYSCONFIG e on e.CTRLCODE = 10080 and a.NATIONALITY = e.CODE
 		left join SYSCONFIG f on f.CTRLCODE = 10071 and a.RELIGION = f.CODE
 		left join SYSCONFIG g on g.CTRLCODE = 10082 and a.OCCUPATION = g.CODE
 		left join MAPDELHNEXIST m on a.HN = m.DELETEDHN 

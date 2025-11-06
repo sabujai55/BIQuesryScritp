@@ -1,5 +1,8 @@
+
+
+
 select
-'PLK' as "BU"
+'PLR' as "BU"
 , v.patient_id  as "PatientID"
 , v.visit_id  as "VisitID"
 , v.visit_date  as "VisitDate"
@@ -7,43 +10,26 @@ select
 , '1' as "PrescriptionNo"
 , bd.base_department_id  as "ClinicCode"
 , bd.description as "ClinicNameTH"
-, bd.description_en as "ClinicNameEN" 
+, '' as "ClinicNameEN"
 , e.base_med_department_id as "ClinicDepartmentCode"
 , bd2.description as "ClinicDepartmentNameTH"
-, bd2.description_en as "ClinicDepartmentNameEN"
+, '' as "ClinicDepartmentNameEN" 
 , ap.employee_id  as "DoctorCode"
 , e.prename || e.firstname || ' ' || e.lastname  as "DoctorNameTH"
 , e.intername  as "DoctorNameEN"
 , e.profession_code  as "DoctorCertificate"
 , bd3.base_department_id  AS "DoctorClinicCode"
 , bd3.description AS "DoctorClinicNameTH"
-, bd3.description_en AS "DoctorClinicNameEN"
+, '' AS "DoctorClinicNameEN"
 , e.base_med_department_id AS "DoctorDepartmentCode"
 , bmd.description AS "DoctorDepartmentNameTH"
-, bmd.description_en AS "DoctorDepartmentNameEN"
+, '' AS "DoctorDepartmentNameEN"
 , e.base_clinic_id AS "DoctorSpecialtyCode"
 , bmd.description AS "DoctorSpecialtyNameTH"
-, bmd.description_en AS "DoctorSpecialtyNameEN"
---, nd."CloseVisitCode" as "CloseVisitCode"
---, nd."CloseVisitNameTH" as "CloseVisitNameTH"
---, nd."CloseVisitNameEN" as "CloseVisitNameEN"
-, (
-   	select 	vfds.description
-   	from 	nurse_discharge nd 
-   			inner join v_fix_discharge_status vfds on nd.fix_discharge_status = vfds.v_fix_discharge_status_id
-   	where 	nd.visit_id = ap.visit_id and nd.attending_physician_id = ap.attending_physician_id 
-   	order by nd.assess_date || nd.assess_time desc
-   	limit 1
-  ) "CloseVisitCode"
-, (
-   	select 	nd.fix_discharge_status
-   	from 	nurse_discharge nd 
-   			inner join v_fix_discharge_status vfds on nd.fix_discharge_status = vfds.v_fix_discharge_status_id
-   	where 	nd.visit_id = ap.visit_id and nd.attending_physician_id = ap.attending_physician_id 
-   	order by nd.assess_date || nd.assess_time desc
-   	limit 1
-  ) "CloseVisitNameTH"
-, '' as "CloseVisitNameEN"
+, '' AS "DoctorSpecialtyNameEN"
+, nd."CloseVisitCode" as "CloseVisitCode"
+, nd."CloseVisitNameTH" as "CloseVisitNameTH"
+, nd."CloseVisitNameEN" as "CloseVisitNameEN"
 , a.appointment_id as "AppointmentNo"
 , a.appoint_datetime as "AppointmentDateTime"
 , case when v.active in ('1','2') then 'Active' else 'Inactive' end as "Status"
@@ -51,14 +37,7 @@ select
 , his_func_get_diagrms(v.visit_id, ap.employee_id,1) as "DiagRms"
 , his_func_get_diagrms(v.visit_id, ap.employee_id,2) as "DiagRmsName"
 , p.fix_new_in_year_id as "NEWPATIENT"
---, nd."CloseVisitDateTime"  as "CloseVisitDateTime"
-, (
-   	select 	nd.assess_date || ' ' || nd.assess_time  
-   	from 	nurse_discharge nd 
-   	where 	nd.visit_id = ap.visit_id and nd.attending_physician_id = ap.attending_physician_id 
-   	order by nd.assess_date || nd.assess_time desc
-   	limit 1
-  ) "CloseVisitDateTime"
+, nd."CloseVisitDateTime"  as "CloseVisitDateTime"
 , v.visit_date ||' '|| v.visit_time as "PrescriptionMakeDateTime"
 , vp.plan_code as "DefaultRightCode"
 , p2.description as "DefaultRightNameTH"
@@ -106,8 +85,8 @@ select
 	cal_date_time_diff_2((v.visit_date || ' ' || v.visit_time),(drug.dispense_date || ' ' || drug.dispense_time))
 	else null end as "TotalVisitTime"
 		from visit v 
-		INNER join attending_physician ap on v.visit_id = ap.visit_id --and ap.priority = '1'
-		INNER join base_department bd on ap.base_department_id = bd.base_department_id and bd.account_product = 'COST' 
+		INNER join attending_physician ap on v.visit_id = ap.visit_id 
+		INNER join base_department bd on ap.base_department_id = bd.base_department_id 
 		left join employee e on ap.employee_id = e.employee_id 
 		left join patient p on p.patient_id = v.patient_id 
 		left join visit_payment vp on vp.visit_id = v.visit_id and vp.priority = '1'
@@ -220,4 +199,7 @@ select
 					)
 					group by p2.visit_id , oi2.order_doctor_eid
 				)drug on v.visit_id = drug.visit_id and ap.employee_id = drug.order_doctor_eid
-where v.visit_date between '$P!{dBeginDate}' and '$P!{dEndDate}' 
+where v.visit_date between '$P!{dBeginDate}' and '$P!{dEndDate}'
+and v.active in ('1','2')
+
+

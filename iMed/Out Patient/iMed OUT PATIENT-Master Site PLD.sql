@@ -31,7 +31,7 @@ select
 , nd."CloseVisitNameTH" as "CloseVisitNameTH"
 , nd."CloseVisitNameEN" as "CloseVisitNameEN"
 , a.appointment_id as "AppointmentNo"
-, a.appoint_date ||' '|| a.appoint_time as "AppointmentDateTime"
+, a.appoint_datetime as "AppointmentDateTime"
 , case when v.active in ('1','2') then 'Active' else 'Inactive' end as "Status"
 , v.visit_date ||' '|| v.visit_time as "RegInDateTime"
 , his_func_get_diagrms(v.visit_id, ap.employee_id,1) as "DiagRms"
@@ -85,8 +85,8 @@ select
 	cal_date_time_diff_2((v.visit_date || ' ' || v.visit_time),(drug.dispense_date || ' ' || drug.dispense_time))
 	else null end as "TotalVisitTime"
 		from visit v 
-		INNER join attending_physician ap on v.visit_id = ap.visit_id --and ap.priority = '1'
-		INNER join base_department bd on ap.base_department_id = bd.base_department_id and bd.account_product = 'COST' 
+		INNER join attending_physician ap on v.visit_id = ap.visit_id and ap.priority = '1' --<< สำหรับ PLD
+		INNER join base_department bd on ap.base_department_id = bd.base_department_id 
 		left join employee e on ap.employee_id = e.employee_id 
 		left join patient p on p.patient_id = v.patient_id 
 		left join visit_payment vp on vp.visit_id = v.visit_id and vp.priority = '1'
@@ -94,9 +94,22 @@ select
 		left join employee e2 on e2.employee_code = v.visit_eid 
 		left join base_department bd2 on bd2.base_department_id = e.base_med_department_id 
 		left join base_patient_group bpg on bpg.base_patient_group_id = v.base_patient_group_id
-		left join assign_lab al on al.visit_id = v.visit_id
-		left join appointment a on a.visit_id = v.visit_id
-		left join receipt r on r.visit_id = v.visit_id
+		left join (select row_number() over(partition by al.visit_id order by al.receive_specimen_date || ' ' || al.receive_specimen_time asc) rowid
+					, al.visit_id
+					, al.receive_specimen_date
+					, al.receive_specimen_time
+						from assign_lab al ) al on al.visit_id = v.visit_id and al.rowid = 1
+		left join (select string_agg(appoint_date||' '||appoint_time,',') as appoint_datetime
+					, string_agg(appointment_id,',') as  appointment_id
+					, a.visit_id
+					, a.base_department_id
+						from appointment a
+						group by a.visit_id , a.base_department_id) a on a.visit_id = ap.visit_id and a.base_department_id=ap.base_department_id 
+		left join (select row_number() over(partition by r.visit_id order by r.receive_date || ' ' || r.receive_time asc) rowid
+					, r.visit_id
+					, r.receive_date
+					, r.receive_time
+							from receipt r  ) r on r.visit_id = v.visit_id and r.rowid = 1
 		left join base_patient_unit bpu on bpu.base_patient_unit_id = p.base_patient_unit_id
 		left join base_office_agent boa on boa.base_office_agent_id = v.base_office_agent_id
 		left join base_clinic bc on bc.base_clinic_id = e.base_clinic_id
@@ -105,7 +118,7 @@ select
 		left join base_department bd3 on bsp.base_department_id = bd3.base_department_id 
 		left join  -- NurseAcknowledge 2
 				(
-					select 	distinct 
+					select  
 							nd.visit_id 
 							, nd.attending_physician_id 
 							, fix_discharge_status as "CloseVisitCode"
@@ -114,7 +127,9 @@ select
 							, nd.assess_date ||' '|| nd.assess_time as "CloseVisitDateTime"
 					from 	nurse_discharge nd 
 							left join v_fix_discharge_status vfds on nd.fix_discharge_status = vfds.v_fix_discharge_status_id 
-					where 	nd.visit_id in (select v.visit_id from visit v where v.visit_date between '$P!{dBeginDate}' and '$P!{dEndDate}')
+					where 	nd.visit_id in (select v.visit_id from visit v where v.visit_date between '$P!{dBeginDate}' and '$P!{dEndDate}'
+					order by nd.assess_date desc
+					limit 1)
 				)nd on ap.visit_id = nd.visit_id and ap.attending_physician_id = nd.attending_physician_id
 		left join  -- NurseAcknowledge
 				(
@@ -185,7 +200,6 @@ select
 					group by p2.visit_id , oi2.order_doctor_eid
 				)drug on v.visit_id = drug.visit_id and ap.employee_id = drug.order_doctor_eid
 where v.visit_date between '$P!{dBeginDate}' and '$P!{dEndDate}'
---limit 10
-
+and v.active in ('1','2')
 
 

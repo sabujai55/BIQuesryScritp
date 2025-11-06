@@ -1,4 +1,7 @@
-select top 10
+use SSBLIVE
+go
+
+select top 50
 	'PT2' as 'BU'
 	,lh.HN as 'PatientID'
 	,lh.FacilityRmsNo as 'FacilityRmsNo'
@@ -52,8 +55,8 @@ select top 10
 	,dbo.sysconname(lh.CxlRequestByUserCode,10031,2) as 'CancelByUserNameTH'
 	,dbo.sysconname(lh.CxlRequestByUserCode,10031,1) as 'CancelByUserNameEN'
 	,lh.CxlDateTime as 'CancelDateTime'
-	,chk.RequestNo as 'CheckupNo'
+	, case when lh.CheckUp = 1 then lh.RequestFromRequestNo else null end as 'CheckupNo'
 			from HNLABREQ_HEADER lh
 			left join HNLABREQ_RESULT ls on lh.RequestNo=ls.RequestNo and lh.FacilityRmsNo=ls.FacilityRmsNo
-			left join HNCHKUP_LABCODE chk on ls.RequestNo=chk.FacilityRequestNo and ls.FacilityRmsNo=chk.FacilityRmsNo and ls.RequestLabCode=chk.RequestLabCode and ls.LabCode=chk.LabCode
-			
+--where	lh.EntryDateTime between '2025-11-01 00:00:00' and '2025-11-03 23:59:59'
+--		and ls.RequestLabCode = 'MIC002000';

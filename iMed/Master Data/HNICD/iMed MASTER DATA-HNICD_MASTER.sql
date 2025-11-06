@@ -7,14 +7,6 @@ select 'PLR' as "BU"
 , '' as "IcdNameEN"
 , fi.is_chronic as "IsChronic"
 , fi.is_secret as "IsSecret"
-, '' as "Status"
+, case when fi.is_not_dx = '1' then 'Inactive' else 'Active' end as "Status"
 from fix_icd10 fi 
-
-
-select * from fix_icd10 fi limit 100
-
-
-
-select * from diagnosis_icd10 di limit 100
-
 
