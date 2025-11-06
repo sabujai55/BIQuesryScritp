@@ -42,11 +42,14 @@ select
 , vp.plan_code as "DefaultRightCode"
 , p2.description as "DefaultRightNameTH"
 , p2.description as "DefaultRightNameEN"
+, v.base_patient_group_id as "PatientType"
+, bpg.description as "PatientTypeNameTH"
+, bpg.description_en as "PatientTypeNameEN"
 , '' as "AccidentCode"
 , '' as "AccidentName"
 , '' as "ComposeDept"
-, v.base_patient_group_id as "VisitCode"
-, bpg.description as "VisitNameTH"
+, v.base_patient_type_id as "VisitCode"
+, bpt.description as "VisitNameTH"
 , '' as "VisitNameEN"
 , '' as "EntryByUserCode"
 , '' as "EntryByUserNameTH"
@@ -93,7 +96,8 @@ select
 		left join plan p2 on p2.plan_code = vp.plan_code
 		left join employee e2 on e2.employee_code = v.visit_eid 
 		left join base_department bd2 on bd2.base_department_id = e.base_med_department_id 
-		left join base_patient_group bpg on bpg.base_patient_group_id = v.base_patient_group_id
+		left join base_patient_type bpt on bpt.base_patient_type_id = v.base_patient_type_id 
+		left join base_patient_group bpg on bpg.base_patient_group_id = v.base_patient_group_id 
 		left join (select row_number() over(partition by al.visit_id order by al.receive_specimen_date || ' ' || al.receive_specimen_time asc) rowid
 					, al.visit_id
 					, al.receive_specimen_date
@@ -199,7 +203,8 @@ select
 					)
 					group by p2.visit_id , oi2.order_doctor_eid
 				)drug on v.visit_id = drug.visit_id and ap.employee_id = drug.order_doctor_eid
-where v.visit_date between '$P!{dBeginDate}' and '$P!{dEndDate}'
-and v.active in ('1','2')
+where v.visit_date between '$P!{dBeginDate}' and '$P!{dEndDate}' 
+
+
 
 

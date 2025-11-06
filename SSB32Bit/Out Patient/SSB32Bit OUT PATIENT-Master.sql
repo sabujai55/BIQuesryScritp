@@ -1,4 +1,4 @@
-select top 10 
+select top 1000 
   opd.BU
 , opd.PatientID
 , opd.VisitID
@@ -39,6 +39,9 @@ select top 10
 , opd.DefaultRightCode
 , opd.DefaultRightNameTH
 , opd.DefaultRightNameEN
+, opd.PatientType
+, opd.PatientTypeNameTH
+, opd.PatientTypeNameEN
 , opd.AccidentCode
 , opd.AccidentNameTH
 , opd.AccidentNameEN
@@ -119,6 +122,9 @@ select top 10
 		,vnm.USEDRIGHTCODE as 'DefaultRightCode' 
 		,dbo.sysconname(vnm.USEDRIGHTCODE,20019,2) as 'DefaultRightNameTH' 
 		,dbo.sysconname(vnm.USEDRIGHTCODE,20019,1) as 'DefaultRightNameEN' 
+		,vnm.PATIENTTYPE as 'PatientType'
+		,dbo.sysconname(vnm.PATIENTTYPE,20011,2) as 'PatientTypeNameTH'
+		,dbo.sysconname(vnm.PATIENTTYPE,20011,1) as 'PatientTypeNameEN'
 		,vnm.ACCIDENT as 'AccidentCode' 
 		,'' as 'AccidentNameTH' 
 		,'' as 'AccidentNameEN' 

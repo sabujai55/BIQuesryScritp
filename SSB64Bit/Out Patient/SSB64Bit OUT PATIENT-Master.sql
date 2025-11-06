@@ -41,6 +41,9 @@ select	opd.BU
 		, opd.DefaultRightCode
 		, opd.DefaultRightNameTH
 		, opd.DefaultRightNameEN
+		, opd.PatientType
+		, opd.PatientTypeNameTH
+		, opd.PatientTypeNameEN
 		, opd.AccidentCode
 		, opd.AccidentNameTH
 		, opd.AccidentNameEN
@@ -132,6 +135,10 @@ select 'PT2' as BU
 		,vnp.DefaultRightCode as DefaultRightCode
 		,dbo.sysconname(vnp.DefaultRightCode,42086,2) as DefaultRightNameTH
 		,dbo.sysconname(vnp.DefaultRightCode,42086,1) as DefaultRightNameEN
+
+		, vnm.PatientType 
+		, dbo.sysconname(vnm.PatientType,42051,2) as PatientTypeNameTH
+		, dbo.sysconname(vnm.PatientType,42051,1) as PatientTypeNameEN
 		,vnm.AccidentCode as AccidentCode
 		,dbo.sysconname(vnm.AccidentCode,42416,2) as AccidentNameTH
 		,dbo.sysconname(vnm.AccidentCode,42416,1) as AccidentNameEN
@@ -214,5 +221,5 @@ from	HNOPD_PRESCRIP vnp
 		left join HNDOCTOR_MASTER doc on vnp.Doctor=doc.Doctor
 		left join DNSYSCONFIG cndp on vnp.Clinic = cndp.Code and cndp.CtrlCode = 42203
 		left join HNAPPMNT_HEADER ah on vnp.AppointmentNo = ah.AppointmentNo
---where	vnp.VisitDate = CAST(GETDATE() as date)
+where	vnp.VisitDate = CAST(GETDATE() as date)
 )opd
