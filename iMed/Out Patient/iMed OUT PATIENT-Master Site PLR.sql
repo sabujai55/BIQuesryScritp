@@ -46,7 +46,8 @@ select
 , bpg.description as "PatientTypeNameTH"
 , bpg.description_en as "PatientTypeNameEN"
 , '' as "AccidentCode"
-, '' as "AccidentName"
+, '' as "AccidentNameTH"
+, '' as "AccidentNameEN"
 , '' as "ComposeDept"
 , v.base_patient_type_id as "VisitCode"
 , bpt.description as "VisitNameTH"
@@ -204,7 +205,3 @@ select
 					group by p2.visit_id , oi2.order_doctor_eid
 				)drug on v.visit_id = drug.visit_id and ap.employee_id = drug.order_doctor_eid
 where v.visit_date between '$P!{dBeginDate}' and '$P!{dEndDate}' 
-
-
-
-

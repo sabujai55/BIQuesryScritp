@@ -16,10 +16,10 @@ select top 10
 		, xs.ResultDoctor as 'ResultDoctorCode'
 		, dbo.Doctorname(xs.ResultDoctor,2) as 'ResultDoctorNameTH'
 		, dbo.Doctorname(xs.ResultDoctor,1) as 'ResultDoctorNameEN'
-		, xs.ResultMemo as 'ResultMemo'
+		, xs.RichTextMemo as 'ResultMemo'
 		, xs.CxlByUserCode as 'CancelByUserCode'
 		, dbo.sysconname(xs.CxlByUserCode,10031,2) as 'CancelByUserNameTH'
 		, dbo.sysconname(xs.CxlByUserCode,10031,1) as 'CancelByUserNameEN'
 		, xs.CxlDateTime as 'CancelDateTime'
-				from HNXRAYREQ_HEADER xh
-				left join HNXRAYREQ_RESULT xs on xh.FacilityRmsNo=xs.FacilityRmsNo and xh.RequestNo=xs.RequestNo
+from	HNXRAYREQ_HEADER xh
+		left join HNXRAYREQ_RESULT xs on xh.FacilityRmsNo=xs.FacilityRmsNo and xh.RequestNo=xs.RequestNo

@@ -41,9 +41,10 @@ select
 , p2.description as "DefaultRightNameEN"
 , v.base_patient_group_id as "PatientType"
 , bpg.description as "PatientTypeNameTH"
-, '' as "PatientTypeNameTH"
+, '' as "PatientTypeNameEN"
 , '' as "AccidentCode"
-, '' as "AccidentName"
+, '' as "AccidentNameTH"
+, '' as "AccidentNameEN"
 , '' as "ComposeDept"
 , v.base_patient_type_id as "VisitCode"
 , bpt.description as "VisitNameTH"
@@ -94,7 +95,7 @@ select
 		left join employee e2 on e2.employee_code = v.visit_eid 
 		left join base_department bd2 on bd2.base_department_id = e.base_med_department_id 
 		left join base_patient_type bpt on bpt.base_patient_type_id = v.base_patient_type_id 
-		left join base_patient_group bpg on v.base_patient_group_id = bpg.base_patient_group_id 
+		left join base_patient_group bpg on bpg.base_patient_group_id = v.base_patient_group_id 
 		left join (select row_number() over(partition by al.visit_id order by al.receive_specimen_date || ' ' || al.receive_specimen_time asc) rowid
 					, al.visit_id
 					, al.receive_specimen_date

@@ -77,4 +77,4 @@ select	a.Code
 		, dbo.sysconname(CAST(SUBSTRING(a.Com, 155, 5) AS varchar(5)),42845,1) as ClinicalAnswerCanUse16NameEN
 from	DNSYSCONFIG a
 where	a.CtrlCode = 42054
-		--and a.Code in ('PM01','HIS01')
+order by a.Code

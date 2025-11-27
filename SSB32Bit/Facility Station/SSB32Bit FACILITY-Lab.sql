@@ -55,6 +55,9 @@ select top 100
 		,dbo.sysconname(ls.CXLBYUSERCODE,10000,1) as 'CancelByUserNameEN'
 		,ls.CXLDATETIME as 'CancelDateTime'
 		,chk.REQUESTNO as 'CheckupNo'
+		,case when lh.CLINIC is not null then lh.CLINIC else lh.WARD end as FromLocationCode
+		,case when lh.CLINIC is not null then dbo.sysconname(lh.CLINIC,20016,2) else dbo.sysconname(lh.WARD,20024,2) end as FromLocationNameTH
+		,case when lh.CLINIC is not null then dbo.sysconname(lh.CLINIC,20016,1) else dbo.sysconname(lh.WARD,20024,1) end as FromLocationNameEN
 				from LABREQ lh
 				left join LABRESULT ls on lh.REQUESTNO=ls.REQUESTNO and lh.FACILITYRMSNO=ls.FACILITYRMSNO
 				left join SYSCONFIG spm on ls.LABCODE=spm.CODE and spm.CTRLCODE = 20067
