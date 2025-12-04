@@ -167,31 +167,39 @@ select 'PT2' as BU,
 		null as OtherICD10NameTH,
 		null as OtherICD10NameEN,
 
-		ipddiag.OperationDoctor1 as OperationDoctor1Code, --เพิ่มวันที่ 03/03/2568
+		ipddiag.OperationDoctor1 as OperationDoctorCode1, --เพิ่มวันที่ 03/03/2568
 		dbo.Doctorname(ipddiag.OperationDoctor1,2) as OperationDoctor1NameTH,
 		dbo.Doctorname(ipddiag.OperationDoctor1,1) as OperationDoctor1NameEN,
-		ipddiag.OperationDoctor2 as OperationDoctorCode, --เพิ่มวันที่ 03/03/2568
-		dbo.Doctorname(ipddiag.OperationDoctor2,2) as OperationDoctorName2TH,
-		dbo.Doctorname(ipddiag.OperationDoctor2,1) as OperationDoctorName2EN,
-		ipddiag.OperationDoctor3, --เพิ่มวันที่ 03/03/2568
-		dbo.Doctorname(ipddiag.OperationDoctor3,2) as OperationDoctorName3, --เพิ่มวันที่ 03/03/2568
-		ipddiag.OperationDoctor4, --เพิ่มวันที่ 03/03/2568
-		dbo.Doctorname(ipddiag.OperationDoctor4,2) as OperationDoctorName4, --เพิ่มวันที่ 03/03/2568
-		ipddiag.OperationDoctor5, --เพิ่มวันที่ 03/03/2568
-		dbo.Doctorname(ipddiag.OperationDoctor5,2) as OperationDoctorName5, --เพิ่มวันที่ 03/03/2568
-		ipddiag.OperationDoctor6, --เพิ่มวันที่ 03/03/2568
-		dbo.Doctorname(ipddiag.OperationDoctor6,2) as OperationDoctorName6, --เพิ่มวันที่ 03/03/2568
-		ipddiag.OperationDoctor7, --เพิ่มวันที่ 03/03/2568
-		dbo.Doctorname(ipddiag.OperationDoctor7,2) as OperationDoctorName7, --เพิ่มวันที่ 03/03/2568
-		ipddiag.OperationDoctor8, --เพิ่มวันที่ 03/03/2568
-		dbo.Doctorname(ipddiag.OperationDoctor8,2) as OperationDoctorName8, --เพิ่มวันที่ 03/03/2568
-		ipddiag.OperationDoctor9, --เพิ่มวันที่ 03/03/2568
-		dbo.Doctorname(ipddiag.OperationDoctor9,2) as OperationDoctorName9, --เพิ่มวันที่ 03/03/2568
-		ipddiag.OperationDoctor10, --เพิ่มวันที่ 03/03/2568
-		dbo.Doctorname(ipddiag.OperationDoctor10,2) as OperationDoctorName10 --เพิ่มวันที่ 03/03/2568
+		ipddiag.OperationDoctor2 as OperationDoctorCode2, --เพิ่มวันที่ 03/03/2568
+		dbo.Doctorname(ipddiag.OperationDoctor2,2) as OperationDoctor2NameTH,
+		dbo.Doctorname(ipddiag.OperationDoctor2,1) as OperationDoctor2NameEN,
+		ipddiag.OperationDoctor3 as OperationDoctorCode3, --เพิ่มวันที่ 03/03/2568
+		dbo.Doctorname(ipddiag.OperationDoctor3,2) as OperationDoctor3NameTH,
+		dbo.Doctorname(ipddiag.OperationDoctor3,1) as OperationDoctor3NameEN,
+		ipddiag.OperationDoctor4 as OperationDoctorCode4, --เพิ่มวันที่ 03/03/2568
+		dbo.Doctorname(ipddiag.OperationDoctor4,2) as OperationDoctor4NameTH,
+		dbo.Doctorname(ipddiag.OperationDoctor4,1) as OperationDoctor4NameEN,
+		ipddiag.OperationDoctor5 as OperationDoctorCode5, --เพิ่มวันที่ 03/03/2568
+		dbo.Doctorname(ipddiag.OperationDoctor5,2) as OperationDoctor5NameTH,
+		dbo.Doctorname(ipddiag.OperationDoctor5,1) as OperationDoctor5NameEN,
+		ipddiag.OperationDoctor6 as OperationDoctorCode6, --เพิ่มวันที่ 03/03/2568
+		dbo.Doctorname(ipddiag.OperationDoctor6,2) as OperationDoctor6NameTH,
+		dbo.Doctorname(ipddiag.OperationDoctor6,1) as OperationDoctor6NameEN,
+		ipddiag.OperationDoctor7 as OperationDoctorCode7, --เพิ่มวันที่ 03/03/2568
+		dbo.Doctorname(ipddiag.OperationDoctor7,2) as OperationDoctor7NameTH,
+		dbo.Doctorname(ipddiag.OperationDoctor7,1) as OperationDoctor7NameEN,
+		ipddiag.OperationDoctor8 as OperationDoctorCode8, --เพิ่มวันที่ 03/03/2568
+		dbo.Doctorname(ipddiag.OperationDoctor8,2) as OperationDoctor8NameTH,
+		dbo.Doctorname(ipddiag.OperationDoctor8,1) as OperationDoctor8NameEN,
+		ipddiag.OperationDoctor9 as OperationDoctorCode9, --เพิ่มวันที่ 03/03/2568
+		dbo.Doctorname(ipddiag.OperationDoctor9,2) as OperationDoctor9NameTH,
+		dbo.Doctorname(ipddiag.OperationDoctor9,1) as OperationDoctor9NameEN,
+		ipddiag.OperationDoctor10 as OperationDoctorCode10, --เพิ่มวันที่ 03/03/2568
+		dbo.Doctorname(ipddiag.OperationDoctor10,2) as OperationDoctor10NameTH,
+		dbo.Doctorname(ipddiag.OperationDoctor10,1) as OperationDoctor10NameEN
 from	HNIPD_MASTER adm
 		join HNIPD_DIAG ipddiag on adm.AN=ipddiag.AN
 		left join HNDOCTOR_MASTER doc on ipddiag.Doctor = doc.Doctor
 		--where ipddiag.ChronicCreteriaCode is not null
---where	adm.AN in (select am.AN from HNIPD_MASTER am where am.AdmDateTime between GETDATE()-5 and GETDATE())
+where	adm.AN in (select am.AN from HNIPD_MASTER am where am.AdmDateTime between GETDATE()-5 and GETDATE())
 		

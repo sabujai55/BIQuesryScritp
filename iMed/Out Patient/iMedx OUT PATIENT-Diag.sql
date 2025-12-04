@@ -12,9 +12,9 @@ select 'PLC' as "BU"
 --
 , di.diagnosis_date ||' '|| di.diagnosis_time as "DiagDateTime"
 --��
-, di.icd10_code as "PrimaryCode"
-, di.icd10_description as "PrimaryNameTH"
-, '' as "PrimaryNameEN"
+, di.icd10_code as "PrimaryDiagnosisCode"
+, di.icd10_description as "PrimaryDiagnosisNameTH"
+, '' as "PrimaryDiagnosisNameEN"
 --
 --����
 , coalesce(di9_1.icd9_code,'') as "ICDCmCode1"
