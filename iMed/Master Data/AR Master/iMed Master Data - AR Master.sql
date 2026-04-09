@@ -1,16 +1,11 @@
-
-
-
-
-
 select
 'PLR' as "BU"
 , p.payer_id as "ARCode"
 , p.description as "ARNameTH"
 , p.description_en  as "ARNameEN"
-, '' as "ARComposeCategory"
-, '' as "ARComposeCategoryNameTH"
-, '' as "ARComposeCategoryNameEN"
+, p.base_plan_group_id as "ARComposeCategory"
+, bpg.description as "ARComposeCategoryNameTH"
+, bpg.description_en as "ARComposeCategoryNameEN"
 , '' as "ComposeDept"
 , '' as "ComposeDeptNameTH"
 , '' as "ComposeDeptNameEN"
@@ -63,9 +58,8 @@ select
 , p.telephone as "TelephoneNo"
 , '' as "FaxNo"
 from payer p 
+left join base_plan_group bpg on bpg.base_plan_group_id = p.base_plan_group_id
 --limit 10
-
-
 
 
 

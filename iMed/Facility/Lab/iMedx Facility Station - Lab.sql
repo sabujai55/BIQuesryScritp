@@ -24,7 +24,15 @@ select 'PLC' as "BU"
 	, '' as "FacilityResultName"
 	, '' as "LABResultClassifiedType"
 	, '' as "LABResultClassifiedName"
-	, '' as "NormalResultValue"
+	,CASE
+    WHEN lt.normal_value_min = '' AND lt.normal_value_max != '' 
+        THEN lt.normal_value_max
+    WHEN lt.normal_value_min != '' AND lt.normal_value_max = '' 
+        THEN lt.normal_value_min
+    WHEN lt.normal_value_min != '' AND lt.normal_value_max != '' 
+        THEN lt.normal_value_min || ' - ' || lt.normal_value_max 
+    ELSE ''
+	END AS "NormalResultValue"  --edit 16/3/69
 	, lr.report_date ||' '|| lr.report_time as "ResultDateTime"
 	, '' as "ConfirmByUserCode"
 	, '' as"ConfirmByUserNameTH"
@@ -49,6 +57,8 @@ select 'PLC' as "BU"
 	inner join assign_lab al on al.visit_id = v.visit_id and oi.assigned_ref_no = al."ln"
 	inner join lab_result lr on lr.assign_lab_id = al.assign_lab_id and lr.visit_id = v.visit_id and lr.order_item_id = oi.order_item_id
 	inner join lab_test lt on lt.order_item_id = oi.order_item_id and lt.lab_result_id = lr.lab_result_id
+	left join template_lab_test tlt on tlt.template_lab_test_id = lt.template_lab_test_id  --edit 16/3/69
+	left join template_lab_normal_value tlnv on tlnv.template_lab_test_id = tlt.template_lab_test_id  --edit 16/3/69
 	left join base_specimen bs on bs.base_specimen_id = oi.base_specimen_id
 	left join employee e on e.employee_id = al.assign_doctor_eid
 	left join employee e2 on e2.employee_id = lr.verify_specimen_eid
@@ -83,7 +93,15 @@ select 'PLC' as "BU"
 	, '' as "FacilityResultName"
 	, '' as "LABResultClassifiedType"
 	, '' as "LABResultClassifiedName"
-	, '' as "NormalResultValue"
+	,CASE
+    WHEN lt.normal_value_min = '' AND lt.normal_value_max != '' 
+        THEN lt.normal_value_max
+    WHEN lt.normal_value_min != '' AND lt.normal_value_max = '' 
+        THEN lt.normal_value_min
+    WHEN lt.normal_value_min != '' AND lt.normal_value_max != '' 
+        THEN lt.normal_value_min || ' - ' || lt.normal_value_max 
+    ELSE ''
+	END AS "NormalResultValue"  --edit 16/3/69
 	, lr.report_date ||' '|| lr.report_time as "ResultDateTime"
 	, '' as "ConfirmByUserCode"
 	, '' as"ConfirmByUserNameTH"
@@ -108,6 +126,8 @@ select 'PLC' as "BU"
 	inner join assign_lab al on al.visit_id = v.visit_id and toi.assigned_ref_no = al."ln"
 	inner join lab_result lr on lr.assign_lab_id = al.assign_lab_id and lr.visit_id = v.visit_id and lr.order_item_id = toi.order_item_id
 	inner join lab_test lt on lt.order_item_id = toi.order_item_id and lt.lab_result_id = lr.lab_result_id
+	left join template_lab_test tlt on tlt.template_lab_test_id = lt.template_lab_test_id  --edit 16/3/69
+	left join template_lab_normal_value tlnv on tlnv.template_lab_test_id = tlt.template_lab_test_id  --edit 16/3/69
 	left join base_specimen bs on bs.base_specimen_id = toi.base_specimen_id
 	left join employee e on e.employee_id = al.assign_doctor_eid
 	left join employee e3 on e3.employee_id = lr.approve_eid
@@ -118,6 +138,7 @@ select 'PLC' as "BU"
 --	and v.patient_id = '570000944229'
 --	and lt.value != ''
 ) dataopd 
+--where dataopd."NormalResultValue" ~ '[A-Za-z]'
 limit 100
 
 

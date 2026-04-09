@@ -1,5 +1,6 @@
 select * from
 (
+(
 select 'PLC' as "BU"
 	,oi.order_item_id as "OrderID"
 	,oi.patient_id as "PatientID"
@@ -76,33 +77,40 @@ select 'PLC' as "BU"
 	,'' as "AuxLabel3NameTH"
 	,'' as "AuxLabel3NameEN"
 	,oi.instruction_text_line1 ||' '|| oi.instruction_text_line2||' '|| oi.instruction_text_line3  as "DoseMemo"
-	,'' as "EntryByFacilityMethodCode"
-	,'' as "EntryByFacilityMethodNameTH"
-	,'' as "EntryByFacilityMethodNameEN"
+	,i2.item_code as "EntryByFacilityMethodCode" --Edit 2026-03-04 >> เพิ่ม EntryByFacilityMethodCode, EntryByFacilityMethodNameTH, EntryByFacilityMethodNameEN
+	,case when i2.print_name != '' then i2.print_name else i2.common_name end as "EntryByFacilityMethodNameTH" --Edit 2026-03-04 >> เพิ่ม EntryByFacilityMethodCode, EntryByFacilityMethodNameTH, EntryByFacilityMethodNameEN
+	,i2.common_name as "EntryByFacilityMethodNameEN" --Edit 2026-03-04 >> เพิ่ม EntryByFacilityMethodCode, EntryByFacilityMethodNameTH, EntryByFacilityMethodNameEN
 	,'' as "Checkup"
 	,case when i.fix_item_type_id = '10' then '1' else '' end as "FlagDF"
-	,oi.base_order_sub_category_id as "ActivityCategoryCode"
-	,bosc.description as "ActivityCategoryNameTH"
-	,'' as "ActivityCategoryNameEN"
-	,di.icd10_code as "PrimaryDiagnosisCode"
-	,di.icd10_description as "PrimaryDiagnosisNameTH"
-	,'' as "PrimaryDiagnosisNameEN"
+	,i.base_order_category_id as "ActivityCategoryCode"	--Edit 2026-03-04 >> เพิ่ม ActivityCategoryCode, ActivityCategoryNameTH, ActivityCategoryNameEN
+	,boc.description as "ActivityCategoryNameTH"	--Edit 2026-03-04 >> เพิ่ม ActivityCategoryCode, ActivityCategoryNameTH, ActivityCategoryNameEN
+	,boc.description as "ActivityCategoryNameEN"	--Edit 2026-03-04 >> เพิ่ม ActivityCategoryCode, ActivityCategoryNameTH, ActivityCategoryNameEN
+	,split_part(his_func_get_diagnosis(oi.visit_id, '1','1'),'|',1) as "PrimaryDiagnosisCode"		--Edit 2026-03-04 >> เพิ่ม Diagnosis
+	,split_part(his_func_get_diagnosis(oi.visit_id, '1','2'),'|',1) as "PrimaryDiagnosisNameTH"	--Edit 2026-03-04 >> เพิ่ม Diagnosis
+	,split_part(his_func_get_diagnosis(oi.visit_id, '1','2'),'|',1) as "PrimaryDiagnosisNameEN"	--Edit 2026-03-04 >> เพิ่ม Diagnosis
 		from order_item oi 
 		inner join admit v on oi.visit_id = v.visit_id 
 		inner join visit_payment vp on v.visit_id = vp.visit_id and oi.visit_payment_id = vp.visit_payment_id and oi.plan_id = vp.plan_id 
 		inner join plan p on vp.plan_code = p.plan_code 
 		left join item i on oi.item_id = i.item_id 
 		left join base_unit bu  on oi.base_unit_id = bu.base_unit_id 
-		left join attending_physician ap on oi.visit_id = ap.visit_id and oi.order_doctor_eid = ap.employee_id 
+		inner join attending_physician ap on oi.visit_id = ap.visit_id and oi.order_doctor_eid = ap.employee_id --แก้ไขจาก left เป็น inner 4-2-69--
 		left join base_department bd on ap.base_department_id = bd.base_department_id and bd.account_product = 'COST'
 		left join fix_item_type fit on oi.fix_item_type_id = fit.fix_item_type_id 
+		left join base_order_category boc on i.base_order_category_id = boc.base_order_category_id	--Edit 2026-03-04 >> เพิ่ม ActivityCategoryCode, ActivityCategoryNameTH, ActivityCategoryNameEN
 		left join base_order_sub_category bosc on oi.base_order_sub_category_id = bosc.base_order_sub_category_id  
 		left join base_service_point bsp on oi.execute_spid = bsp.base_service_point_id 
 		left join base_dose_unit bdu on oi.base_dose_unit_id = bdu.base_dose_unit_id 
 		left join base_drug_frequency bdf on oi.base_drug_frequency_id = bdf.base_drug_frequency_id 
-		left join diagnosis_icd10 di on di.visit_id = oi.visit_id and di.fix_diagnosis_type_id = '1'
---where v.ipd_discharge_date between '$P!{dBeginDate}' and '$P!{dEndDate}'
+		-- inner join diagnosis_icd10 di on di.visit_id = oi.visit_id and di.fix_diagnosis_type_id = '1' --Edit 2026-03-04 >> เปลี่ยนวิธีการดึงข้อมูล Diagnosis
+-- *************************************** Get Package name *************************************** 
+		left join order_item oi2 on oi.visit_id = oi2.visit_id and oi.set_order_id = oi2.order_item_id	 --Edit 2026-03-04 >> เพิ่ม EntryByFacilityMethodCode, EntryByFacilityMethodNameTH, EntryByFacilityMethodNameEN
+		left join item i2 on oi2.item_id = i2.item_id	 --Edit 2026-03-04 >> เพิ่ม EntryByFacilityMethodCode, EntryByFacilityMethodNameTH, EntryByFacilityMethodNameEN
+where 	oi.verify_date = current_date::text
+order by oi.visit_id, oi.order_item_id
+)
 union all
+(
 select 'PLC' as "BU"
 	,oi.order_item_id as "OrderID"
 	,oi.patient_id as "PatientID"
@@ -184,12 +192,12 @@ select 'PLC' as "BU"
 	,'' as "EntryByFacilityMethodNameEN"
 	,'' as "Checkup"
 	,case when i.fix_item_type_id = '10' then '1' else '' end as "FlagDF"
-	,oi.base_order_sub_category_id as "ActivityCategoryCode"
-	,bosc.description as "ActivityCategoryNameTH"
-	,'' as "ActivityCategoryNameEN"
-	,di.icd10_code as "PrimaryDiagnosisCode"
-	,di.icd10_description as "PrimaryDiagnosisNameTH"
-	,'' as "PrimaryDiagnosisNameEN"
+	,i.base_order_category_id as "ActivityCategoryCode"	--Edit 2026-03-04 >> เพิ่ม ActivityCategoryCode, ActivityCategoryNameTH, ActivityCategoryNameEN
+	,boc.description as "ActivityCategoryNameTH"	--Edit 2026-03-04 >> เพิ่ม ActivityCategoryCode, ActivityCategoryNameTH, ActivityCategoryNameEN
+	,boc.description as "ActivityCategoryNameEN"	--Edit 2026-03-04 >> เพิ่ม ActivityCategoryCode, ActivityCategoryNameTH, ActivityCategoryNameEN
+	,split_part(his_func_get_diagnosis(oi.visit_id, '1','1'),'|',1) as "PrimaryDiagnosisCode"		--Edit 2026-03-04 >> เพิ่ม Diagnosis
+	,split_part(his_func_get_diagnosis(oi.visit_id, '1','2'),'|',1) as "PrimaryDiagnosisNameTH"	--Edit 2026-03-04 >> เพิ่ม Diagnosis
+	,split_part(his_func_get_diagnosis(oi.visit_id, '1','2'),'|',1) as "PrimaryDiagnosisNameEN"	--Edit 2026-03-04 >> เพิ่ม Diagnosis
 		from track_order_item oi
 		inner join admit v on oi.visit_id = v.visit_id 
 		inner join visit_payment vp on v.visit_id = vp.visit_id and oi.visit_payment_id = vp.visit_payment_id and oi.plan_id = vp.plan_id 
@@ -197,15 +205,18 @@ select 'PLC' as "BU"
 		left join employee e on oi.verify_eid = e.employee_id 
 		left join item i on oi.item_id = i.item_id 
 		left join base_unit bu  on oi.base_unit_id = bu.base_unit_id 
-		left join attending_physician ap on oi.visit_id = ap.visit_id and oi.order_doctor_eid = ap.employee_id 
+		inner join attending_physician ap on oi.visit_id = ap.visit_id and oi.order_doctor_eid = ap.employee_id --แก้ไขจาก left เป็น inner 4-2-69--
 		left join base_department bd on ap.base_department_id = bd.base_department_id and bd.account_product = 'COST'
 		left join fix_item_type fit on oi.fix_item_type_id = fit.fix_item_type_id 
+		left join base_order_category boc on i.base_order_category_id = boc.base_order_category_id	--Edit 2026-03-04 >> เพิ่ม ActivityCategoryCode, ActivityCategoryNameTH, ActivityCategoryNameEN
 		left join base_order_sub_category bosc on oi.base_order_sub_category_id = bosc.base_order_sub_category_id 
 		left join base_service_point bsp on oi.execute_spid = bsp.base_service_point_id 
 		left join base_dose_unit bdu on oi.base_dose_unit_id = bdu.base_dose_unit_id 
 		left join base_drug_frequency bdf on oi.base_drug_frequency_id = bdf.base_drug_frequency_id 
-		left join diagnosis_icd10 di on di.visit_id = oi.visit_id and di.fix_diagnosis_type_id = '1'
---where v.ipd_discharge_date between '$P!{dBeginDate}' and '$P!{dEndDate}'
+		-- inner join diagnosis_icd10 di on di.visit_id = oi.visit_id and di.fix_diagnosis_type_id = '1' --Edit 2026-03-04 >> เปลี่ยนวิธีการดึงข้อมูล Diagnosis
+where 	oi.track_date = current_date::text
+order by oi.visit_id
+)
 ) dataipd 
 limit 10
 		

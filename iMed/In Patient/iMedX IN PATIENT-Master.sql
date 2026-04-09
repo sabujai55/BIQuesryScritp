@@ -25,7 +25,7 @@ select 'PLC' as "BU"
 , ddi.fix_ipd_discharge_status_id as "DischargeCode"
 , fids.description as "DischargeNameTH"
 , '' as "DischargeNameEN"
-, case when a.ipd_discharge = '0' then 'Active' else 'Inactive' end as "Status"
+, case when a.active = '1' then 'Active' else 'Inactive' end as "Status"
 , a.times_admit as "AdmCount"
 , a.base_admit_type_id as "AdmType"
 , bat.description as "AdmTypeNameTH"
@@ -61,7 +61,7 @@ select 'PLC' as "BU"
 , boa.description as "AgencyNameTH"
 , '' as "AgencyNameEN"
 from admit a 
-left join doctor_discharge_ipd ddi on a.visit_id = ddi.visit_id 
+left join doctor_discharge_ipd ddi on a.visit_id = ddi.visit_id
 left join fix_ipd_discharge_status fids on ddi.fix_ipd_discharge_status_id = fids.fix_ipd_discharge_status_id 
 left join base_department bd on a.base_department_id = bd.base_department_id 
 left join employee e on a.admit_doctor_eid = e.employee_id 
@@ -73,12 +73,14 @@ left join base_clinic bc on bc.base_clinic_id = e.base_clinic_id
 left join base_department bmd on bmd.base_department_id = e.base_med_department_id
 left join base_service_point bsp2 on e.base_service_point_id = bsp2.base_service_point_id 
 left join base_department bd3 on bsp2.base_department_id = bd3.base_department_id 
-left join visit v on v.visit_id = a.visit_id
+inner join visit v on v.visit_id = a.visit_id --แก้ไขจาก left เป็น inner 4-2-69--
 left join base_admit_type bat on bat.base_admit_type_id = a.base_admit_type_id
 left join base_office_agent boa on boa.base_office_agent_id = v.base_office_agent_id
 left join fix_ipd_discharge_type fidt on fidt.fix_ipd_discharge_type_id = ddi.fix_ipd_discharge_type_id
---where a.admit_id = '525101813392553201'
+--where a.admit_id = '224100212232149601'
 --limit 10000
+
+
 
 
 

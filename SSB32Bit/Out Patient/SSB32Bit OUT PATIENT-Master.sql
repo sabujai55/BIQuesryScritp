@@ -1,4 +1,4 @@
-select top 1000 
+select top 10
   opd.BU
 , opd.PatientID
 , opd.VisitID
@@ -112,7 +112,10 @@ select top 1000
 		,dbo.sysconname(vnp.CLOSEVISITTYPE,20043,1) as 'CloseVisitNameEN' 
 		,vnp.APPOINTMENTNO as 'AppointmentNo'
 		,apm.APPOINTMENTDATETIME as 'AppointmentDateTime'
-		,case when CLOSEVISITTYPE is null then 'Active' else 'InActive' end as 'Status'
+
+		,case when CAST(SUBSTRING(cv.COM,8,1)as int) = 1 then 'InActive' else 'Active' end as 'Status' --modify 2026-04-02
+
+
 		,vnp.REGINDATETIME as 'RegInDateTime' 
 		,vnp.DISGRMS as 'DiagRms' 
 		,dbo.sysconname(vnp.DISGRMS,20042,4) as 'DiagRmsName' 
@@ -180,4 +183,6 @@ select top 1000
 				left join SYSCONFIG ssp on doc.SPECIALTY+doc.SUBSPECIALTY = REPLACE(ssp.CODE,' ','') and ssp.CTRLCODE = 20015
 				left join ADMMASTER adm on vnm.HN=adm.HN and CONVERT(date,vnm.VISITDATE,101) = CONVERT(date,adm.ADMDATETIME,101)
 				left join PATIENT_CLINIC ptc on vnm.HN=ptc.HN and vnp.CLINIC=ptc.CLINIC
+				left join SYSCONFIG cv on vnp.CLOSEVISITTYPE = cv.CODE and cv.CTRLCODE = 20043 --modify 2026-04-02
+				--where vnp.VISITDATE = '2026-04-01'
 		) opd

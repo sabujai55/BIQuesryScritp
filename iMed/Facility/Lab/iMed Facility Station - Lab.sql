@@ -24,7 +24,15 @@ select 'PLC' as "BU"
 	, '' as "FacilityResultName"
 	, '' as "LABResultClassifiedType"
 	, '' as "LABResultClassifiedName"
-	, '' as "NormalResultValue"
+	,CASE
+    WHEN lt.normal_value_min = '' AND lt.normal_value_max != '' 
+        THEN lt.normal_value_max
+    WHEN lt.normal_value_min != '' AND lt.normal_value_max = '' 
+        THEN lt.normal_value_min
+    WHEN lt.normal_value_min != '' AND lt.normal_value_max != '' 
+        THEN lt.normal_value_min || ' - ' || lt.normal_value_max 
+    ELSE ''
+	END AS "NormalResultValue" --edit 16/3/69
 	, lr.report_date ||' '|| lr.report_time as "ResultDateTime"
 	, '' as "ConfirmByUserCode"
 	, '' as"ConfirmByUserNameTH"
@@ -58,6 +66,7 @@ select 'PLC' as "BU"
 --	where oi.fix_item_type_id = '1' 
 --	and v.patient_id = '570000944229'
 --	and lt.value != ''
+--	where lt.lab_result_id = '524012914133809201'
 	union all
 select 'PLC' as "BU"
 	, v.patient_id as "PatientID"
@@ -83,7 +92,15 @@ select 'PLC' as "BU"
 	, '' as "FacilityResultName"
 	, '' as "LABResultClassifiedType"
 	, '' as "LABResultClassifiedName"
-	, '' as "NormalResultValue"
+	,CASE
+    WHEN lt.normal_value_min = '' AND lt.normal_value_max != '' 
+        THEN lt.normal_value_max
+    WHEN lt.normal_value_min != '' AND lt.normal_value_max = '' 
+        THEN lt.normal_value_min
+    WHEN lt.normal_value_min != '' AND lt.normal_value_max != '' 
+        THEN lt.normal_value_min || ' - ' || lt.normal_value_max 
+    ELSE ''
+	END AS "NormalResultValue"  --edit 16/3/69
 	, lr.report_date ||' '|| lr.report_time as "ResultDateTime"
 	, '' as "ConfirmByUserCode"
 	, '' as"ConfirmByUserNameTH"
@@ -117,8 +134,11 @@ select 'PLC' as "BU"
 --	where oi.fix_item_type_id = '1'
 --	and v.patient_id = '570000944229'
 --	and lt.value != ''
+--	where lt.lab_result_id = '524012914133809201'
 ) dataopd 
+--where dataopd."NormalResultValue" ~ '[A-Za-z]'
 limit 100
+
 
 
 

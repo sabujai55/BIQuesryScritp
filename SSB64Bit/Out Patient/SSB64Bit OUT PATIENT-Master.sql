@@ -125,7 +125,8 @@ select 'PT2' as BU
 		,vnp.AppointmentNo as AppointmentNo
 		, ah.AppointDateTime as AppointmentDateTime
 
-		,case when vnp.CloseVisitCode is null then 'Active' else 'InActive' end as [Status]
+		,Case When  CAST(SUBSTRING(cv.Com,16,1)as int) = 1 Then 'InActive' Else 'Active' End as [Status] --modify 2026-04-02
+		
 		,vnm.InDateTime as RegInDateTime
 		,vnp.DiagRms as DiagRms
 		,dbo.sysconname(vnp.DiagRms,42205,4) as DiagRmsName
@@ -221,5 +222,6 @@ from	HNOPD_PRESCRIP vnp
 		left join HNDOCTOR_MASTER doc on vnp.Doctor=doc.Doctor
 		left join DNSYSCONFIG cndp on vnp.Clinic = cndp.Code and cndp.CtrlCode = 42203
 		left join HNAPPMNT_HEADER ah on vnp.AppointmentNo = ah.AppointmentNo
+		left join DNSYSCONFIG cv on vnp.CloseVisitCode=cv.Code and cv.CtrlCode = 42261 --modify 2026-04-02
 where	vnp.VisitDate = CAST(GETDATE() as date)
 )opd

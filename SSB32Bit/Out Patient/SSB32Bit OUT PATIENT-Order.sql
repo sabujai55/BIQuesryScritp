@@ -1,4 +1,4 @@
-select top 10000 'PLS' as 'BU' , datamst.*
+select top 1000 'PLS' as 'BU' , datamst.*
 		from 
 			((
 				select  
@@ -71,10 +71,10 @@ select top 10000 'PLS' as 'BU' , datamst.*
 						,'' as 'AuxLabel3NameTH'
 						,'' as 'AuxLabel3NameEN'
 						,'' as 'DoseMemo'
-						,'' as 'EntryByFacilityMethodCode'
-						,'' as 'EntryByFacilityMethodNameTH' 
-						,'' as 'EntryByFacilityMethodNameEN' 
-						,'' as 'Checkup'
+						,vnt.GROUPREQUESTCODE as 'EntryByFacilityMethodCode' --modify 2026-04-03
+						,dbo.sysconname(vnt.GROUPREQUESTCODE,20120,2) as 'EntryByFacilityMethodNameTH'  --modify 2026-04-03
+						,dbo.sysconname(vnt.GROUPREQUESTCODE,20120,1) as 'EntryByFacilityMethodNameEN'  --modify 2026-04-03
+						,CASE WHEN CAST(SUBSTRING(fac.Com,2,1)as int) = 1 Then 'True' else 'False' end as 'Checkup' --modify 2026-04-03 Check Setup FacilityMtd
 						,case when (Convert(int, substring(sc.com,51,1)) =0 ) Then 0
 						when (Convert(int, substring(sc.com,51,1)) =1 ) Then 1 end as 'FlagDF' 
 						,CAST(SUBSTRING(act.COM,91,3)as varchar) as 'ActivityCategoryCode' 
@@ -90,6 +90,7 @@ select top 10000 'PLS' as 'BU' , datamst.*
 						left join ICD_MASTER icd on vnd.ICDCODE=icd.ICDCODE
 						left join SYSCONFIG sc on vnt.TREATMENTCODE=sc.CODE and sc.CTRLCODE = 20051
 						left join SYSCONFIG act on vnt.CHARGECODE=act.CODE and act.CTRLCODE = 20023
+						left join SYSCONFIG fac on vnt.GROUPREQUESTCODE=fac.CODE and fac.CTRLCODE = 20120 --modify 2026-04-03
 						where vnt.FACILITYSYSTEM not in (9,8,4,6)
 		)  
 		union all
@@ -255,10 +256,10 @@ select top 10000 'PLS' as 'BU' , datamst.*
 						,'' as 'AuxLabel3NameTH'
 						,'' as 'AuxLabel3NameEN'
 						,'' as 'DoseMemo'
-						,'' as 'EntryByFacilityMethodCode'
-						,'' as 'EntryByFacilityMethodNameTH' 
-						,'' as 'EntryByFacilityMethodNameEN' 
-						,'' as 'Checkup'
+						,vnt.GROUPREQUESTCODE as 'EntryByFacilityMethodCode' --modify 2026-04-03
+						,dbo.sysconname(vnt.GROUPREQUESTCODE,20120,2) as 'EntryByFacilityMethodNameTH'  --modify 2026-04-03
+						,dbo.sysconname(vnt.GROUPREQUESTCODE,20120,1) as 'EntryByFacilityMethodNameEN'  --modify 2026-04-03
+						,CASE WHEN CAST(SUBSTRING(fac.Com,2,1)as int) = 1 Then 'True' else 'False' end as 'Checkup' --modify 2026-04-03 Check Setup FacilityMtd
 						,0 as 'FlagDF' 
 						,CAST(SUBSTRING(act.COM,91,3)as varchar) as 'ActivityCategoryCode' 
 						,dbo.sysconname(CAST(SUBSTRING(act.COM,91,3)as varchar),10051,2) as 'ActivityCategoryNameTH' 
@@ -274,6 +275,7 @@ select top 10000 'PLS' as 'BU' , datamst.*
 						left join VNDIAG vnd on vnp.VN=vnd.VN and vnp.VISITDATE=vnd.VISITDATE and TYPEOFTHISDIAG = 1
 						left join ICD_MASTER icd on vnd.ICDCODE=icd.ICDCODE
 						left join SYSCONFIG act on lr.CHARGECODE=act.CODE and act.CTRLCODE = 20023
+						left join SYSCONFIG fac on vnt.GROUPREQUESTCODE=fac.CODE and fac.CTRLCODE = 20120 --modify 2026-04-03
 						
 		) 
 		union all
@@ -348,10 +350,10 @@ select top 10000 'PLS' as 'BU' , datamst.*
 						,'' as 'AuxLabel3NameTH'
 						,'' as 'AuxLabel3NameEN'
 						,'' as 'DoseMemo'
-						,'' as 'EntryByFacilityMethodCode'
-						,'' as 'EntryByFacilityMethodNameTH' 
-						,'' as 'EntryByFacilityMethodNameEN' 
-						,'' as 'Checkup'
+						,vnt.GROUPREQUESTCODE as 'EntryByFacilityMethodCode' --modify 2026-04-03
+						,dbo.sysconname(vnt.GROUPREQUESTCODE,20120,2) as 'EntryByFacilityMethodNameTH'  --modify 2026-04-03
+						,dbo.sysconname(vnt.GROUPREQUESTCODE,20120,1) as 'EntryByFacilityMethodNameEN'  --modify 2026-04-03
+						,CASE WHEN CAST(SUBSTRING(fac.Com,2,1)as int) = 1 Then 'True' else 'False' end as 'Checkup' --modify 2026-04-03 Check Setup FacilityMtd
 						,0 as 'FlagDF' 
 						,CAST(SUBSTRING(act.COM,91,3)as varchar) as 'ActivityCategoryCode' 
 						,dbo.sysconname(CAST(SUBSTRING(act.COM,91,3)as varchar),10051,2) as 'ActivityCategoryNameTH' 
@@ -367,6 +369,7 @@ select top 10000 'PLS' as 'BU' , datamst.*
 						left join VNDIAG vnd on vnp.VN=vnd.VN and vnp.VISITDATE=vnd.VISITDATE and TYPEOFTHISDIAG = 1
 						left join ICD_MASTER icd on vnd.ICDCODE=icd.ICDCODE
 						left join SYSCONFIG act on xr.CHARGECODE=act.CODE and act.CTRLCODE = 20023
+						left join SYSCONFIG fac on vnt.GROUPREQUESTCODE=fac.CODE and fac.CTRLCODE = 20120 --modify 2026-04-03
 		)
 		union all
 		(
@@ -440,10 +443,10 @@ select top 10000 'PLS' as 'BU' , datamst.*
 						,'' as 'AuxLabel3NameTH'
 						,'' as 'AuxLabel3NameEN'
 						,'' as 'DoseMemo'
-						,'' as 'EntryByFacilityMethodCode'
-						,'' as 'EntryByFacilityMethodNameTH' 
-						,'' as 'EntryByFacilityMethodNameEN' 
-						,'' as 'Checkup'
+						,vnt.GROUPREQUESTCODE as 'EntryByFacilityMethodCode' --modify 2026-04-03
+						,dbo.sysconname(vnt.GROUPREQUESTCODE,20120,2) as 'EntryByFacilityMethodNameTH'  --modify 2026-04-03
+						,dbo.sysconname(vnt.GROUPREQUESTCODE,20120,1) as 'EntryByFacilityMethodNameEN'  --modify 2026-04-03
+						,CASE WHEN CAST(SUBSTRING(fac.Com,2,1)as int) = 1 Then 'True' else 'False' end as 'Checkup' --modify 2026-04-03 Check Setup FacilityMtd
 						,0 as 'FlagDF'
 						,CAST(SUBSTRING(act.COM,91,3)as varchar) as 'ActivityCategoryCode' 
 						,dbo.sysconname(CAST(SUBSTRING(act.COM,91,3)as varchar),10051,2) as 'ActivityCategoryNameTH' 
@@ -459,6 +462,7 @@ select top 10000 'PLS' as 'BU' , datamst.*
 			left join VNDIAG vnd on vnp.VN=vnd.VN and vnp.VISITDATE=vnd.VISITDATE and TYPEOFTHISDIAG = 1
 			left join ICD_MASTER icd on vnd.ICDCODE=icd.ICDCODE
 			left join SYSCONFIG act on vnt.CHARGECODE=act.CODE and act.CTRLCODE = 20023
+			left join SYSCONFIG fac on vnt.GROUPREQUESTCODE=fac.CODE and fac.CTRLCODE = 20120 --modify 2026-04-03
 			where vnt.FACILITYSYSTEM = 4
 		)
 		union all
@@ -533,10 +537,10 @@ select top 10000 'PLS' as 'BU' , datamst.*
 						,'' as 'AuxLabel3NameTH'
 						,'' as 'AuxLabel3NameEN'
 						,'' as 'DoseMemo'
-						,'' as 'EntryByFacilityMethodCode'
-						,'' as 'EntryByFacilityMethodNameTH' 
-						,'' as 'EntryByFacilityMethodNameEN' 
-						,'' as 'Checkup'
+						,vnt.GROUPREQUESTCODE as 'EntryByFacilityMethodCode' --modify 2026-04-03
+						,dbo.sysconname(vnt.GROUPREQUESTCODE,20120,2) as 'EntryByFacilityMethodNameTH'  --modify 2026-04-03
+						,dbo.sysconname(vnt.GROUPREQUESTCODE,20120,1) as 'EntryByFacilityMethodNameEN'  --modify 2026-04-03
+						,CASE WHEN CAST(SUBSTRING(fac.Com,2,1)as int) = 1 Then 'True' else 'False' end as 'Checkup' --modify 2026-04-03 Check Setup FacilityMtd
 						,0 as 'FlagDF' 
 						,CAST(SUBSTRING(act.COM,91,3)as varchar) as 'ActivityCategoryCode' 
 						,dbo.sysconname(CAST(SUBSTRING(act.COM,91,3)as varchar),10051,2) as 'ActivityCategoryNameTH' 
@@ -552,6 +556,7 @@ select top 10000 'PLS' as 'BU' , datamst.*
 						left join ICD_MASTER icd on vnd.ICDCODE=icd.ICDCODE
 						left join SYSCONFIG sc on vnt.TREATMENTCODE=sc.CODE and sc.CTRLCODE = 20051
 						left join SYSCONFIG act on vnt.CHARGECODE=act.CODE and act.CTRLCODE = 20023
+						left join SYSCONFIG fac on vnt.GROUPREQUESTCODE=fac.CODE and fac.CTRLCODE = 20120 --modify 2026-04-03
 						where vnt.FACILITYSYSTEM = 6
 		)  
 		) datamst

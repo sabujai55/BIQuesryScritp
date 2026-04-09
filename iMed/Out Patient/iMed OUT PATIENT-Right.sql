@@ -24,7 +24,7 @@ select
 ,'' AS "CompanyNameTH"
 ,'' as "CompanyNameEN"
 from visit_payment vp 
-left join visit v on vp.visit_id = v.visit_id
+inner join visit v on vp.visit_id = v.visit_id --แก้ไขจาก left เป็น inner 4-2-69--
 left join plan p on vp.plan_code = p.plan_code
 left join payer p2 on vp.payer_id = p2.payer_id
 left join base_office bo on vp.main_hospital_code = bo.base_office_id --MainHospital

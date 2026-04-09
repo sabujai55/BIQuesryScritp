@@ -1,4 +1,4 @@
-select top 10 
+select top 10
 	 'PT2' as 'BU',
 	 a.HN as 'PatientID',
 	 CONVERT(varchar,a.AdmDateTime,112)+a.AN as 'AdmitID',
@@ -25,4 +25,5 @@ select top 10
 			from HNIPD_MASTER a
 			left join HNIPD_RIGHT b on a.AN=b.AN
 			left join ARMASTER ar on b.ARCode=ar.ARCode
-			left join HNPAT_RIGHT c on b.RightCode=c.RightCode and b.ARCode=c.ARCode and a.HN=c.HN
+			left join HNPAT_RIGHT c on b.RightCode=c.RightCode and b.ARCode=c.ARCode and a.HN=c.HN and b.RefRightKeyNo = c.RefRightKeyNo
+			

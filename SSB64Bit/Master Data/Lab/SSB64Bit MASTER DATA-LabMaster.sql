@@ -1,11 +1,14 @@
+use SSBLIVE
+go
+
 select 
-	'PT2' as BU
+	'PT3' as BU
 	, lm.Code as LabCode
 	, dbo.CutSortChar(lm.LocalName) as LabNameTH
 	, dbo.CutSortChar(lm.EnglishName) as LabNameEN
-	, CAST(SUBSTRING(lx2.com,1,7)as varchar) as GroupOfLabCode
-	, dbo.sysconname(CAST(SUBSTRING(lx2.com,1,7)as varchar),42129,2) as GroupOfLabNameTH
-	, dbo.sysconname(CAST(SUBSTRING(lx2.com,1,7)as varchar),42129,1) as GroupOfLabNameEN
+	, coalesce(CAST(SUBSTRING(lx2.com,1,7)as varchar),CAST(SUBSTRING(lm.Com,122,7)as varchar)) as GroupOfLabCode --แก้ไขวันที่ 09/02/69
+	, dbo.sysconname(coalesce(CAST(SUBSTRING(lx2.com,1,7)as varchar),CAST(SUBSTRING(lm.Com,122,7)as varchar)),42129,2) as GroupOfLabNameTH --แก้ไขวันที่ 09/02/69
+	, dbo.sysconname(coalesce(CAST(SUBSTRING(lx2.com,1,7)as varchar),CAST(SUBSTRING(lm.Com,122,7)as varchar)),42129,1) as GroupOfLabNameEN --แก้ไขวันที่ 09/02/69
 	, CAST(SUBSTRING(lm.com,31,3)as varchar) as ChartColour
 	, dbo.sysconname(CAST(SUBSTRING(lm.com,31,3)as varchar),10151,2) as ChartColourNameTH
 	, dbo.sysconname(CAST(SUBSTRING(lm.com,31,3)as varchar),10151,1) as ChartColourNameEN
@@ -45,9 +48,9 @@ select
 	, dbo.sysconname(CAST(SUBSTRING(lm.Com,41,6)as varchar),42093,2) as CheckUpHNActivityNameTH
 	, dbo.sysconname(CAST(SUBSTRING(lm.Com,41,6)as varchar),42093,1) as CheckUpHNActivityNameEN
 	, CAST(SUBSTRING(lm.Com,116,1)as int) as Gender
-	, case when CAST(SUBSTRING(lm.Com,116,1)as int) = 0 then '����к�'
-		   when CAST(SUBSTRING(lm.Com,116,1)as int) = 1 then '˭ԧ'
-		   when CAST(SUBSTRING(lm.Com,116,1)as int) = 2 then '���'
+	, case when CAST(SUBSTRING(lm.Com,116,1)as int) = 0 then 'ไม่ระบุ'
+		   when CAST(SUBSTRING(lm.Com,116,1)as int) = 1 then 'หญิง'
+		   when CAST(SUBSTRING(lm.Com,116,1)as int) = 2 then 'ชาย'
 		   end as GenderNameTH
 	, case when CAST(SUBSTRING(lm.Com,116,1)as int) = 0 then 'None'
 		   when CAST(SUBSTRING(lm.Com,116,1)as int) = 1 then 'Female'
@@ -154,3 +157,4 @@ select
 				from DNSYSCONFIG lm
 				left join DNSYSCONFIG_DETAIL lx2 on lm.CtrlCode=lx2.MasterCtrlCode and lm.Code=lx2.Code and lx2.CtrlCode=60051 and lx2.AdditionCode='EXTEND2'
 				where lm.CtrlCode = 42136
+				

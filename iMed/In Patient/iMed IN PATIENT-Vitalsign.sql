@@ -23,7 +23,7 @@ select 'PLC' as "BU"
 , vsi.sat_o2 as "O2Sat"
 , '' as "Remark"
 from admit a
-left join vital_sign_ipd vsi on vsi.admit_id = a.admit_id 
+inner join vital_sign_ipd vsi on vsi.admit_id = a.admit_id --แก้ไขจาก left เป็น inner 4-2-69--
 left join employee e on e.employee_id = vsi.measure_eid 
 left join base_service_point bsp on bsp.base_service_point_id = vsi.measure_spid
 left join vs_pain_score vps on vps.vital_sign_id = vsi.vital_sign_ipd_id

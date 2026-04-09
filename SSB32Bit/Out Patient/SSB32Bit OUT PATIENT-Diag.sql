@@ -27,18 +27,54 @@ select
 		, vnd.PROCUDUREICDCMCODE4 as 'ICDCmCode4'
 		, dbo.ICDCMname(vnd.PROCUDUREICDCMCODE4,2) as 'ICDCm4NameTH'
 		, dbo.ICDCMname(vnd.PROCUDUREICDCMCODE4,1) as 'ICDCm4NameEN'
-		, (select a.PROCUDUREICDCMCODE1 from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=2) as 'ICDCmCode5'
-		, (select dbo.ICDCMname(a.PROCUDUREICDCMCODE1,2) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=2) as 'ICDCm5NameTH'
-		, (select dbo.ICDCMname(a.PROCUDUREICDCMCODE1,1) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=2) as 'ICDCm5NameEN'
-		, (select a.PROCUDUREICDCMCODE2 from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=2) as 'ICDCmCode6'
-		, (select dbo.ICDCMname(a.PROCUDUREICDCMCODE2,2) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=2) as 'ICDCm6NameTH'
-		, (select dbo.ICDCMname(a.PROCUDUREICDCMCODE2,1) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=2) as 'ICDCm6NameEN'
-		, (select a.PROCUDUREICDCMCODE3 from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=2) as 'ICDCmCode7'
-		, (select dbo.ICDCMname(a.PROCUDUREICDCMCODE3,2) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=2) as 'ICDCm7NameTH'
-		, (select dbo.ICDCMname(a.PROCUDUREICDCMCODE3,1) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=2) as 'ICDCm7NameEN'
-		, (select a.PROCUDUREICDCMCODE4 from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=2) as 'ICDCmCode8'
-		, (select dbo.ICDCMname(a.PROCUDUREICDCMCODE4,2) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=2) as 'ICDCm8NameTH'
-		, (select dbo.ICDCMname(a.PROCUDUREICDCMCODE4,1) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=2) as 'ICDCm8NameEN'
+		, COALESCE(
+			  (select a.PROCUDUREICDCMCODE1 from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.TYPEOFTHISDIAG != 1 and a.SUBSUFFIX = 1)
+			, (select a.PROCUDUREICDCMCODE1 from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.TYPEOFTHISDIAG != 1 and a.SUBSUFFIX = 2)
+			, (select a.PROCUDUREICDCMCODE1 from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.TYPEOFTHISDIAG != 1 and a.SUBSUFFIX = 3))as 'ICDCmCode5'
+		, COALESCE(
+			  (select dbo.ICDCMname(a.PROCUDUREICDCMCODE1,2) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.TYPEOFTHISDIAG != 1 and a.SUBSUFFIX = 1)
+			, (select dbo.ICDCMname(a.PROCUDUREICDCMCODE1,2) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.TYPEOFTHISDIAG != 1 and a.SUBSUFFIX = 2)
+			, (select dbo.ICDCMname(a.PROCUDUREICDCMCODE1,2) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.TYPEOFTHISDIAG != 1 and a.SUBSUFFIX = 3)) as 'ICDCm5NameTH'
+		, COALESCE(
+			  (select dbo.ICDCMname(a.PROCUDUREICDCMCODE1,1) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.TYPEOFTHISDIAG != 1 and a.SUBSUFFIX = 1)
+			, (select dbo.ICDCMname(a.PROCUDUREICDCMCODE1,1) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.TYPEOFTHISDIAG != 1 and a.SUBSUFFIX = 2)
+			, (select dbo.ICDCMname(a.PROCUDUREICDCMCODE1,1) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.TYPEOFTHISDIAG != 1 and a.SUBSUFFIX = 3)) as 'ICDCm5NameEN'
+		, COALESCE(
+			  (select a.PROCUDUREICDCMCODE2 from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.TYPEOFTHISDIAG != 1 and a.SUBSUFFIX = 1)
+			, (select a.PROCUDUREICDCMCODE2 from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.TYPEOFTHISDIAG != 1 and a.SUBSUFFIX = 2)
+			, (select a.PROCUDUREICDCMCODE2 from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.TYPEOFTHISDIAG != 1 and a.SUBSUFFIX = 3)) as 'ICDCmCode6'
+		, COALESCE(
+			  (select dbo.ICDCMname(a.PROCUDUREICDCMCODE2,2) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.TYPEOFTHISDIAG != 1 and a.SUBSUFFIX = 1)
+			, (select dbo.ICDCMname(a.PROCUDUREICDCMCODE2,2) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.TYPEOFTHISDIAG != 1 and a.SUBSUFFIX = 2)
+			, (select dbo.ICDCMname(a.PROCUDUREICDCMCODE2,2) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.TYPEOFTHISDIAG != 1 and a.SUBSUFFIX = 3)) as 'ICDCm6NameTH'
+		, COALESCE(
+			  (select dbo.ICDCMname(a.PROCUDUREICDCMCODE2,1) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.TYPEOFTHISDIAG != 1 and a.SUBSUFFIX = 1)
+			, (select dbo.ICDCMname(a.PROCUDUREICDCMCODE2,1) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.TYPEOFTHISDIAG != 1 and a.SUBSUFFIX = 2)
+			, (select dbo.ICDCMname(a.PROCUDUREICDCMCODE2,1) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.TYPEOFTHISDIAG != 1 and a.SUBSUFFIX = 3)) as 'ICDCm6NameEN'
+		, COALESCE(
+			  (select a.PROCUDUREICDCMCODE3 from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.TYPEOFTHISDIAG != 1 and a.SUBSUFFIX = 1)
+			, (select a.PROCUDUREICDCMCODE3 from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.TYPEOFTHISDIAG != 1 and a.SUBSUFFIX = 2)
+			, (select a.PROCUDUREICDCMCODE3 from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.TYPEOFTHISDIAG != 1 and a.SUBSUFFIX = 3)) as 'ICDCmCode7'
+		, COALESCE(
+			  (select dbo.ICDCMname(a.PROCUDUREICDCMCODE3,2) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.TYPEOFTHISDIAG != 1 and a.SUBSUFFIX = 1)
+			, (select dbo.ICDCMname(a.PROCUDUREICDCMCODE3,2) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.TYPEOFTHISDIAG != 1 and a.SUBSUFFIX = 2)
+			, (select dbo.ICDCMname(a.PROCUDUREICDCMCODE3,2) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.TYPEOFTHISDIAG != 1 and a.SUBSUFFIX = 3)) as 'ICDCm7NameTH'
+		, COALESCE(
+			  (select dbo.ICDCMname(a.PROCUDUREICDCMCODE3,1) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.TYPEOFTHISDIAG != 1 and a.SUBSUFFIX = 1)
+			, (select dbo.ICDCMname(a.PROCUDUREICDCMCODE3,1) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.TYPEOFTHISDIAG != 1 and a.SUBSUFFIX = 2)
+			, (select dbo.ICDCMname(a.PROCUDUREICDCMCODE3,1) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.TYPEOFTHISDIAG != 1 and a.SUBSUFFIX = 3)) as 'ICDCm7NameEN'
+		, COALESCE(
+			  (select a.PROCUDUREICDCMCODE4 from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.TYPEOFTHISDIAG != 1 and a.SUBSUFFIX = 1)
+			, (select a.PROCUDUREICDCMCODE4 from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.TYPEOFTHISDIAG != 1 and a.SUBSUFFIX = 2)
+			, (select a.PROCUDUREICDCMCODE4 from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.TYPEOFTHISDIAG != 1 and a.SUBSUFFIX = 3)) as 'ICDCmCode8'
+		, COALESCE(
+			  (select dbo.ICDCMname(a.PROCUDUREICDCMCODE4,2) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.TYPEOFTHISDIAG != 1 and a.SUBSUFFIX = 1)
+			, (select dbo.ICDCMname(a.PROCUDUREICDCMCODE4,2) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.TYPEOFTHISDIAG != 1 and a.SUBSUFFIX = 2)
+			, (select dbo.ICDCMname(a.PROCUDUREICDCMCODE4,2) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.TYPEOFTHISDIAG != 1 and a.SUBSUFFIX = 3)) as 'ICDCm8NameTH'
+		, COALESCE(
+			  (select dbo.ICDCMname(a.PROCUDUREICDCMCODE4,1) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.TYPEOFTHISDIAG != 1 and a.SUBSUFFIX = 1)
+			, (select dbo.ICDCMname(a.PROCUDUREICDCMCODE4,1) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.TYPEOFTHISDIAG != 1 and a.SUBSUFFIX = 2)
+			, (select dbo.ICDCMname(a.PROCUDUREICDCMCODE4,1) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.TYPEOFTHISDIAG != 1 and a.SUBSUFFIX = 3)) as 'ICDCm8NameEN'
 		, '' as 'ICDCmCode9'
 		, '' as 'ICDCm9NameTH'
 		, '' as 'ICDCm9NameEN'
@@ -55,21 +91,21 @@ select
 		, vnd.ECODE as 'ECode'
 		, dbo.ICDname(vnd.ECODE,2) as 'ECodeNameTH'
 		, dbo.ICDname(vnd.ECODE,1) as 'ECodeNameEN'
-		, (select a.ICDCODE from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=2 and a.TYPEOFTHISDIAG = 4) as 'ComobidityCode1'
-		, (select dbo.ICDname(a.ICDCODE,2) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=2 and a.TYPEOFTHISDIAG = 4) as 'Comobidity1NameTH'
-		, (select dbo.ICDname(a.ICDCODE,1) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=2 and a.TYPEOFTHISDIAG = 4) as 'Comobidity1NameEN'
-		, (select a.ICDCODE from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=3 and a.TYPEOFTHISDIAG = 4) as 'ComobidityCode2'
-		, (select dbo.ICDname(a.ICDCODE,2) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=3 and a.TYPEOFTHISDIAG = 4) as 'Comobidity2NameTH'
-		, (select dbo.ICDname(a.ICDCODE,1) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=3 and a.TYPEOFTHISDIAG = 4) as 'Comobidity2NameEN'
-		, (select a.ICDCODE from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=4 and a.TYPEOFTHISDIAG = 4) as 'ComobidityCode3'
-		, (select dbo.ICDname(a.ICDCODE,2) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=4 and a.TYPEOFTHISDIAG = 4) as 'Comobidity3NameTH'
-		, (select dbo.ICDname(a.ICDCODE,1) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=4 and a.TYPEOFTHISDIAG = 4) as 'Comobidity3NameEN'
-		, (select a.ICDCODE from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=5 and a.TYPEOFTHISDIAG = 4) as 'ComobidityCode4'
-		, (select dbo.ICDname(a.ICDCODE,2) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=5 and a.TYPEOFTHISDIAG = 4) as 'Comobidity4NameTH'
-		, (select dbo.ICDname(a.ICDCODE,1) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=5 and a.TYPEOFTHISDIAG = 4) as 'Comobidity4NameEN'
-		, (select a.ICDCODE from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=6 and a.TYPEOFTHISDIAG = 4) as 'ComobidityCode5'
-		, (select dbo.ICDname(a.ICDCODE,2) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=6 and a.TYPEOFTHISDIAG = 4) as 'Comobidity5NameTH'
-		, (select dbo.ICDname(a.ICDCODE,1) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=6 and a.TYPEOFTHISDIAG = 4) as 'Comobidity5NameEN'
+		, (select a.ICDCODE from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=1 and a.TYPEOFTHISDIAG = 4) as 'ComobidityCode1'
+		, (select dbo.ICDname(a.ICDCODE,2) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=1 and a.TYPEOFTHISDIAG = 4) as 'Comobidity1NameTH'
+		, (select dbo.ICDname(a.ICDCODE,1) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=1 and a.TYPEOFTHISDIAG = 4) as 'Comobidity1NameEN'
+		, (select a.ICDCODE from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=2 and a.TYPEOFTHISDIAG = 4) as 'ComobidityCode2'
+		, (select dbo.ICDname(a.ICDCODE,2) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=2 and a.TYPEOFTHISDIAG = 4) as 'Comobidity2NameTH'
+		, (select dbo.ICDname(a.ICDCODE,1) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=2 and a.TYPEOFTHISDIAG = 4) as 'Comobidity2NameEN'
+		, (select a.ICDCODE from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=3 and a.TYPEOFTHISDIAG = 4) as 'ComobidityCode3'
+		, (select dbo.ICDname(a.ICDCODE,2) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=3 and a.TYPEOFTHISDIAG = 4) as 'Comobidity3NameTH'
+		, (select dbo.ICDname(a.ICDCODE,1) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=3 and a.TYPEOFTHISDIAG = 4) as 'Comobidity3NameEN'
+		, (select a.ICDCODE from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=4 and a.TYPEOFTHISDIAG = 4) as 'ComobidityCode4'
+		, (select dbo.ICDname(a.ICDCODE,2) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=4 and a.TYPEOFTHISDIAG = 4) as 'Comobidity4NameTH'
+		, (select dbo.ICDname(a.ICDCODE,1) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=4 and a.TYPEOFTHISDIAG = 4) as 'Comobidity4NameEN'
+		, (select a.ICDCODE from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=5 and a.TYPEOFTHISDIAG = 4) as 'ComobidityCode5'
+		, (select dbo.ICDname(a.ICDCODE,2) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=5 and a.TYPEOFTHISDIAG = 4) as 'Comobidity5NameTH'
+		, (select dbo.ICDname(a.ICDCODE,1) from VNDIAG a where a.VN=vnd.VN and a.VISITDATE=vnd.VISITDATE and a.SUFFIX=vnd.SUFFIX and a.SUBSUFFIX=5 and a.TYPEOFTHISDIAG = 4) as 'Comobidity5NameEN'
 				from VNDIAG vnd
-				inner join VNPRES vnp on vnd.VN=vnp.VN and vnd.VISITDATE=vnp.VISITDATE and vnd.SUFFIX=vnp.SUFFIX and vnd.SUBSUFFIX = 1
+				inner join VNPRES vnp on vnd.VN=vnp.VN and vnd.VISITDATE=vnp.VISITDATE and vnd.SUFFIX=vnp.SUFFIX and vnd.TYPEOFTHISDIAG = 1
 				inner join VNMST vnm on vnp.VN=vnm.VN and vnp.VISITDATE=vnm.VISITDATE

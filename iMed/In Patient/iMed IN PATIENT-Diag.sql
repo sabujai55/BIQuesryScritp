@@ -192,7 +192,7 @@ select 'PLR' as "BU"
 , split_part(his_func_get_icd9(a.visit_id,'5'),'|',10) as "OperationDoctor10NameEN"
 from admit a 
 left join base_department bd on bd.base_department_id = a.base_department_id 
-left join diagnosis_icd10 di on di.visit_id = a.visit_id and di.fix_diagnosis_type_id = '1'
+inner join diagnosis_icd10 di on di.visit_id = a.visit_id and di.fix_diagnosis_type_id = '1' --แก้ไขวันที่ 04/02/2569
 left join employee e2 on e2.employee_id = di.doctor_eid 
 left join patient p on p.patient_id = a.patient_id
 left join base_clinic bc on bc.base_clinic_id = e2.base_clinic_id

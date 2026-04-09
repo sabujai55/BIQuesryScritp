@@ -198,8 +198,9 @@ select 'PT2' as BU,
 		dbo.Doctorname(ipddiag.OperationDoctor10,2) as OperationDoctor10NameTH,
 		dbo.Doctorname(ipddiag.OperationDoctor10,1) as OperationDoctor10NameEN
 from	HNIPD_MASTER adm
-		join HNIPD_DIAG ipddiag on adm.AN=ipddiag.AN
+		join HNIPD_DIAG ipddiag on adm.AN=ipddiag.AN and ipddiag.DiagnosisRecordType = 1 --เพิ่มวันที่ 04/02/2569
 		left join HNDOCTOR_MASTER doc on ipddiag.Doctor = doc.Doctor
 		--where ipddiag.ChronicCreteriaCode is not null
-where	adm.AN in (select am.AN from HNIPD_MASTER am where am.AdmDateTime between GETDATE()-5 and GETDATE())
+where	1=1
+		--and adm.AN in (select am.AN from HNIPD_MASTER am where am.AdmDateTime between GETDATE()-5 and GETDATE())
 		

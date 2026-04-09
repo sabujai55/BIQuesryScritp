@@ -4,8 +4,12 @@ GO
 select top 10
 		  'PT2' as 'BU'
 		, a.HN as 'PatientID'
-		, a.VisitDate as 'Date'
-		, a.VN as 'VN/AN'
+		, a.HN
+		, a.OutDateTime as 'ReferDate'
+		, a.VisitDate
+		, a.VN as 'VN'
+		, '' as 'AN'
+		, '' as 'AdmitDateTime'
 		, b.Doctor as 'DoctorCode'
 		, dbo.Doctorname(b.Doctor,2) as 'DoctorNameTH'
 		, dbo.Doctorname(b.Doctor,1) as 'DoctorNameEN'
@@ -20,12 +24,18 @@ select top 10
 		, dbo.sysconname(doc.Specialty,42197,2) as DoctorSpecialtyNameTH
 		, dbo.sysconname(doc.Specialty,42197,1) as DoctorSpecialtyNameEN
 		, 'ReferOut' as 'Refer'
-		, a.RefToCode as 'ReferType'
-		, dbo.sysconname(a.RefToCode,42266,2) as 'ReferTypeNameTH'
-		, dbo.sysconname(a.RefToCode,42266,1) as 'ReferTypeNameEN'
-		, a.RefToHospital as 'ReferHospital'
-		, dbo.sysconname(a.RefToHospital,42025,2) as 'ReferHospitalNameTH'
-		, dbo.sysconname(a.RefToHospital,42025,1) as 'ReferHospitalNameEN'
+		, '' as 'ReferFromType'
+		, '' as 'ReferFromNameTH'
+		, '' as 'ReferFromNameEN'
+		, a.RefToCode as 'ReferToType'
+		, dbo.sysconname(a.RefToCode,42266,2) as 'ReferToNameTH'
+		, dbo.sysconname(a.RefToCode,42266,1) as 'ReferToNameEN'
+		, '' as 'ReferFromHospital'
+		, '' as 'ReferFromHospitalNameTH'
+		, '' as 'ReferFromHospitalNameEN'
+		, a.RefToHospital as 'ReferToHospital'
+		, dbo.sysconname(a.RefToHospital,42025,2) as 'ReferToHospitalNameTH'
+		, dbo.sysconname(a.RefToHospital,42025,1) as 'ReferToHospitalNameEN'
 		, b.RemarksMemo as 'Remarks'
 		, c.ICDCode as 'Diag'
 		, dbo.CutSortChar(d.LocalName) as 'DiagNameTH'
@@ -39,8 +49,12 @@ Union All
 select top 10
 		  'PT2' as 'BU'
 		, a.HN as 'PatientID'
-		, a.VisitDate as 'Date'
-		, a.VN as 'VN/AN'
+		, a.HN
+		, a.InDateTime as 'ReferDateTime'
+		, a.VisitDate
+		, a.VN as 'VN'
+		, '' as 'AN'
+		, '' as 'AdmitDateTime'
 		, b.Doctor as 'DoctorCode'
 		, dbo.Doctorname(b.Doctor,2) as 'DoctorNameTH'
 		, dbo.Doctorname(b.Doctor,1) as 'DoctorNameEN'
@@ -55,12 +69,18 @@ select top 10
 		, dbo.sysconname(doc.Specialty,42197,2) as DoctorSpecialtyNameTH
 		, dbo.sysconname(doc.Specialty,42197,1) as DoctorSpecialtyNameEN
 		, 'ReferIn' as 'Refer'
-		, a.RefFromCode as 'ReferType'
-		, dbo.sysconname(a.RefFromCode,42266,2) as 'ReferTypeNameTH'
-		, dbo.sysconname(a.RefFromCode,42266,1) as 'ReferTypeNameEN'
-		, a.RefFromHospital as 'ReferHospital'
-		, dbo.sysconname(a.RefFromHospital,42025,2) as 'ReferHospitalNameTH'
-		, dbo.sysconname(a.RefFromHospital,42025,1) as 'ReferHospitalNameEN'
+		, a.RefFromCode as 'ReferFromType'
+		, dbo.sysconname(a.RefFromCode,42266,2) as 'ReferFromNameTH'
+		, dbo.sysconname(a.RefFromCode,42266,1) as 'ReferFromNameEN'
+		, '' as 'ReferToType'
+		, '' as 'ReferToNameTH'
+		, '' as 'ReferToNameEN'
+		, a.RefFromHospital as 'ReferFromHospital'
+		, dbo.sysconname(a.RefFromHospital,42025,2) as 'ReferFromHospitalNameTH'
+		, dbo.sysconname(a.RefFromHospital,42025,1) as 'ReferFromHospitalNameEN'
+		, '' as 'ReferToHospital'
+		, '' as 'ReferToHospitalNameTH'
+		, '' as 'ReferToHospitalNameEN'
 		, b.RemarksMemo as 'Remarks'
 		, c.ICDCode as 'Diag'
 		, dbo.CutSortChar(d.LocalName) as 'DiagNameTH'
@@ -74,8 +94,12 @@ Union All
 select top 10
 		  'PT2' as 'BU'
 		, a.HN as 'PatientID'
-		, a.AdmDateTime as 'Date'
-		, a.AN as 'VN/AN'
+		, a.HN
+		, a.AdmDateTime as 'ReferDateTime'
+		, '' as 'VisitDate'
+		, '' as 'VN'
+		, a.AN as 'AN'
+		, a.AdmDateTime as 'AdmitDateTime'
 		, dm.DoctorCode
 		, dm.DoctorNameTH
 		, dm.DoctorNameEN
@@ -90,12 +114,18 @@ select top 10
 		, dm.DoctorSpecialtyNameTH
 		, dm.DoctorSpecialtyNameEN
 		, 'ReferIn' as 'Refer'
-		, a.RefFromCode as 'ReferType'
-		, dbo.sysconname(a.RefFromCode,42266,2) as 'ReferTypeNameTH'
-		, dbo.sysconname(a.RefFromCode,42266,1) as 'ReferTypeNameEN'
-		, a.RefFromHospital as 'ReferHospital'
-		, dbo.sysconname(a.RefFromHospital,42025,2) as 'ReferHospitalNameTH'
-		, dbo.sysconname(a.RefFromHospital,42025,1) as 'ReferHospitalNameEN'
+		, a.RefFromCode as 'ReferFromType'
+		, dbo.sysconname(a.RefFromCode,42266,2) as 'ReferFromNameTH'
+		, dbo.sysconname(a.RefFromCode,42266,1) as 'ReferFromNameEN'
+		, '' as 'ReferToType'
+		, '' as 'ReferToNameTH'
+		, '' as 'ReferToNameEN'
+		, a.RefFromHospital as 'ReferFromHospital'
+		, dbo.sysconname(a.RefFromHospital,42025,2) as 'ReferFromHospitalNameTH'
+		, dbo.sysconname(a.RefFromHospital,42025,1) as 'ReferFromHospitalNameEN'
+		, '' as 'ReferToHospital'
+		, '' as 'ReferToHospitalNameTH'
+		, '' as 'ReferToHospitalNameEN'
 		, '' as 'Remarks'
 		, b.ICDCode
 		, dbo.CutSortChar(c.LocalName) as 'DiagNameTH'
@@ -131,8 +161,12 @@ Union All
 select top 10
 		  'PT2' as 'BU'
 		, a.HN as 'PatientID'
-		, a.AdmDateTime as 'Date'
-		, a.AN as 'VN/AN'
+		, a.HN
+		, a.DischargeDateTime as 'ReferDateTime'
+		, '' as 'VisitDate'
+		, '' as 'VN'
+		, a.AN as 'AN'
+		, a.AdmDateTime as 'AdmitDateTime'
 		, dm.DoctorCode
 		, dm.DoctorNameTH
 		, dm.DoctorNameEN
@@ -147,12 +181,18 @@ select top 10
 		, dm.DoctorSpecialtyNameTH
 		, dm.DoctorSpecialtyNameEN
 		, 'ReferOut' as 'Refer'
-		, a.RefToCode as 'ReferType'
-		, dbo.sysconname(a.RefToCode,42266,2) as 'ReferTypeNameTH'
-		, dbo.sysconname(a.RefToCode,42266,1) as 'ReferTypeNameEN'
-		, a.RefToHospital as 'ReferHospital'
-		, dbo.sysconname(a.RefToHospital,42025,2) as 'ReferHospitalNameTH'
-		, dbo.sysconname(a.RefToHospital,42025,1) as 'ReferHospitalNameEN'
+		, '' as 'ReferFromType'
+		, '' as 'ReferFromNameTH'
+		, '' as 'ReferFromNameEN'
+		, a.RefToCode as 'ReferToType'
+		, dbo.sysconname(a.RefToCode,42266,2) as 'ReferToNameTH'
+		, dbo.sysconname(a.RefToCode,42266,1) as 'ReferToNameEN'
+		, '' as 'ReferFromHospital'
+		, '' as 'ReferFromHospitalNameTH'
+		, '' as 'ReferFromHospitalNameEN'
+		, a.RefToHospital as 'ReferToHospital'
+		, dbo.sysconname(a.RefToHospital,42025,2) as 'ReferToHospitalNameTH'
+		, dbo.sysconname(a.RefToHospital,42025,1) as 'ReferToHospitalNameEN'
 		, '' as 'Remarks'
 		, b.ICDCode
 		, dbo.CutSortChar(c.LocalName) as 'DiagNameTH'
