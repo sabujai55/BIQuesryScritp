@@ -1,4 +1,4 @@
-select top 1000
+select top 10
 	'PLS' as 'BU',
 	inv.HN as 'PatientID',
 	CONVERT(varchar,adm.ADMDATETIME,112)+adm.AN as 'AdmitID',
@@ -34,9 +34,7 @@ select top 1000
 	dbo.sysconname(inv.ENTRYBYUSERCODE,10000,1) as 'ReceiveByUserNameEN',
 	inv.TOBERECEIVECODE as 'HNReceiveCode',
 	dbo.sysconname(inv.TOBERECEIVECODE,20107,2) as 'HNReceiveNameTH',
-	dbo.sysconname(inv.TOBERECEIVECODE,20107,1) as 'HNReceiveNameEN',
-	case when CAST(substring(b.COM,91,1)as Int) = 3 Then 0 Else 1 end as HereStatement --เพิ่มวันที่ 27/05/2569
+	dbo.sysconname(inv.TOBERECEIVECODE,20107,1) as 'HNReceiveNameEN'
 			from IPDINV inv
 			left join ADMMASTER adm on inv.AN=adm.AN
 			left join SSBBACKOFFICE.dbo.ARMASTER ar on inv.SPONSOR=ar.ARCODE
-			left join SYSCONFIG b on inv.RECEIPTFORMCODE=b.CODE and b.CTRLCODE = 20079 --เพิ่มวันที่ 27/05/2569

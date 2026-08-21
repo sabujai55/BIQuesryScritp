@@ -1,4 +1,4 @@
-select top 10 
+select top 1000
 		'PLS' as 'BU'
 		,a.HN as 'PatientID'
 		,CONVERT(varchar,a.ADMDATETIME,112)+a.AN as 'AdmitID'
@@ -42,7 +42,7 @@ select top 10
 		,dbo.CutSortChar(bedactive.ENGLISHNAME) as 'ActiveHNBedNameEN'
 		, '' as 'DoctorDischargeDateTime'
 		, dth.MAKEDATETIME as 'DrugTakeHomeDateTime'
-		, lord.MAKEDATETIME as 'LastOrderDateTime'
+		, lord.MAKEDATETIME as 'LastOrderDateTime' 
 		, a.WARDALLOWDISCHARGEDATETIME as 'WardAllowDischargeDateTime'
 		, a.ACCOUNTALLOWRELEASEDATETIME as 'FinanceialDateTime'
 		,a.DISCHARGEDATETIME as 'WardDischargeDateTime'
@@ -99,7 +99,8 @@ select top 10
 				) c on a.AN=c.AN and c.seq = 1
 				left join HNBEDINV bedactive on c.BEDNO=bedactive.BEDNO 
 				left join (
-						select a.HN
+						select ROW_NUMBER() over(partition by AN order by MAKEDATETIME desc) as seq --modify 04/06/2569
+						,a.HN
 						,a.AN
 						,a.ADMDATETIME
 						,b.VISITDATE
@@ -107,19 +108,23 @@ select top 10
 						,c.CLINIC
 						from ADMMASTER a
 						inner join VNMST b on a.HN=b.HN and CONVERT(DATE,a.ADMDATETIME) = CONVERT(DATE,b.VISITDATE)
-						inner join VNPRES c on b.VISITDATE=c.VISITDATE and b.VN=c.VN and c.CLOSEVISITTYPE = '8'
-				) admfrom on a.AN=admfrom.AN and a.HN=admfrom.HN
+						inner join VNPRES c on b.VISITDATE=c.VISITDATE and b.VN=c.VN  --modify 04/06/2569
+				) admfrom on a.AN=admfrom.AN and a.HN=admfrom.HN and admfrom.seq = 1 --modify 04/06/2569
 				left join (
-						select ROW_NUMBER() over(partition by AN order by MAKEDATETIME desc) as seq 
-						,MAKEDATETIME
-						,AN
-						from IPDDRUGHIST 
+						select ROW_NUMBER() over(partition by a.AN order by a.MAKEDATETIME desc) as seq  --modify 04/06/2569
+						,a.MAKEDATETIME --modify 04/06/2569
+						,a.AN --modify 04/06/2569
+						from IPDDRUGHIST a
+						inner join ADMMASTER b on a.an=b.an and DISCHARGEDATETIME is not null --modify 04/06/2569
 						where MEDICINEORDERTYPE = 3
 				) dth on a.AN=dth.AN and dth.seq = 1 --DrugTakeHome
 				left join (
-					select ROW_NUMBER() over(partition by AN order by MAKEDATETIME desc) as seq 
-					,MAKEDATETIME 
-					,AN
-					from IPDCHRG 
-				) lord on a.AN=lord.AN and lord.seq=1 --LastOrder
+					select ROW_NUMBER() over(partition by a.AN order by a.MAKEDATETIME desc) as seq  --modify 04/06/2569
+					,a.MAKEDATETIME  --modify 04/06/2569
+					,a.AN --modify 04/06/2569
+					from IPDCHRG a
+					inner join ADMMASTER b on a.AN=b.AN and b.DISCHARGEDATETIME is not null --modify 04/06/2569
+				) lord on a.AN=lord.AN and lord.seq=1 --LastOrder --modify 04/06/2569
 				left join SYSCONFIG ssp on doc.SPECIALTY+doc.SUBSPECIALTY = REPLACE(ssp.CODE,' ','') and ssp.CTRLCODE = 20015
+
+				

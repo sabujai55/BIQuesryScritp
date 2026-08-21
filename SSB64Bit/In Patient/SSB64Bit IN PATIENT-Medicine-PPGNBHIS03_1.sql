@@ -1,24 +1,18 @@
 use SSBLIVE
 go
 
-select	'PT2' AS 'BU'
-		, CONCAT(format(a.MakeDateTime,'yyyyMMdd'),a.vn,a.prescriptionno,format(a.MakeDateTime,'yyyyMMddHHmmssffff'),a.SuffixTiny) AS 'OrderID'
-		, b.HN AS 'PatientID'
-		, CONCAT(format(a.MakeDateTime,'yyyyMMdd'),a.vn,a.prescriptionno) AS 'VisitID'
-		, format(a.VisitDate,'yyyy-MM-dd') AS 'VisitDate'
-		, a.VN AS 'VN'
-		, a.PrescriptionNo
-		, p.Clinic as ClinicCode	-->> 2026-08-06 Pay : Add Column
-		, dbo.sysconname(p.Clinic,42203,2) as ClinicNameTH	-->> 2026-08-06 Pay : Add Column
-		, dbo.sysconname(p.Clinic,42203,1) as ClinicNameEN	-->> 2026-08-06 Pay : Add Column
-		, p.Doctor as DoctorCode	-->> 2026-08-06 Pay : Add Column
-		, dbo.Doctorname(p.Doctor,2) as DoctorNameTH	-->> 2026-08-06 Pay : Add Column
-		, dbo.Doctorname(p.Doctor,1) as DoctorNameEN	-->> 2026-08-06 Pay : Add Column
-		, a.MakeDateTime AS 'MakeDateTime'
+select	'PT2' as BU 
+		, convert(varchar(25), b.AdmDateTime, 112) + replace(a.AN,'/','') + FORMAT(a.IPDChargeDateTime, 'yyyyMMddHHmmss') + convert(varchar(3),a.ChargeMedicineSuffixSmall) as OrderID
+		, b.HN as PatientID
+		, convert(varchar(25), b.AdmDateTime, 112) + replace(b.AN,'/','') as AdmitID
+		, b.AdmDateTime as AdmitDateTime
+		, b.AN
+		, a.SuffixDateTime as MakeDateTime
+		, a.DrugOrderNo
 		, a.Store as StoreCode
 		, dbo.sysconname(a.Store,20020,2) as StoreNameTH
 		, dbo.sysconname(a.Store,20020,1) as StoreNameEN
-		, a.StockCode AS ItemCode
+		, a.StockCode as ItemCode
 		, dbo.Stockname(a.StockCode,2) as ItemNameTH
 		, dbo.Stockname(a.StockCode,1) as ItemNameEN
 		, case 
@@ -30,15 +24,9 @@ select	'PT2' AS 'BU'
 		, dbo.sysconname(a.UnitCode,20021,1) as UnitNameEN
 		, a.UnitPrice
 		, a.ChargeAmt
-		,Case 
-	when A.HNChargeType = 0 then 'Charge' 
-	when A.HNChargeType = 1 then 'Free' 
-	when A.HNChargeType = 2 then 'Refund'
-	when A.HNChargeType = 6 then 'Free Return'
-	end AS 'ChargeType' --เพิ่มวันที่ 27/05/2569
-		, a.HNActivityCode
-		, dbo.sysconname(a.HNActivityCode,42093,2) as HNActivityNameTH
-		, dbo.sysconname(a.HNActivityCode,42093,1) as HNActivityNameEN
+		, c.HNActivityCode
+		, dbo.sysconname(c.HNActivityCode,42093,2) as HNActivityNameTH
+		, dbo.sysconname(c.HNActivityCode,42093,1) as HNActivityNameEN
 		, a.RightCode
 		, dbo.sysconname(a.RightCode,42086,2) as RightNameTH
 		, dbo.sysconname(a.RightCode,42086,1) as RightNameEN
@@ -62,9 +50,12 @@ select	'PT2' AS 'BU'
 		, a.DoseQtyCode
 		, dbo.sysconname(a.DoseQtyCode,42044,2) as DoseQtyNameTH
 		, dbo.sysconname(a.DoseQtyCode,42044,1) as DoseQtyNameEN
-		, a.StatDoseQtyCode
-		, dbo.sysconname(a.StatDoseQtyCode,42044,2) as StatDoseQtyNameTH
-		, dbo.sysconname(a.StatDoseQtyCode,42044,1) as StatDoseQtyNameEN
+		, a.IPDDrugOrderQtyType as IPDDrugOrderQtyTypeCode
+		, case 
+		  when a.IPDDrugOrderQtyType = 0 then 'None'
+		  when a.IPDDrugOrderQtyType = 1 then 'Return'
+		  when a.IPDDrugOrderQtyType = 2 then 'Stat'
+		  end as IPDDrugOrderQtyTypeName
 		, a.DoseUnitCode
 		, dbo.sysconname(a.DoseUnitCode,42045,2) as DoseUnitNameTH
 		, dbo.sysconname(a.DoseUnitCode,42045,1) as DoseUnitNameEN
@@ -72,27 +63,30 @@ select	'PT2' AS 'BU'
 		, a.DoseFreqCode
 		, dbo.sysconname(a.DoseFreqCode,42041,2) as DoseFreqNameTH
 		, dbo.sysconname(a.DoseFreqCode,42041,1) as DoseFreqNameEN
-		, a.AuxLabel1 as AuxLabel1Code
-		, dbo.sysconname(a.AuxLabel1,42046,2) as AuxLabel1NameTH
-		, dbo.sysconname(a.AuxLabel1,42046,1) as AuxLabel1NameEN
-		, a.AuxLabel2 as AuxLabel2Code
-		, dbo.sysconname(a.AuxLabel2,42046,2) as AuxLabel2NameTH
-		, dbo.sysconname(a.AuxLabel2,42046,1) as AuxLabel2NameEN
-		, a.AuxLabel3 as AuxLabel3Code
-		, dbo.sysconname(a.AuxLabel3,42046,2) as AuxLabel3NameTH
-		, dbo.sysconname(a.AuxLabel3,42046,1) as AuxLabel3NameEN
+		, d.AuxLabel1 as AuxLabel1Code
+		, dbo.sysconname(d.AuxLabel1,42046,2) as AuxLabel1NameTH
+		, dbo.sysconname(d.AuxLabel1,42046,1) as AuxLabel1NameEN
+		, d.AuxLabel2 as AuxLabel2Code
+		, dbo.sysconname(d.AuxLabel2,42046,2) as AuxLabel2NameTH
+		, dbo.sysconname(d.AuxLabel2,42046,1) as AuxLabel2NameEN
+		, d.AuxLabel3 as AuxLabel3Code
+		, dbo.sysconname(d.AuxLabel3,42046,2) as AuxLabel3NameTH
+		, dbo.sysconname(d.AuxLabel3,42046,1) as AuxLabel3NameEN
 		, replace(replace(a.DoseMemo, CHAR(10),' '), CHAR(13),' ') as DoseMemo
-		, a.ReturnOpdDrugReason as ReturnOpdDrugReasonCode
-		, dbo.sysconname(a.ReturnOpdDrugReason,42458,2) as ReturnOpdDrugReasonnameTH
-		, dbo.sysconname(a.ReturnOpdDrugReason,42458,1) as ReturnOpdDrugReasonNameEN
-		, a.DoctorApproved
-		, a.DrugRepeatType
-		, case 
-		  when a.DrugRepeatType = 0 then 'None'
-		  when a.DrugRepeatType = 1 then 'Previous Prescription'
-		  when a.DrugRepeatType = 2 then 'Previous Prescription With Modification'
-		  when a.DrugRepeatType = 3 then 'Refill Medicine'
-		  end as DrugRepeatTypeName
+		, d.ReturnIpdDrugReason as ReturnIpdDrugReasonCode
+		, dbo.sysconname(d.ReturnIpdDrugReason,42457,2) as ReturnIpdDrugReasonnameTH
+		, dbo.sysconname(d.ReturnIpdDrugReason,42457,1) as ReturnIpdDrugReasonNameEN
+		, d.NetPrice
+		, d.OutsideHospitalDrug
+		, a.MedicineOrderType as MedicineOrderTypeCode
+		, case
+		  when a.MedicineOrderType = 0 then 'None'
+		  when a.MedicineOrderType = 1 then 'Continue'
+		  when a.MedicineOrderType = 2 then 'OneDay'
+		  when a.MedicineOrderType = 4 then 'TakeHome'
+		  when a.MedicineOrderType = 5 then 'ToBeTakeHome'
+		  when a.MedicineOrderType = 6 then 'PRN'
+		  end as MedicineOrderTypeName
 		, a.HNDrugErrorCodeType as HNDrugErrorCodeTypeCode
 		, case
 		  when a.HNDrugErrorCodeType = 0 then 'None'
@@ -127,17 +121,19 @@ select	'PT2' AS 'BU'
 		  when a.HNAllergicErrorCodeType = 12 then 'Duplicate Ingredient'
 		  when a.HNAllergicErrorCodeType = 13 then 'Duplicate Ingredient Posted'
 		  end as HNAllergicErrorCodeTypeName
-		, a.NetPrice
-		, a.OutsideHospitalDrug
 		, a.StartDoseDateTime
-		, a.FinishDoseDateTime
-from	HNOPD_PRESCRIP_MEDICINE a
-		inner join HNOPD_MASTER b on a.VisitDate = b.VisitDate and a.VN = b.VN
-		inner join HNOPD_PRESCRIP p on a.VisitDate = p.VisitDate and a.VN = p.VN and a.PrescriptionNo = p.PrescriptionNo	-->> 2026-08-06 Pay : Add 
+		, a.StopDateTime
+		, null as MarDateTime1
+		, null as MarDateTime2
+		, null as MarDateTime3
+		, null as MarDateTime4
+		, null as MarDateTime5
+		, null as MarDateTime6
+from	HNIPD_DRUG_HISTORY a
+		inner join HNIPD_MASTER b on a.AN = b.AN
+		inner join HNIPD_CHARGE_MEDICINE c on a.AN = c.AN and a.IPDChargeDateTime = c.IPDChargeDateTime and a.ChargeMedicineSuffixSmall = c.ChargeMedicineSuffixSmall
+		inner join HNIPDDRUG_ORDER_ITEM d on a.DrugOrderNo = d.DrugOrderNo and a.ChargeMedicineSuffixSmall = d.SuffixSmall
 		left join DNSYSCONFIG sys1 on sys1.CtrlCode = 42043 and a.DoseCode = sys1.Code
 where	1=1
-		and a.VisitDate = '2026-01-22'
-		and a.HereUsage = 0
-order by a.VisitDate, a.VN, a.PrescriptionNo, a.MakeDateTime;
-
-
+		and a.AN in (select AN from HNIPD_MASTER where AdmDateTime between '2026-01-01 00:00:00' and '2026-01-01 23:59:59')
+order by a.AN, a.SuffixDateTime, a. ChargeMedicineSuffixSmall

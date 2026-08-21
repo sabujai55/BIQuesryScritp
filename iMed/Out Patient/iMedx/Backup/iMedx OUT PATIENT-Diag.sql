@@ -81,5 +81,7 @@ left join base_department bd on ap.base_department_id = bd.base_department_id an
 inner join diagnosis_icd10 di on v.visit_id = di.visit_id and di.fix_diagnosis_type_id = '1' and ap.employee_id = di.doctor_eid --แก้ไขจาก left เป็น inner 4-2-69--
 left join employee e2 on e2.employee_code = di.doctor_eid 
 left join patient p on p.patient_id = v.patient_id
-where v.visit_date = current_date::text
+where 	1=1
+--		and format_vn(v.vn) = 'O16-681201-0076'
+		and v.visit_date = current_date::text
 --    limit 100

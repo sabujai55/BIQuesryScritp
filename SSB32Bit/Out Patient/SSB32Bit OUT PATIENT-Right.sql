@@ -1,7 +1,7 @@
 select top 10
 'PLS' as 'BU'
+,vnm.HN as 'PatientID' --modify 29/4/69
 ,convert(varchar,vnp.VISITDATE,112)+convert(varchar,vnp.VN)+convert(varchar,vnp.SUFFIX) as 'VisitID'
-,vnm.HN 
 ,vnp.VISITDATE as 'VisitDate'
 ,vnp.VN as 'VN'
 ,vnp.SUFFIX as 'PrescriptionNo'

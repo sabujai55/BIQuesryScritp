@@ -2,6 +2,7 @@ USE SSBLIVE
 go
 
 select	'PT2' as 'BU'
+		,CONCAT(b.An,b.HNBedNo,FORMAT(b.makedatetime, 'yyyyMMddHHmmss')) as 'BedID' --Modify 10/06/69
 		,a.HN as 'PatientID'
 		,CONVERT(varchar,a.ADMDATETIME,112)+a.AN as 'AdmitID'
 		,b.AN as 'AN'
@@ -57,5 +58,5 @@ select	'PT2' as 'BU'
 		, b.PatientStay
 from	HNIPD_BED b
 		inner join HNIPD_MASTER a on b.AN=a.AN
-where	a.AN in (select AN from HNIPD_MASTER where ADMDateTime between '2025-10-01 00:00:00' and '2025-10-01 23:59:59')
+where	a.AN in (select AN from HNIPD_MASTER where ADMDateTime between '2026-05-01 00:00:00' and '2026-05-01 23:59:59')
 order by b.AN, b.MakeDateTime

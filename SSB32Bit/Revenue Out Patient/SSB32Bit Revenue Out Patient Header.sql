@@ -1,4 +1,4 @@
-select top 10
+select top 1000
 		'PLS' as 'BU',
 		a.HN as 'PatientID',
 		CONVERT(varchar,a.VISITDATE,112)+CONVERT(varchar,a.VN)+CONVERT(varchar,a.SUFFIX) as 'VisitID',
@@ -34,6 +34,9 @@ select top 10
 		dbo.sysconname(a.ISSUEBYUSERCODE,10000,1) as 'ReceiveByUserNameEN', --เพิ่มวันที่ 05/03/2568
 		a.RECEIVECODE as 'HNReceiveCode', --เพิ่มวันที่ 05/03/2568
 		dbo.sysconname(a.RECEIVECODE,20107,2) as 'HNReceiveNameTH', --เพิ่มวันที่ 05/03/2568
-		dbo.sysconname(a.RECEIVECODE,20107,1) as 'HNReceiveNameEN' --เพิ่มวันที่ 05/03/2568
+		dbo.sysconname(a.RECEIVECODE,20107,1) as 'HNReceiveNameEN', --เพิ่มวันที่ 05/03/2568
+		case when CAST(substring(b.COM,91,1)as Int) = 3 Then 0 Else 1 end as HereStatement --เพิ่มวันที่ 27/05/2569
 				from VNRCPT a
 				left join SSBBACKOFFICE.dbo.ARMASTER ar on a.SPONSOR=ar.ARCODE
+				left join SYSCONFIG b on a.RECEIPTFORMCODE=b.CODE and b.CTRLCODE = 20079 --เพิ่มวันที่ 27/05/2569
+				where a.VISITDATE = '2026-05-26'

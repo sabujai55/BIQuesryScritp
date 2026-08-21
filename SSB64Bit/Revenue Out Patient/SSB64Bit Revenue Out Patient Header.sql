@@ -34,7 +34,8 @@ select top 10
 		dbo.sysconname(a.EntryByUserCode,10031,1) as 'ReceiveByUserNameEN', --เพิ่มวันที่ 05/03/2568
 		rb.HNReceiveCode as 'HNReceiveCode', --เพิ่มวันที่ 05/03/2568
 		dbo.sysconname(rb.HNReceiveCode,42077,2) as 'HNReceiveNameTH', --เพิ่มวันที่ 05/03/2568
-		dbo.sysconname(rb.HNReceiveCode,42077,1) as 'HNReceiveNameEN' --เพิ่มวันที่ 05/03/2568
+		dbo.sysconname(rb.HNReceiveCode,42077,1) as 'HNReceiveNameEN', --เพิ่มวันที่ 05/03/2568
+		a.HereStatement --เพิ่มวันที่ 27/05/2569
 				from HNOPD_RECEIVE_HEADER a
 				left join HNOPD_MASTER b on a.VN=b.VN and a.VisitDate=b.VisitDate
 				left join ARMASTER ar on a.ARCode=ar.ARCode

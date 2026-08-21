@@ -4,6 +4,13 @@ select top 1000
 		CONVERT(varchar,a.VISITDATE,112)+CONVERT(varchar,a.VN)+CONVERT(varchar,a.SUFFIX) as 'VisitID',
 		a.VISITDATE as 'VisitDate',
 		a.VN as 'VN',
+		case when vnpt.SUFFIX is null then vnpm.SUFFIX else vnpt.SUFFIX end as 'PrescriptionNo', --modify 05/08/2569
+		case when vnpt.CLINIC is null then vnpm.CLINIC else vnpt.CLINIC end as 'ClinicCode', --modify 24/07/2569
+		case when vnpt.CLINIC is null then dbo.sysconname(vnpm.CLINIC,20016,2) else dbo.sysconname(vnpt.CLINIC,20016,2) end as 'ClinicNameTH', --modify 24/07/2569
+		case when vnpt.CLINIC is null then dbo.sysconname(vnpm.CLINIC,20016,1) else dbo.sysconname(vnpt.CLINIC,20016,1) end as 'ClinicNameEN', --modify 24/07/2569
+		case when vnpt.DOCTOR is null then vnpm.DOCTOR else vnpt.DOCTOR end as 'DoctorCode', --modify 24/07/2569
+		case when vnpt.DOCTOR is null then dbo.Doctorname(vnpm.DOCTOR,2) else dbo.Doctorname(vnpt.DOCTOR,2) end as 'DoctorNameTH', --modify 24/07/2569
+		case when vnpt.DOCTOR is null then dbo.Doctorname(vnpm.DOCTOR,1) else dbo.Doctorname(vnpt.DOCTOR,1) end as 'DoctorNameEN', --modify 24/07/2569
 		a.REFNO as 'InvoiceNo',
 		a.SUFFIX as 'InvoiceSuffixSmall',
 		a.RECEIPTFORMCODE as 'HNReceiptFormCode',
@@ -40,7 +47,9 @@ select top 1000
 		dbo.sysconname(c.GROUPREQUESTCODE,20120,1) as 'FacilityReqMethodNameEN' --เพิ่ทมวันที่ 05/02/2568
 				from VNRCPT a
 				left join VNRCPTDTL b on a.VISITDATE=b.VISITDATE and a.VN=b.VN and a.SUFFIX=b.SUFFIX
-				left join VNTREAT c on b.VISITDATE=c.VISITDATE and b.VN=c.VN and b.PAIDSUBSUFFIX=c.SUBSUFFIX
-				left join VNMEDICINE d on b.VISITDATE=d.VISITDATE and b.VN=d.VN and b.PAIDSUBSUFFIX=d.SUBSUFFIX
+				left join VNTREAT c on b.VISITDATE=c.VISITDATE and b.VN=c.VN and b.PAIDSUBSUFFIX=c.SUBSUFFIX and a.MAINPRESCRIPTIONSUFFIX=c.SUFFIX --modify 24/07/2569
+				left join VNMEDICINE d on b.VISITDATE=d.VISITDATE and b.VN=d.VN and b.PAIDSUBSUFFIX=d.SUBSUFFIX and a.MAINPRESCRIPTIONSUFFIX=d.SUFFIX --modify 24/07/2569
+				left join VNPRES vnpt on c.VN=vnpt.VN and c.VISITDATE=vnpt.VISITDATE and c.SUFFIX=vnpt.SUFFIX --modify 24/07/2569
+				left join VNPRES vnpm on d.VN=vnpm.VN and d.VISITDATE=vnpm.VISITDATE and d.SUFFIX=vnpm.SUFFIX --modify 24/07/2569
 				left join vw_setup_HNReceiptForm_Line_Activity act on b.CHARGECODE=act.hnactivitycode
 				left join dbo.API_SIMB_ReceiptFormBillingLocation bll on act.ReceiptFormLine=bll.Line

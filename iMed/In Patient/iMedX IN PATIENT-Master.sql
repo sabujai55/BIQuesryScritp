@@ -22,7 +22,7 @@ select 'PLC' as "BU"
 , e.base_clinic_id as "DoctorMasterSpecialtyCode"
 , bmd.description as "DoctorMasterSpecialtyNameTH"
 , '' as "DoctorMasterSpecialtyNameEN"
-, ddi.fix_ipd_discharge_status_id as "DischargeCode"
+, ddi_amd.fix_ipd_discharge_status_id as "DischargeCode"
 , fids.description as "DischargeNameTH"
 , '' as "DischargeNameEN"
 , case when a.active = '1' then 'Active' else 'Inactive' end as "Status"
@@ -40,13 +40,15 @@ select 'PLC' as "BU"
 , '' as "ActiveHNBedNameTH"
 , '' as "ActiveHNBedNameEN"
 , a.doctor_allow_date ||' '|| a.doctor_allow_time as "DoctorDischargeDateTime"
-, (select sts.stamp_date||' '||sts.stamp_time from service_time_stamp sts where sts.visit_id = a.visit_id and sts.fix_time_stamp_point_id = 'HOME_MED_APPROVE' limit 1) as "DrugTakeHomeDateTime"
-, (select oi.verify_date||' '||oi.verify_time from order_item oi where oi.visit_id = a.visit_id order by oi.verify_date||' '||oi.verify_time desc limit 1) as "LastOrderDateTime"
+--, (select sts.stamp_date||' '||sts.stamp_time from service_time_stamp sts where sts.visit_id = a.visit_id and sts.fix_time_stamp_point_id = 'HOME_MED_APPROVE' limit 1) as "DrugTakeHomeDateTime"
+--, (select oi.verify_date||' '||oi.verify_time from order_item oi where oi.visit_id = a.visit_id order by oi.verify_date||' '||oi.verify_time desc limit 1) as "LastOrderDateTime"
+, case when a.ipd_discharge = '0' then '' else (select sts.stamp_date||' '||sts.stamp_time from service_time_stamp sts where sts.visit_id = a.visit_id and sts.fix_time_stamp_point_id = 'HOME_MED_APPROVE' limit 1) end as "DrugTakeHomeDateTime"
+, case when a.ipd_discharge = '0' then '' else (select oi.verify_date||' '||oi.verify_time from order_item oi where oi.visit_id = a.visit_id order by oi.verify_date||' '||oi.verify_time desc limit 1) end as "LastOrderDateTime"
 , '' as "WardAllowDischargeDateTime"
 , v.financial_discharge_date ||' '|| v.financial_discharge_time as "FinancialDateTime"
 , a.ipd_discharge_date ||' '|| a.ipd_discharge_time as "WardDischargeDateTime"
 --, CASE WHEN a.ipd_discharge_date != '' AND a.ipd_discharge_time != '' THEN a.ipd_discharge_date ||' '|| a.ipd_discharge_time WHEN ddi.discharge_date != '' and ddi.discharge_time != '' THEN ddi.discharge_date ||' '|| ddi.discharge_time ELSE '' end as "WardDischargeDateTime"
-, ddi.fix_ipd_discharge_type_id as "DiagnosisStatusType"
+, ddi_amd.fix_ipd_discharge_type_id as "DiagnosisStatusType"
 , fidt.fix_ipd_discharge_type_name as "DiagnosisStatusName"
 , vp.plan_code as "DefaultRightCode"
 , p.description as "DefaultRightNameTH"
@@ -60,9 +62,22 @@ select 'PLC' as "BU"
 , v.base_office_agent_id as "AgencyCode"
 , boa.description as "AgencyNameTH"
 , '' as "AgencyNameEN"
+, ddi_amd.modify_date 
+, ddi_amd.modify_time
 from admit a 
-left join doctor_discharge_ipd ddi on a.visit_id = ddi.visit_id
-left join fix_ipd_discharge_status fids on ddi.fix_ipd_discharge_status_id = fids.fix_ipd_discharge_status_id 
+--left join doctor_discharge_ipd ddi on a.visit_id = ddi.visit_id
+left join
+              (
+                     select row_number() over(partition by ddi.visit_id order by ddi.modify_date desc) as rowid
+                                  , ddi.doctor_discharge_ipd_id
+                                  , ddi.visit_id
+                                  , ddi.fix_ipd_discharge_status_id
+                                  , ddi.fix_ipd_discharge_type_id
+                                  , ddi.modify_date 
+                                  , ddi.modify_time
+                     from  doctor_discharge_ipd ddi
+              )ddi_amd on ddi_amd.visit_id = a.visit_id and ddi_amd.rowid = 1 --Modify 08/06/69
+left join fix_ipd_discharge_status fids on ddi_amd.fix_ipd_discharge_status_id = fids.fix_ipd_discharge_status_id 
 left join base_department bd on a.base_department_id = bd.base_department_id 
 left join employee e on a.admit_doctor_eid = e.employee_id 
 left join base_department bd2 on e.base_med_department_id = bd2.base_department_id 
@@ -76,11 +91,7 @@ left join base_department bd3 on bsp2.base_department_id = bd3.base_department_i
 inner join visit v on v.visit_id = a.visit_id --แก้ไขจาก left เป็น inner 4-2-69--
 left join base_admit_type bat on bat.base_admit_type_id = a.base_admit_type_id
 left join base_office_agent boa on boa.base_office_agent_id = v.base_office_agent_id
-left join fix_ipd_discharge_type fidt on fidt.fix_ipd_discharge_type_id = ddi.fix_ipd_discharge_type_id
+left join fix_ipd_discharge_type fidt on fidt.fix_ipd_discharge_type_id = ddi_amd.fix_ipd_discharge_type_id
 --where a.admit_id = '224100212232149601'
 --limit 10000
-
-
-
-
-
+--where a.admit_id = '222093018501759501'

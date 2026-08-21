@@ -1,9 +1,17 @@
-select top 10
+select 
+		--top 10
 		'PT2' as 'BU',
 		opd.HN as 'PatientID',
 		CONVERT(varchar,a.VisitDate,112)+convert(varchar,a.VN)+convert(varchar,a.PrescriptionNo) as 'VisitID',
 		a.VisitDate as 'VisitDate',
 		a.VN as 'VN',
+		b.PrescriptionNo AS 'PrescriptionNo'
+		, p.Clinic as ClinicCode	-->> 2026-08-04 Pay : Add Column
+		, dbo.sysconname(p.Clinic,42203,2) as ClinicNameTH	-->> 2026-08-04 Pay : Add Column
+		, dbo.sysconname(p.Clinic,42203,1) as ClinicNameEN	-->> 2026-08-04 Pay : Add Column
+		, p.Doctor as DoctorCode	-->> 2026-08-04 Pay : Add Column
+		, dbo.Doctorname(p.Doctor,2) as DoctorNameTH	-->> 2026-08-04 Pay : Add Column
+		, dbo.Doctorname(p.Doctor,1) as DoctorNameEN,	-->> 2026-08-04 Pay : Add Column
 		a.ReceiptNo as 'InvoiceNo',
 		a.ReceiptSuffixTiny as 'InvoiceSuffixSmall',
 		a.HNReceiptFormCode as 'HNReceiptFormCode',
@@ -54,3 +62,4 @@ select top 10
 				left join HNOPD_PRESCRIP_MEDICINE med on b.VN=med.VN and b.VisitDate=med.VisitDate and b.PrescriptionNo=med.PrescriptionNo and b.MedcineSuffixTiny=med.SuffixTiny and b.MakeDateTime=med.MakeDateTime
 				left join HNOPD_PRESCRIP_TREATMENT treat on b.VN=treat.VN and b.VisitDate=treat.VisitDate and b.PrescriptionNo=treat.PrescriptionNo and b.TreatmentSuffixTiny=treat.SuffixTiny and b.MakeDateTime=treat.MakeDateTime
 				left join API_SIMB_ReceiptFormBillingLocation bll on b.ReceiveFormLineNo=bll.Line
+				left join HNOPD_PRESCRIP p on b.VisitDate = p.VisitDate and b.VN = p.VN and b.PrescriptionNo = p.PrescriptionNo	-->> 2026-08-04 Pay : Add

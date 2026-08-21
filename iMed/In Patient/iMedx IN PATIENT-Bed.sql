@@ -1,14 +1,14 @@
 select  'PLC' as "BU"
-	  , a.patient_id as "PatientID"
+	  , bm.bed_management_id as "BedID"
+	  , a.patient_id as "PatientID"	--เพิ่ม 12/6/69
 	  , a.admit_id as "AdmitID"
 	  , format_an(a.an) as "AN"
-	  , to_char(a.admit_date ::timestamp,'dd/mm/yyyy')|| ' ' || substring(a.admit_time,0,6) as "MakeDateTime"
-	  , to_char(a.begin_date ::timestamp,'dd/mm/yyyy')|| ' ' || substring(a.begin_time,0,6) as "InDateTime"
-	  , to_char(a.end_date::timestamp,'dd/mm/yyyy')|| ' ' || substring(a.end_time,0,6) as "OutDateTime"
+	  , bm.move_date || ' ' || bm.move_time as "MakeDateTime"	--แก้ไข 12/6/69
+	  , CASE WHEN COALESCE(a.begin_date, '') = '' THEN '' ELSE to_char(a.begin_date::timestamp, 'dd/mm/yyyy') || ' ' || substring(COALESCE(a.begin_time, ''), 1, 5) END AS "InDateTime"		--แก้ไข 12/6/69
+	  , case WHEN COALESCE(a.end_date, '') = '' THEN '' ELSE to_char(a.end_date::timestamp, 'dd/mm/yyyy') || ' ' || substring(COALESCE(a.end_time, ''), 1, 5) END AS "OutDateTime"		--แก้ไข 12/6/69
 	  , '' as "AckDateTime"
 	  , '' as "StartRmsFeeDateTime"
-	  , to_char(a.modify_date::timestamp,'dd/mm/yyyy')|| ' ' || substring(a.modify_time,0,6) as "LastPostDateTime"
-	  , bsp.base_service_point_id as "FromWardCode"
+	  , case WHEN COALESCE(a.modify_date, '') = '' THEN '' ELSE to_char(a.modify_date::timestamp, 'dd/mm/yyyy') || ' ' || substring(COALESCE(a.modify_time, ''), 1, 5) END AS "LastPostDateTime"	--แก้ไข 12/6/69
 	  , bsp.description_th as "FromWardNameTH"
 	  , bsp.description_en as "FromWardNameEN"
 	  , bsp.base_service_point_id as "ToWardCode"
@@ -30,18 +30,23 @@ select  'PLC' as "BU"
 	  , '' as "TransferOutReasonNameTH"
 	  , '' as "TransferOutReasonNameEN"
 	  , '' as "Remarks"
-	  , a.admit_eid as "InByUserCode"
+	  , a.modify_eid as "InByUserCode"
 	  , e.prename || ' ' || e.firstname || '  ' || e.lastname as "InByUserNameTH"
 	  , e.intername as "InByUserNameEN"
-	  , a.ipd_discharge as "OutByUserCode"
-	  , e2.prename || ' ' || e2.firstname || '  ' || e2.lastname as "OutByUserNameTH"
-	  , e2.intername as "OutByUserNameEN"
+	  , '' as "OutByUserCode"
+	  , '' as "OutByUserNameTH"
+	  , '' as "OutByUserNameEN"
 	  , case when a.is_observe != '1' then 0 else 1 end as "Observe"
-	  , bm.current_bed as "PatientStay"
+	  , case when bm.current_bed = '3' then 0 else bm.current_bed::integer end as "PatientStay"	--แก้ไข 12/6/69
 from admit a 
 inner join bed_management bm on a.admit_id = bm.admit_id 
 left join base_service_point bsp on bm.base_service_point_id = bsp.base_service_point_id 
 left join base_room_type brt on bm.base_room_type_id = brt.base_room_type_id 
-left join employee e on a.admit_eid = e.employee_id 
-left join employee e2 on a.ipd_discharge_eid = e2.employee_id 
+left join employee e on a.modify_eid = e.employee_id	--แก้ไข 12/6/69
+--left join employee e2 on a.ipd_discharge_eid = e2.employee_id 
+--where bm.bed_management_id = '224101120402114301'
+--bm.current_bed in ('0','1')
+--bm.current_bed = '1'
+--limit 100
+
 

@@ -35,6 +35,7 @@ select 	'PLC' as "BU"
 		, '' as "HNReceiveCode"
 		, '' as "HNReceiveNameTH"
 		, '' as "HNReceiveNameEN"
+		, '' as "HereStatement"
 from 	receipt r 
 		inner join visit v on r.visit_id = v.visit_id and v.fix_visit_type_id = '1'
 		INNER JOIN admit a ON v.visit_id = a.visit_id

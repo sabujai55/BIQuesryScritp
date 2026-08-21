@@ -34,6 +34,7 @@ select 	'PLC' as "BU"
 		, '' as "HNReceiveCode"
 		, '' as "HNReceiveNameTH"
 		, '' as "HNReceiveNameEN"
+		, '' as "HereStatement"
 from 	receipt r 
 		left join visit v on r.visit_id = v.visit_id
 		left join payer p on r.payer_id = p.payer_id 

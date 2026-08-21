@@ -43,8 +43,8 @@ select 'PT2' as 'BU'
 		,dbo.sysconname(a.ActiveHNBedNo,42421,2) as 'ActiveHNBedNameTH' --เพิ่มวันที่ 27/02/2568
 		,dbo.sysconname(a.ActiveHNBedNo,42421,1) as 'ActiveHNBedNameEN' --เพิ่มวันที่ 27/02/2568
 		, a.PlanDischargeDateTime as DoctorDischargeDateTime
-		, a.MedicalTakeHomeDateTime as DrugTakeHomeDateTime
-		, (select top 1 c.IPDChargeDateTime From HNIPD_CHARGE c where c.AN = a.AN and c.VoidDateTime is null order by c.IPDChargeDateTime) as LastOrderDateTime
+		, case when a.DischargeDateTime is null then null else a.MedicalTakeHomeDateTime end as DrugTakeHomeDateTime --modify 08/06/2569
+		, case when a.dischargedatetime is null then null else (select top 1 c.IPDChargeDateTime From HNIPD_CHARGE c where c.AN = a.AN and c.VoidDateTime is null order by c.IPDChargeDateTime) end as LastOrderDateTime --modify 08/06/2569
 		, a.WardAllowDischargeDateTime
 		, a.AccountAllowReleaseDateTime as FinancialDateTime
 		, a.DischargeDateTime as WardDischargeDateTime

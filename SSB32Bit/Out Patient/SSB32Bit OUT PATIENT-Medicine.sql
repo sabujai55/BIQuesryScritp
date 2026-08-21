@@ -9,6 +9,12 @@ Select
 		, med.VISITDATE as 'VisitDate'
 		, med.VN as 'VN'
 		, med.SUFFIX as 'PrescriptionNo'
+		, vnp.CLINIC as 'ClinicCode' --modify 06/08/2569
+		, dbo.sysconname(vnp.CLINIC,20016,2) as 'ClinicNameTH' --modify 06/08/2569
+		, dbo.sysconname(vnp.CLINIC,20016,1) as 'ClinicNameEN' --modify 06/08/2569
+		, vnp.DOCTOR as 'DoctorCode' --modify 06/08/2569
+		, dbo.Doctorname(vnp.DOCTOR,4) as 'DoctorNameTH' --modify 06/08/2569
+		, dbo.Doctorname(vnp.DOCTOR,4) as 'DoctorNameEN' --modify 06/08/2569
 		, med.MAKEDATETIME as 'MakeDateTime'
 		, med.STORE as 'StoreCode'
 		, dbo.sysconname(med.STORE,40010,2) as 'StoreNameTH'
@@ -22,6 +28,14 @@ Select
 		, dbo.sysconname(med.UNITCODE,40016,1) as 'UnitNameEN'
 		, med.UNITPRICE as 'UnitPrice'
 		, med.AMT as 'ChargeAmt'
+		,case when med.TYPEOFCHARGE = 0 then 'Charge'
+							  when med.TYPEOFCHARGE = 1 then 'Free'
+							  when med.TYPEOFCHARGE = 2 then 'Refund'
+							  when med.TYPEOFCHARGE = 3 then 'Cxl'
+							  when med.TYPEOFCHARGE = 4 then 'Usage FOC'
+							  when med.TYPEOFCHARGE = 5 then 'Never Charge'
+							  when med.TYPEOFCHARGE = 6 then 'Adjust'
+							  when med.TYPEOFCHARGE = 7 then 'Return Usage FOC' end as 'ChargeType'
 		, med.CHARGECODE as 'HNActivityCode'
 		, dbo.sysconname(med.CHARGECODE,20023,2) as 'HNActivityNameTH'
 		, dbo.sysconname(med.CHARGECODE,20023,1) as 'HNActivityNameEN'
@@ -83,8 +97,4 @@ Select
 				inner Join SSBSTOCK.dbo.STOCK_MASTER stm on med.STOCKCODE=stm.STOCKCODE and stm.MAINCATEGORY = 'ME'
 				Left Join SYSCONFIG sys01 on med.DOSECODE=sys01.CODE and sys01.CTRLCODE = 20032
 				Where	1=1 
-				and med.VISITDATE = '2026-04-02'
-				--and vnm.HN = '922003'
-				--and med.VN = '004' 
-				--and med.STOCKCODE = 'PIHEMAX40H2X'
-				--and med.RETURNDRUGREASON is not null
+				--and med.VISITDATE = '2026-04-02'

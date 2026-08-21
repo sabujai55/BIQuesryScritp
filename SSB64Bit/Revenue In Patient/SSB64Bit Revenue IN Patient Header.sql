@@ -35,6 +35,7 @@ select	top 10
 		, a.HNReceiveCode as HNReceiveCode --เพิ่มวันที่ 05/03/2568
 		, dbo.sysconname(a.HNReceiveCode,42077,2) as HNReceiveNameTH --เพิ่มวันที่ 05/03/2568
 		, dbo.sysconname(a.HNReceiveCode,42077,1) as HNReceiveNameEN --เพิ่มวันที่ 05/03/2568
+		, a.HereStatement --เพิ่มวันที่ 27/05/2569
 from	HNIPD_INVOICE_HEADER a
 		left join HNIPD_MASTER b on a.AN = b.AN 
 		left join MK_HN_PATIENT c on b.HN = c.HN

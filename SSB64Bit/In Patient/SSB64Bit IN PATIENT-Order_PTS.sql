@@ -27,6 +27,9 @@ select	'PTS' as BU
 		, a.ChargeDateTime
 		, a.EntryByFacilityRmsNo as EntryByFacility
 		, case when a.EntryByFacilityRmsNo is not null then a.EntryByFacilityRefNo else a.OrderRef end as RefNo
+		,A.EntryByUserCode --เพิ่มวันที่ 27/05/2569
+		,dbo.sysconname(A.EntryByUserCode,10031,2) AS 'EntryByUserNameTH' --เพิ่มวันที่ 27/05/2569
+		,dbo.sysconname(A.EntryByUserCode,10031,1) AS 'EntryByUserNameEN' --เพิ่มวันที่ 27/05/2569
 		, a.VoidByUserCode as CancelByUserCode --แก้ไขวันที่ 03/03/2568 
 		, dbo.sysconname(a.VoidByUserCode,10031,2) as CancelByUserNameTH --เพิ่มวันที่ 03/03/2568
 		, dbo.sysconname(a.VoidByUserCode,10031,1) as CancelByUserNameEN --เพิ่มวันที่ 03/03/2568
@@ -114,6 +117,9 @@ select	'PTS' as BU
 		, a.ChargeDateTime
 		, a.EntryByFacilityRmsNo as EntryByFacility
 		, case when a.EntryByFacilityRmsNo is not null then a.EntryByFacilityRefNo else a.OrderRef end as RefNo
+		,A.EntryByUserCode --เพิ่มวันที่ 27/05/2569
+		,dbo.sysconname(A.EntryByUserCode,10031,2) AS 'EntryByUserNameTH' --เพิ่มวันที่ 27/05/2569
+		,dbo.sysconname(A.EntryByUserCode,10031,1) AS 'EntryByUserNameEN' --เพิ่มวันที่ 27/05/2569
 		, a.VoidByUserCode as CancelByUserCode --แก้ไขวันที่ 03/03/2568 
 		, dbo.sysconname(a.VoidByUserCode,10031,2) as CancelByUserNameTH --เพิ่มวันที่ 03/03/2568
 		, dbo.sysconname(a.VoidByUserCode,10031,1) as CancelByUserNameEN --เพิ่มวันที่ 03/03/2568
@@ -201,6 +207,9 @@ select	'PTS' as BU
 		, a.ChargeDateTime
 		, a.EntryByFacilityRmsNo as EntryByFacility
 		, case when a.EntryByFacilityRmsNo is not null then a.EntryByFacilityRefNo else a.OrderRef end as RefNo
+		,A.EntryByUserCode --เพิ่มวันที่ 27/05/2569
+		,dbo.sysconname(A.EntryByUserCode,10031,2) AS 'EntryByUserNameTH' --เพิ่มวันที่ 27/05/2569
+		,dbo.sysconname(A.EntryByUserCode,10031,1) AS 'EntryByUserNameEN' --เพิ่มวันที่ 27/05/2569
 		, a.VoidByUserCode as CancelByUserCode --แก้ไขวันที่ 03/03/2568 
 		, dbo.sysconname(a.VoidByUserCode,10031,2) as CancelByUserNameTH --เพิ่มวันที่ 03/03/2568
 		, dbo.sysconname(a.VoidByUserCode,10031,1) as CancelByUserNameEN --เพิ่มวันที่ 03/03/2568
@@ -288,6 +297,9 @@ select	'PTS' as BU
 		, a.ChargeDateTime
 		, a.EntryByFacilityRmsNo as EntryByFacility
 		, case when a.EntryByFacilityRmsNo is not null then a.EntryByFacilityRefNo else a.OrderRef end as RefNo
+		,A.EntryByUserCode --เพิ่มวันที่ 27/05/2569
+		,dbo.sysconname(A.EntryByUserCode,10031,2) AS 'EntryByUserNameTH' --เพิ่มวันที่ 27/05/2569
+		,dbo.sysconname(A.EntryByUserCode,10031,1) AS 'EntryByUserNameEN' --เพิ่มวันที่ 27/05/2569
 		, a.VoidByUserCode as CancelByUserCode --แก้ไขวันที่ 03/03/2568 
 		, dbo.sysconname(a.VoidByUserCode,10031,2) as CancelByUserNameTH --เพิ่มวันที่ 03/03/2568
 		, dbo.sysconname(a.VoidByUserCode,10031,1) as CancelByUserNameEN --เพิ่มวันที่ 03/03/2568
@@ -375,6 +387,9 @@ select	'PTS' as BU
 		, a.ChargeDateTime
 		, a.EntryByFacilityRmsNo as EntryByFacility
 		, case when a.EntryByFacilityRmsNo is not null then a.EntryByFacilityRefNo else a.OrderRef end as RefNo
+		,A.EntryByUserCode --เพิ่มวันที่ 27/05/2569
+		,dbo.sysconname(A.EntryByUserCode,10031,2) AS 'EntryByUserNameTH' --เพิ่มวันที่ 27/05/2569
+		,dbo.sysconname(A.EntryByUserCode,10031,1) AS 'EntryByUserNameEN' --เพิ่มวันที่ 27/05/2569
 		, a.VoidByUserCode as CancelByUserCode --แก้ไขวันที่ 03/03/2568 
 		, dbo.sysconname(a.VoidByUserCode,10031,2) as CancelByUserNameTH --เพิ่มวันที่ 03/03/2568
 		, dbo.sysconname(a.VoidByUserCode,10031,1) as CancelByUserNameEN --เพิ่มวันที่ 03/03/2568
@@ -466,6 +481,9 @@ select	'PTS' as BU
 		, a.ChargeDateTime
 		, a.EntryByFacilityRmsNo as EntryByFacility
 		, case when a.EntryByFacilityRmsNo is not null then a.EntryByFacilityRefNo else a.OrderRef end as RefNo
+		,A.EntryByUserCode --เพิ่มวันที่ 27/05/2569
+		,dbo.sysconname(A.EntryByUserCode,10031,2) AS 'EntryByUserNameTH' --เพิ่มวันที่ 27/05/2569
+		,dbo.sysconname(A.EntryByUserCode,10031,1) AS 'EntryByUserNameEN' --เพิ่มวันที่ 27/05/2569
 		, a.VoidByUserCode as CancelByUserCode --แก้ไขวันที่ 03/03/2568 
 		, dbo.sysconname(a.VoidByUserCode,10031,2) as CancelByUserNameTH --เพิ่มวันที่ 03/03/2568
 		, dbo.sysconname(a.VoidByUserCode,10031,1) as CancelByUserNameEN --เพิ่มวันที่ 03/03/2568
@@ -558,6 +576,9 @@ select	'PTS' as BU
 		, a.ChargeDateTime
 		, a.EntryByFacilityRmsNo as EntryByFacility
 		, case when a.EntryByFacilityRmsNo is not null then a.EntryByFacilityRefNo else a.OrderRef end as RefNo
+		,A.EntryByUserCode --เพิ่มวันที่ 27/05/2569
+		,dbo.sysconname(A.EntryByUserCode,10031,2) AS 'EntryByUserNameTH' --เพิ่มวันที่ 27/05/2569
+		,dbo.sysconname(A.EntryByUserCode,10031,1) AS 'EntryByUserNameEN' --เพิ่มวันที่ 27/05/2569
 		, a.VoidByUserCode as CancelByUserCode --แก้ไขวันที่ 03/03/2568 
 		, dbo.sysconname(a.VoidByUserCode,10031,2) as CancelByUserNameTH --เพิ่มวันที่ 03/03/2568
 		, dbo.sysconname(a.VoidByUserCode,10031,1) as CancelByUserNameEN --เพิ่มวันที่ 03/03/2568

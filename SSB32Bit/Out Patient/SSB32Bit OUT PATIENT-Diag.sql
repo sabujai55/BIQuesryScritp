@@ -9,6 +9,9 @@ select
 		, vnp.CLINIC as 'ClinicCode'
 		, dbo.sysconname(vnp.CLINIC,20016,2) as 'ClinicNameTH'
 		, dbo.sysconname(vnp.CLINIC,20016,1) as 'ClinicNameEN'
+		, vnp.DOCTOR as 'DoctorCode' --modify 24/07/2569
+		, dbo.Doctorname(vnp.DOCTOR,2) as 'DoctorNameTH' --modify 24/07/2569
+		, dbo.Doctorname(vnp.DOCTOR,1) as 'DoctorNameEN' --modify 24/07/2569
 		, vnd.DIAGDATETIME as 'DiagDateTime'
 		--, '' as 'DiagnosisRecordType'
 		--, '' as 'DiagnosisRecordName'

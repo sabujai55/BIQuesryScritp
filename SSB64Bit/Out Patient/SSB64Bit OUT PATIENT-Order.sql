@@ -1,6 +1,7 @@
 use SSBLIVE
 go
 
+
 select 'PT2' AS 'BU'
 	,CONCAT(format(A.MakeDateTime,'yyyyMMdd'),A.vn,A.prescriptionno,format(A.MakeDateTime,'yyyyMMddHHmmssffff'),A.SuffixTiny) AS 'OrderID'
 	,B.HN AS 'PatientID'
@@ -8,6 +9,12 @@ select 'PT2' AS 'BU'
 	,format(A.VisitDate,'yyyy-MM-dd') AS 'VisitDate'
 	,A.VN AS 'VN'
 	,A.PrescriptionNo AS 'PrescriptionNo'
+	, c.Clinic as ClinicCode	-->> 2026-08-04 Pay : Add Column
+	, dbo.sysconname(c.Clinic,42203,2) as ClinicNameTH	-->> 2026-08-04 Pay : Add Column
+	, dbo.sysconname(c.Clinic,42203,1) as ClinicNameEN	-->> 2026-08-04 Pay : Add Column
+	, c.Doctor as DoctorCode	-->> 2026-08-04 Pay : Add Column
+	, dbo.Doctorname(c.Doctor,2) as DoctorNameTH	-->> 2026-08-04 Pay : Add Column
+	, dbo.Doctorname(c.Doctor,1) as DoctorNameEN	-->> 2026-08-04 Pay : Add Column
 	,A.MakeDateTime AS 'MakeDateTime'
 	,'Treatment' AS 'ItemType'
 	,A.TreatmentCode AS 'ItemCode'
@@ -31,6 +38,9 @@ select 'PT2' AS 'BU'
 	,A.ChargeDateTime AS 'ChargeDateTime'
 	,A.EntryByFacilityRmsNo AS 'EntryByFacility'
 	,A.EntryByFacilityRefNo AS 'RefNo'
+	,A.EntryByUserCode --เพิ่มวันที่ 27/05/2569
+	,dbo.sysconname(A.EntryByUserCode,10031,2) AS 'EntryByUserNameTH' --เพิ่มวันที่ 27/05/2569
+	,dbo.sysconname(A.EntryByUserCode,10031,1) AS 'EntryByUserNameEN' --เพิ่มวันที่ 27/05/2569
 	,A.CxlByUserCode AS 'CancelByUserCode' --แก้ไขวันที่ 26/02/2568
 	,dbo.sysconname(A.CxlByUserCode,10031,2) AS 'CancelByUserNameTH' --เพิ่มวันที่ 26/02/2568
 	,dbo.sysconname(A.CxlByUserCode,10031,1) AS 'CancelByUserNameEN' --เพิ่มวันที่ 26/02/2568
@@ -86,6 +96,7 @@ from
 HNOPD_PRESCRIP_TREATMENT A
 left join HNOPD_MASTER B ON(A.visitdate = B.VisitDate and A.vn = B.VN)
 left join DNSYSCONFIG ACT ON A.HNActivityCode=ACT.Code and ACT.CtrlCode = 42093 
+left join HNOPD_PRESCRIP c on A.VisitDate = c.VisitDate and A.VN = c.VN and A.PrescriptionNo = c.PrescriptionNo
 where	A.TreatmentCode is not null
 		and A.VisitDate = CAST(GETDATE() as date)
 
@@ -98,6 +109,12 @@ select 'PT2' AS 'BU'
 	,format(A.VisitDate,'yyyy-MM-dd') AS 'VisitDate'
 	,A.VN AS 'VN'
 	,A.PrescriptionNo AS 'PrescriptionNo'
+	, d.Clinic as ClinicCode	-->> 2026-08-04 Pay : Add Column
+	, dbo.sysconname(d.Clinic,42203,2) as ClinicNameTH	-->> 2026-08-04 Pay : Add Column
+	, dbo.sysconname(d.Clinic,42203,1) as ClinicNameEN	-->> 2026-08-04 Pay : Add Column
+	, d.Doctor as DoctorCode	-->> 2026-08-04 Pay : Add Column
+	, dbo.Doctorname(d.Doctor,2) as DoctorNameTH	-->> 2026-08-04 Pay : Add Column
+	, dbo.Doctorname(d.Doctor,1) as DoctorNameEN	-->> 2026-08-04 Pay : Add Column
 	,A.MakeDateTime AS 'MakeDateTime'
 	, case when c.StockComposeCategory like 'ME%' then 'Medicine' 
 	  when c.StockComposeCategory like 'MS%' then 'Usage' end AS 'ItemType'
@@ -122,6 +139,9 @@ select 'PT2' AS 'BU'
 	,A.ChargeDateTime AS 'ChargeDateTime'
 	,A.EntryByFacilityRmsNo AS 'EntryByFacility'
 	,A.EntryByFacilityRefNo AS 'RefNo'
+	,A.EntryByUserCode --เพิ่มวันที่ 27/05/2569
+	,dbo.sysconname(A.EntryByUserCode,10031,2) AS 'EntryByUserNameTH' --เพิ่มวันที่ 27/05/2569
+	,dbo.sysconname(A.EntryByUserCode,10031,1) AS 'EntryByUserNameEN' --เพิ่มวันที่ 27/05/2569
 	,A.CxlByUserCode AS 'CancelByUserCode' --แก้ไขวันที่ 26/02/2568
 	,dbo.sysconname(A.CxlByUserCode,10031,2) AS 'CancelByUserNameTH' --เพิ่มวันที่ 26/02/2568
 	,dbo.sysconname(A.CxlByUserCode,10031,1) AS 'CancelByUserNameEN' --เพิ่มวันที่ 26/02/2568
@@ -178,6 +198,7 @@ HNOPD_PRESCRIP_TREATMENT A
 left join HNOPD_MASTER B ON(A.visitdate = B.VisitDate and A.vn = B.VN)
 left join STOCKMASTER c on A.StockCode = c.StockCode
 left join DNSYSCONFIG ACT ON A.HNActivityCode=ACT.Code and ACT.CtrlCode = 42093 
+left join HNOPD_PRESCRIP d on A.VisitDate = d.VisitDate and A.VN = d.VN and A.PrescriptionNo = d.PrescriptionNo
 where A.StockCode is not null
 and A.VisitDate = CAST(GETDATE() as date)
 
@@ -190,6 +211,12 @@ select 'PT2' AS 'BU'
 	,format(A.VisitDate,'yyyy-MM-dd') AS 'VisitDate'
 	,A.VN AS 'VN'
 	,A.PrescriptionNo AS 'PrescriptionNo'
+	, c.Clinic as ClinicCode	-->> 2026-08-04 Pay : Add Column
+	, dbo.sysconname(c.Clinic,42203,2) as ClinicNameTH	-->> 2026-08-04 Pay : Add Column
+	, dbo.sysconname(c.Clinic,42203,1) as ClinicNameEN	-->> 2026-08-04 Pay : Add Column
+	, c.Doctor as DoctorCode	-->> 2026-08-04 Pay : Add Column
+	, dbo.Doctorname(c.Doctor,2) as DoctorNameTH	-->> 2026-08-04 Pay : Add Column
+	, dbo.Doctorname(c.Doctor,1) as DoctorNameEN	-->> 2026-08-04 Pay : Add Column
 	,A.MakeDateTime AS 'MakeDateTime'
 	,'Lab' AS 'ItemType'
 	,A.LabCode AS 'ItemCode'
@@ -213,6 +240,9 @@ select 'PT2' AS 'BU'
 	,A.ChargeDateTime AS 'ChargeDateTime'
 	,A.EntryByFacilityRmsNo AS 'EntryByFacility'
 	,A.EntryByFacilityRefNo AS 'RefNo'
+	,A.EntryByUserCode --เพิ่มวันที่ 27/05/2569
+	,dbo.sysconname(A.EntryByUserCode,10031,2) AS 'EntryByUserNameTH' --เพิ่มวันที่ 27/05/2569
+	,dbo.sysconname(A.EntryByUserCode,10031,1) AS 'EntryByUserNameEN' --เพิ่มวันที่ 27/05/2569
 	,A.CxlByUserCode AS 'CancelByUserCode' --แก้ไขวันที่ 26/02/2568
 	,dbo.sysconname(A.CxlByUserCode,10031,2) AS 'CancelByUserNameTH' --เพิ่มวันที่ 26/02/2568
 	,dbo.sysconname(A.CxlByUserCode,10031,1) AS 'CancelByUserNameEN' --เพิ่มวันที่ 26/02/2568
@@ -268,6 +298,7 @@ from
 HNOPD_PRESCRIP_TREATMENT A
 left join HNOPD_MASTER B ON(A.visitdate = B.VisitDate and A.vn = B.VN)
 left join DNSYSCONFIG ACT ON A.HNActivityCode=ACT.Code and ACT.CtrlCode = 42093 
+left join HNOPD_PRESCRIP c on A.VisitDate = c.VisitDate and A.VN = c.VN and A.PrescriptionNo = c.PrescriptionNo
 where A.LabCode is not null
 and A.VisitDate = CAST(GETDATE() as date)
 
@@ -280,6 +311,12 @@ select 'PT2' AS 'BU'
 	,format(A.VisitDate,'yyyy-MM-dd') AS 'VisitDate'
 	,A.VN AS 'VN'
 	,A.PrescriptionNo AS 'PrescriptionNo'
+	, c.Clinic as ClinicCode	-->> 2026-08-04 Pay : Add Column
+	, dbo.sysconname(c.Clinic,42203,2) as ClinicNameTH	-->> 2026-08-04 Pay : Add Column
+	, dbo.sysconname(c.Clinic,42203,1) as ClinicNameEN	-->> 2026-08-04 Pay : Add Column
+	, c.Doctor as DoctorCode	-->> 2026-08-04 Pay : Add Column
+	, dbo.Doctorname(c.Doctor,2) as DoctorNameTH	-->> 2026-08-04 Pay : Add Column
+	, dbo.Doctorname(c.Doctor,1) as DoctorNameEN	-->> 2026-08-04 Pay : Add Column
 	,A.MakeDateTime AS 'MakeDateTime'
 	,'Xray' AS 'ItemType'
 	,A.XrayCode AS 'ItemCode'
@@ -303,6 +340,9 @@ select 'PT2' AS 'BU'
 	,A.ChargeDateTime AS 'ChargeDateTime'
 	,A.EntryByFacilityRmsNo AS 'EntryByFacility'
 	,A.EntryByFacilityRefNo AS 'RefNo'
+	,A.EntryByUserCode --เพิ่มวันที่ 27/05/2569
+	,dbo.sysconname(A.EntryByUserCode,10031,2) AS 'EntryByUserNameTH' --เพิ่มวันที่ 27/05/2569
+	,dbo.sysconname(A.EntryByUserCode,10031,1) AS 'EntryByUserNameEN' --เพิ่มวันที่ 27/05/2569
 	,A.CxlByUserCode AS 'CancelByUserCode' --แก้ไขวันที่ 26/02/2568
 	,dbo.sysconname(A.CxlByUserCode,10031,2) AS 'CancelByUserNameTH' --เพิ่มวันที่ 26/02/2568
 	,dbo.sysconname(A.CxlByUserCode,10031,1) AS 'CancelByUserNameEN' --เพิ่มวันที่ 26/02/2568
@@ -358,6 +398,7 @@ from
 HNOPD_PRESCRIP_TREATMENT A
 left join HNOPD_MASTER B ON(A.visitdate = B.VisitDate and A.vn = B.VN)
 left join DNSYSCONFIG ACT ON A.HNActivityCode=ACT.Code and ACT.CtrlCode = 42093 
+left join HNOPD_PRESCRIP c on A.VisitDate = c.VisitDate and A.VN = c.VN and A.PrescriptionNo = c.PrescriptionNo
 where A.XrayCode is not null
 and A.VisitDate = CAST(GETDATE() as date)
 
@@ -370,6 +411,12 @@ select 'PT2' AS 'BU'
 	,format(A.VisitDate,'yyyy-MM-dd') AS 'VisitDate'
 	,A.VN AS 'VN'
 	,A.PrescriptionNo AS 'PrescriptionNo'
+	, c.Clinic as ClinicCode	-->> 2026-08-04 Pay : Add Column
+	, dbo.sysconname(c.Clinic,42203,2) as ClinicNameTH	-->> 2026-08-04 Pay : Add Column
+	, dbo.sysconname(c.Clinic,42203,1) as ClinicNameEN	-->> 2026-08-04 Pay : Add Column
+	, c.Doctor as DoctorCode	-->> 2026-08-04 Pay : Add Column
+	, dbo.Doctorname(c.Doctor,2) as DoctorNameTH	-->> 2026-08-04 Pay : Add Column
+	, dbo.Doctorname(c.Doctor,1) as DoctorNameEN	-->> 2026-08-04 Pay : Add Column
 	,A.MakeDateTime AS 'MakeDateTime'
 	,'Medicine' AS 'ItemType'
 	,A.StockCode AS 'ItemCode'
@@ -393,6 +440,9 @@ select 'PT2' AS 'BU'
 	,A.ChargeDateTime AS 'ChargeDateTime'
 	,A.EntryByFacilityRmsNo AS 'EntryByFacility'
 	,A.EntryByFacilityRefNo AS 'RefNo'
+	,A.EntryByUserCode --เพิ่มวันที่ 27/05/2569
+	,dbo.sysconname(A.EntryByUserCode,10031,2) AS 'EntryByUserNameTH' --เพิ่มวันที่ 27/05/2569
+	,dbo.sysconname(A.EntryByUserCode,10031,1) AS 'EntryByUserNameEN' --เพิ่มวันที่ 27/05/2569
 	,A.CxlByUserCode AS 'CancelByUserCode'
 	,dbo.sysconname(A.CxlByUserCode,10031,2) AS 'CancelByUserNameTH'
 	,dbo.sysconname(A.CxlByUserCode,10031,1) AS 'CancelByUserNameEN'
@@ -447,6 +497,7 @@ from
 HNOPD_PRESCRIP_MEDICINE A
 left join HNOPD_MASTER B ON(A.visitdate = B.VisitDate and A.vn = B.VN)
 left join DNSYSCONFIG ACT ON A.HNActivityCode=ACT.Code and ACT.CtrlCode = 42093 
+left join HNOPD_PRESCRIP c on A.VisitDate = c.VisitDate and A.VN = c.VN and A.PrescriptionNo = c.PrescriptionNo
 where A.HereUsage = 0
 and A.VisitDate = CAST(GETDATE() as date)
 
@@ -459,6 +510,12 @@ select 'PT2' AS 'BU'
 	,format(A.VisitDate,'yyyy-MM-dd') AS 'VisitDate'
 	,A.VN AS 'VN'
 	,A.PrescriptionNo AS 'PrescriptionNo'
+	, c.Clinic as ClinicCode	-->> 2026-08-04 Pay : Add Column
+	, dbo.sysconname(c.Clinic,42203,2) as ClinicNameTH	-->> 2026-08-04 Pay : Add Column
+	, dbo.sysconname(c.Clinic,42203,1) as ClinicNameEN	-->> 2026-08-04 Pay : Add Column
+	, c.Doctor as DoctorCode	-->> 2026-08-04 Pay : Add Column
+	, dbo.Doctorname(c.Doctor,2) as DoctorNameTH	-->> 2026-08-04 Pay : Add Column
+	, dbo.Doctorname(c.Doctor,1) as DoctorNameEN	-->> 2026-08-04 Pay : Add Column
 	,A.MakeDateTime AS 'MakeDateTime'
 	,'Usage' AS 'ItemType'
 	,A.StockCode AS 'ItemCode'
@@ -482,6 +539,9 @@ select 'PT2' AS 'BU'
 	,A.ChargeDateTime AS 'ChargeDateTime'
 	,A.EntryByFacilityRmsNo AS 'EntryByFacility'
 	,A.EntryByFacilityRefNo AS 'RefNo'
+	,A.EntryByUserCode --เพิ่มวันที่ 27/05/2569
+	,dbo.sysconname(A.EntryByUserCode,10031,2) AS 'EntryByUserNameTH' --เพิ่มวันที่ 27/05/2569
+	,dbo.sysconname(A.EntryByUserCode,10031,1) AS 'EntryByUserNameEN' --เพิ่มวันที่ 27/05/2569
 	,A.CxlByUserCode AS 'CancelByUserCode' --แก้ไขวันที่ 26/02/2568
 	,dbo.sysconname(A.CxlByUserCode,10031,2) AS 'CancelByUserNameTH' --เพิ่มวันที่ 26/02/2568
 	,dbo.sysconname(A.CxlByUserCode,10031,1) AS 'CancelByUserNameEN' --เพิ่มวันที่ 26/02/2568
@@ -536,5 +596,6 @@ from
 HNOPD_PRESCRIP_MEDICINE A
 left join HNOPD_MASTER B ON(A.visitdate = B.VisitDate and A.vn = B.VN)
 left join DNSYSCONFIG ACT ON A.HNActivityCode=ACT.Code and ACT.CtrlCode = 42093
+left join HNOPD_PRESCRIP c on A.VisitDate = c.VisitDate and A.VN = c.VN and A.PrescriptionNo = c.PrescriptionNo
 where A.HereUsage = 1
 and A.VisitDate = CAST(GETDATE() as date)

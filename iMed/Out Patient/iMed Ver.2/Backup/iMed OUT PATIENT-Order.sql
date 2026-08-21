@@ -43,6 +43,9 @@ select 'PLR' as "BU"
 	,oi.verify_date ||' '|| oi.verify_time as "ChargeDateTime"
 	,'' as "EntryByFacility"
 	,substring(oi.assigned_ref_no,2,length(oi.assigned_ref_no)) as "RefNo"
+	,e.employee_code AS "EntryByUserCode"	--เพิ่ม 2/6/69
+	,e.prename||e.firstname||' '||e.lastname AS "EntryByUserNameTH"	--เพิ่ม 2/6/69
+	,e.intername AS "EntryByUserNameEN"	--เพิ่ม 2/6/69
 	,'' as "CancelByUserCode"
 	,'' as "CancelByUserNameTH"
 	,'' as "CancelByUserNameEN"
@@ -56,7 +59,7 @@ select 'PLR' as "BU"
 	,oi.execute_spid as "StoreCode"
 	,bsp.description as "StoreNameTH"
 	,bsp.description as "StoreNameEN"
-	--����
+	--๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ
 	, '' as "DoseTypeCode"
 	, '' as "DoseTypeNameTH"
 	, '' as "DoseTypeNameEN"
@@ -83,38 +86,40 @@ select 'PLR' as "BU"
 	,'' as "AuxLabel3NameEN"
 	--
 	,oi.instruction_text_line1 ||' '|| oi.instruction_text_line2||' '|| oi.instruction_text_line3  as "DoseMemo"
-	,i2.item_code as "EntryByFacilityMethodCode" --Edit 2026-03-04 >> เพิ่ม EntryByFacilityMethodCode, EntryByFacilityMethodNameTH, EntryByFacilityMethodNameEN
-	,case when i2.print_name != '' then i2.print_name else i2.common_name end as "EntryByFacilityMethodNameTH" --Edit 2026-03-04 >> เพิ่ม EntryByFacilityMethodCode, EntryByFacilityMethodNameTH, EntryByFacilityMethodNameEN
-	,i2.common_name as "EntryByFacilityMethodNameEN" --Edit 2026-03-04 >> เพิ่ม EntryByFacilityMethodCode, EntryByFacilityMethodNameTH, EntryByFacilityMethodNameEN
+	,i2.item_code as "EntryByFacilityMethodCode" --Edit 2026-03-04 >> เน€เธ�เธดเน�เธก EntryByFacilityMethodCode, EntryByFacilityMethodNameTH, EntryByFacilityMethodNameEN
+	,case when i2.print_name != '' then i2.print_name else i2.common_name end as "EntryByFacilityMethodNameTH" --Edit 2026-03-04 >> เน€เธ�เธดเน�เธก EntryByFacilityMethodCode, EntryByFacilityMethodNameTH, EntryByFacilityMethodNameEN
+	,i2.common_name as "EntryByFacilityMethodNameEN" --Edit 2026-03-04 >> เน€เธ�เธดเน�เธก EntryByFacilityMethodCode, EntryByFacilityMethodNameTH, EntryByFacilityMethodNameEN
 	,'' as "Checkup"
 	,case when i.fix_item_type_id = '10' then '1' else '0' end as "FlagDF"
 	,i.base_order_category_id as "ActivityCategoryCode"
 	,boc.description as "ActivityCategoryNameTH"
 	,boc.description as "ActivityCategoryNameEN"
-	,split_part(his_func_get_diagnosis(oi.visit_id, '1','1'),'|',1) as "PrimaryDiagnosisCode"	--Edit 2026-03-04 >> เพิ่ม Diagnosis
-	,split_part(his_func_get_diagnosis(oi.visit_id, '1','2'),'|',1) as "PrimaryDiagnosisNameTH"	--Edit 2026-03-04 >> เพิ่ม Diagnosis
-	,split_part(his_func_get_diagnosis(oi.visit_id, '1','2'),'|',1) as "PrimaryDiagnosisNameEN"	--Edit 2026-03-04 >> เพิ่ม Diagnosis
+	,split_part(his_func_get_diagnosis(oi.visit_id, '1','1'),'|',1) as "PrimaryDiagnosisCode"	--Edit 2026-03-04 >> เน€เธ�เธดเน�เธก Diagnosis
+	,split_part(his_func_get_diagnosis(oi.visit_id, '1','2'),'|',1) as "PrimaryDiagnosisNameTH"	--Edit 2026-03-04 >> เน€เธ�เธดเน�เธก Diagnosis
+	,split_part(his_func_get_diagnosis(oi.visit_id, '1','2'),'|',1) as "PrimaryDiagnosisNameEN"	--Edit 2026-03-04 >> เน€เธ�เธดเน�เธก Diagnosis
 	--
 		from order_item oi 
 		inner join visit v on oi.visit_id = v.visit_id 
 		left join visit_payment vp on v.visit_id = vp.visit_id and oi.visit_payment_id = vp.visit_payment_id and oi.plan_id = vp.plan_id 
 		left join plan p on vp.plan_code = p.plan_code  
+		left join employee e on oi.verify_eid = e.employee_id
 		left join item i on oi.item_id = i.item_id 
 		left join base_unit bu  on oi.base_unit_id = bu.base_unit_id 
 		left join attending_physician ap on oi.visit_id = ap.visit_id and oi.order_doctor_eid = ap.employee_id 
 		left join base_department bd on ap.base_department_id = bd.base_department_id and bd.account_product = 'COST'
 		left join fix_item_type fit on oi.fix_item_type_id = fit.fix_item_type_id 
-		left join base_order_category boc on i.base_order_category_id = boc.base_order_category_id		--Edit 2026-03-04 >> เพิ่ม ActivityCategoryCode, ActivityCategoryNameTH, ActivityCategoryNameEN
-		left join base_order_sub_category bosc on oi.base_order_sub_category_id = bosc.base_order_category_id 
+		left join base_order_category boc on i.base_order_category_id = boc.base_order_category_id		--Edit 2026-03-04 >> เน€เธ�เธดเน�เธก ActivityCategoryCode, ActivityCategoryNameTH, ActivityCategoryNameEN
+		left join base_order_sub_category bosc on oi.base_order_sub_category_id = bosc.base_order_sub_category_id	--แก้ไข 2/6/69
 		left join base_service_point bsp on oi.execute_spid = bsp.base_service_point_id 
 -- *************************************** Setup Dose Med *************************************** 
 		left join base_dose_unit bdu on oi.base_dose_unit_id = bdu.base_dose_unit_id 
 		left join base_drug_frequency bdf on oi.base_drug_frequency_id = bdf.base_drug_frequency_id 
 		left join base_drug_instruction bdi on split_part(oi.base_drug_usage_code,' ', 1) = bdi.base_drug_instruction_id
 -- *************************************** Get Package name *************************************** 
-		left join order_item oi2 on oi.visit_id = oi2.visit_id and oi.set_order_id = oi2.order_item_id	 --Edit 2026-03-04 >> เพิ่ม EntryByFacilityMethodCode, EntryByFacilityMethodNameTH, EntryByFacilityMethodNameEN
-		left join item i2 on oi2.item_id = i2.item_id	 --Edit 2026-03-04 >> เพิ่ม EntryByFacilityMethodCode, EntryByFacilityMethodNameTH, EntryByFacilityMethodNameEN
+		left join order_item oi2 on oi.visit_id = oi2.visit_id and oi.set_order_id = oi2.order_item_id	 --Edit 2026-03-04 >> เน€เธ�เธดเน�เธก EntryByFacilityMethodCode, EntryByFacilityMethodNameTH, EntryByFacilityMethodNameEN
+		left join item i2 on oi2.item_id = i2.item_id	 --Edit 2026-03-04 >> เน€เธ�เธดเน�เธก EntryByFacilityMethodCode, EntryByFacilityMethodNameTH, EntryByFacilityMethodNameEN
 WHERE 	oi.verify_date = current_date::text
+--oi.visit_id = '520100103094625801'
 order by oi.visit_id, oi.order_item_id
 )
 union all
@@ -160,10 +165,13 @@ select 'PLR' as "BU"
 	,toi.verify_date ||' '|| toi.verify_time as "ChargeDateTime"
 	,'' as "EntryByFacility"
 	,substring(toi.assigned_ref_no,2,length(toi.assigned_ref_no)) as "RefNo"
-	,toi.track_actor as "CancelByUserCode"
-	,e.prename||e.firstname||' '||e.lastname as "CancelByUserNameTH"
-	,e.intername as "CancelByUserNameEN"
-	,toi.verify_date ||' '||toi.verify_time as "CancelDateTime"
+   	,toi.verify_eid AS "EntryByUserCode"	--เพิ่ม 2/6/69
+	,e.prename||e.firstname||' '||e.lastname AS "EntryByUserNameTH"	--เพิ่ม 2/6/69
+	,e.intername AS "EntryByUserNameEN"	--เพิ่ม 2/6/69
+	,toi.track_actor as "CancelByUserCode"	--แก้ไข 2/6/69
+	,e2.prename||e2.firstname||' '||e2.lastname as "CancelByUserNameTH"	--แก้ไข 2/6/69
+	,e2.intername as "CancelByUserNameEN"	--แก้ไข 2/6/69
+	,toi.track_date ||' '||toi.track_time as "CancelDateTime"	--แก้ไข 2/6/69
 	,'' as "TreatmentDateTimeFrom"
 	,'' as "TreatmentDateTimeTo"
 	,toi.doctor_fee_eid as "DFDoctor"
@@ -173,7 +181,7 @@ select 'PLR' as "BU"
 	,toi.execute_spid as "StoreCode"
 	,bsp.description as "StoreNameTH"
 	,bsp.description as "StoreNameEN"
-	--����
+	--๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ
 	, '' as "DoseTypeCode"
 	, '' as "DoseTypeNameTH"
 	, '' as "DoseTypeNameEN"
@@ -205,41 +213,35 @@ select 'PLR' as "BU"
 	,'' as "EntryByFacilityMethodNameEN"
 	,'' as "Checkup"
 	,case when i.fix_item_type_id = '10' then '1' else '0' end as "FlagDF"
-	,i.base_order_category_id as "ActivityCategoryCode"	--Edit 2026-03-04 >> เพิ่ม ActivityCategoryCode, ActivityCategoryNameTH, ActivityCategoryNameEN
-	,boc.description as "ActivityCategoryNameTH"	--Edit 2026-03-04 >> เพิ่ม ActivityCategoryCode, ActivityCategoryNameTH, ActivityCategoryNameEN
-	,boc.description as "ActivityCategoryNameEN"	--Edit 2026-03-04 >> เพิ่ม ActivityCategoryCode, ActivityCategoryNameTH, ActivityCategoryNameEN
-	--����
-	,split_part(his_func_get_diagnosis(toi.visit_id, '1','1'),'|',1) as "PrimaryDiagnosisCode"		--Edit 2026-03-04 >> เพิ่ม Diagnosis
-	,split_part(his_func_get_diagnosis(toi.visit_id, '1','2'),'|',1) as "PrimaryDiagnosisNameTH"	--Edit 2026-03-04 >> เพิ่ม Diagnosis
-	,split_part(his_func_get_diagnosis(toi.visit_id, '1','2'),'|',1) as "PrimaryDiagnosisNameEN"	--Edit 2026-03-04 >> เพิ่ม Diagnosis
+	,i.base_order_category_id as "ActivityCategoryCode"	--Edit 2026-03-04 >> เน€เธ�เธดเน�เธก ActivityCategoryCode, ActivityCategoryNameTH, ActivityCategoryNameEN
+	,boc.description as "ActivityCategoryNameTH"	--Edit 2026-03-04 >> เน€เธ�เธดเน�เธก ActivityCategoryCode, ActivityCategoryNameTH, ActivityCategoryNameEN
+	,boc.description as "ActivityCategoryNameEN"	--Edit 2026-03-04 >> เน€เธ�เธดเน�เธก ActivityCategoryCode, ActivityCategoryNameTH, ActivityCategoryNameEN
+	--๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ
+	,split_part(his_func_get_diagnosis(toi.visit_id, '1','1'),'|',1) as "PrimaryDiagnosisCode"		--Edit 2026-03-04 >> เน€เธ�เธดเน�เธก Diagnosis
+	,split_part(his_func_get_diagnosis(toi.visit_id, '1','2'),'|',1) as "PrimaryDiagnosisNameTH"	--Edit 2026-03-04 >> เน€เธ�เธดเน�เธก Diagnosis
+	,split_part(his_func_get_diagnosis(toi.visit_id, '1','2'),'|',1) as "PrimaryDiagnosisNameEN"	--Edit 2026-03-04 >> เน€เธ�เธดเน�เธก Diagnosis
 	--
 		from track_order_item toi 
 		inner join visit v on toi.visit_id = v.visit_id 
 		left join visit_payment vp on v.visit_id = vp.visit_id and toi.visit_payment_id = vp.visit_payment_id and toi.plan_id = vp.plan_id 
 		left join plan p on vp.plan_code = p.plan_code  
 		left join employee e on toi.verify_eid = e.employee_id 
+		left join employee e2 on toi.track_actor = e2.employee_id	--เพิ่ม 2/6/69
 		left join item i on toi.item_id = i.item_id 
 		left join base_unit bu  on toi.base_unit_id = bu.base_unit_id 
 		left join attending_physician ap on toi.visit_id = ap.visit_id and toi.order_doctor_eid = ap.employee_id
 		left join base_department bd on ap.base_department_id = bd.base_department_id and bd.account_product = 'COST'
 		left join fix_item_type fit on toi.fix_item_type_id = fit.fix_item_type_id 
-		left join base_order_category boc on i.base_order_category_id = boc.base_order_category_id	--Edit 2026-03-04 >> เพิ่ม ActivityCategoryCode, ActivityCategoryNameTH, ActivityCategoryNameEN
-		left join base_order_sub_category bosc on toi.base_order_sub_category_id = bosc.base_order_category_id 
+		left join base_order_category boc on i.base_order_category_id = boc.base_order_category_id	--Edit 2026-03-04 >> เน€เธ�เธดเน�เธก ActivityCategoryCode, ActivityCategoryNameTH, ActivityCategoryNameEN
+		left join base_order_sub_category bosc on toi.base_order_sub_category_id = bosc.base_order_sub_category_id	--แก้ไข 2/6/69
 		left join base_service_point bsp on toi.execute_spid = bsp.base_service_point_id 
 -- *************************************** Setup Dose Med *************************************** 
 		left join base_dose_unit bdu on toi.base_dose_unit_id = bdu.base_dose_unit_id 
 		left join base_drug_frequency bdf on toi.base_drug_frequency_id = bdf.base_drug_frequency_id 
 WHERE 	toi.track_date = current_date::text
+--toi.visit_id = '520100103094625801'
 order by toi.visit_id
 )
 ) dataopd 
 --where "CancelByUserCode" != ''  
 --limit 100
-
-
-
-
-
-
-
-

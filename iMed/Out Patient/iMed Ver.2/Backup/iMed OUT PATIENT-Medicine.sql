@@ -4,7 +4,13 @@ select 	bs.site_code as "BU"
 		, oi.visit_id as "VisitID"
 		, v.visit_date ||' '|| v.visit_time as "VisitDate"
 		, format_vn(v.vn) as "VN"
-		, '1' as "PrescriptionNo"
+		, coalesce(ap.attending_physician_id, ap2."PrescriptionNo", ap3."PrescriptionNo") as "PrescriptionNo"	--> 2026-08-06	Add Prescription
+		, coalesce(ap.base_department_id, ap2."ClinicCode", ap3."ClinicCode") as "ClinicCode"	--> 2026-08-06	Add Clinic Prescription
+		, coalesce(bd.description, ap2."ClinicNameTH", ap3."ClinicNameTH") as "ClinicNameTH"	--> 2026-08-06	Add Clinic Prescription
+		, '' as "ClinicNameEN"
+		, coalesce(ap.employee_id, ap2."DoctorCode", ap3."DoctorCode") as "DoctorCode"	--> 2026-08-06	Add Doctor Prescription
+		, coalesce(e.prename || e.firstname || ' ' || e.lastname, ap2."DoctorNameTH", ap3."DoctorNameTH") as "DoctorNameTH"	--> 2026-08-06	Add Doctor Prescription
+		, coalesce(e.intername, ap2."DoctorNameEN", ap3."DoctorNameEN") as "DoctorNameEN" 	--> 2026-08-06	Add Doctor Prescription
 		, oi.verify_date ||' '|| oi.verify_time as "MakeDateTime"
 		, s.stock_id as "StoreCode"
 		, s.stock_name as "StoreNameTH"
@@ -18,6 +24,7 @@ select 	bs.site_code as "BU"
 		, bu.description_en as "UnitNameEN"
 		, oi.unit_price_sale::decimal as "UnitPrice"
 		, oi.unit_price_sale::decimal * oi.quantity::decimal as "ChargeAmt"
+		, case when oi.charge_complete = '1' then 'Charge' else 'None' end as "ChargeType"
 		, oi.base_order_sub_category_id as "HNActivityCode"
 		, bosc.description as "HNActivityNameTH"
 		, bosc.description as "HNActivityNameEN"
@@ -71,12 +78,12 @@ select 	bs.site_code as "BU"
 		, null as "DoseFreqCode"
 		, null as "DoseFreqNameTH"
 		, null as "DoseFreqNameEN"
-		, i.base_drug_description_id as "AuxLabel1Code"
-		, bdd.description_th as "AuxLabel1NameTH"
-		, bdd.description_en as "AuxLabel1NameEN"
-		, i.base_drug_caution_id as "AuxLabel2Code"
-		, bdc.description_th as "AuxLabel2NameTH"
-		, bdc.description_en as "AuxLabel2NameEN"
+		, null as "AuxLabel1Code"
+		, i.description as "AuxLabel1NameTH"
+		, i.description_en  as "AuxLabel1NameEN"
+		, null as "AuxLabel2Code"
+		, i.caution as "AuxLabel2NameTH"
+		, i.caution_en as "AuxLabel2NameEN"
 		, null as "AuxLabel3Code"
 		, null as "AuxLabel3NameTH"
 		, null as "AuxLabel3NameEN"
@@ -109,6 +116,7 @@ from 	order_item oi
 		inner join visit v on oi.visit_id = v.visit_id and v.fix_visit_type_id = '0'
 		inner join item i on oi.item_id = i.item_id
 		left join base_service_point bsp on oi.dispense_spid = bsp.base_service_point_id 
+		left join base_service_point bsp2 on bsp2.base_service_point_id = oi.verify_spid 
 		left join stock s on bsp.stock_id = s.stock_id 
 		left join base_unit bu on oi.base_unit_id = bu.base_unit_id 
 		left join base_order_sub_category bosc on oi.base_order_sub_category_id = bosc.base_order_sub_category_id
@@ -116,10 +124,46 @@ from 	order_item oi
 		left join base_drug_instruction bdi on split_part(oi.base_drug_usage_code,' ',1) = bdi.base_drug_instruction_id 
 		left join base_drug_time bdt on (case when split_part(oi.base_drug_usage_code,' ',4) like 'once%' then split_part(oi.base_drug_usage_code,' ',6) else split_part(oi.base_drug_usage_code,' ',5) end) = bdt.base_drug_time_id 
 		left join base_dose_unit bdu on split_part(oi.base_drug_usage_code,' ',3) = bdu.base_dose_unit_id 
-		left join base_drug_description bdd on i.base_drug_description_id = bdd.base_drug_description_id 
-		left join base_drug_caution bdc on i.base_drug_caution_id = bdc.base_drug_caution_id 
 		left join return_drug rd on oi.order_item_id = rd.dispense_order_id 
+		left join attending_physician ap on ap.visit_id = oi.visit_id and ap.employee_id = oi.order_doctor_eid and ap.base_department_id = bsp2.base_department_id 	--> 2026-08-06	Add Prescription
+		left join base_department bd on bd.base_department_id = ap.base_department_id	--> 2026-08-06	Add Clinic Prescription
+		left join employee e on e.employee_id = ap.employee_id	--> 2026-08-06	Add Doctor Prescription
+		left join lateral	--> 2026-08-06	Add Doctor Prescription
+		(
+			select 	distinct on (ap.visit_id, ap.base_department_id)
+					ap.attending_physician_id as "PrescriptionNo"
+					, ap.base_department_id as "ClinicCode"
+					, bd.description as "ClinicNameTH"
+					, '' as "ClinicNameEN"
+					, ap.employee_id as "DoctorCode"
+					, e.prename || e.firstname || ' ' || e.lastname as "DoctorNameTH"
+					, e.intername as "DoctorNameEN"
+			from 	attending_physician ap 
+					inner join employee e on ap.employee_id = e.employee_id
+					inner join base_department bd on ap.base_department_id = bd.base_department_id
+			where 	ap.visit_id = oi.visit_id
+					and ap.employee_id = oi.order_doctor_eid
+			limit 1
+		)ap2 on true
+		left join lateral	--> 2026-08-06	Add Doctor Prescription
+		(
+			select 	distinct on (ap.visit_id, ap.base_department_id)
+					ap.attending_physician_id as "PrescriptionNo"
+					, ap.base_department_id as "ClinicCode"
+					, bd.description as "ClinicNameTH"
+					, '' as "ClinicNameEN"
+					, ap.employee_id as "DoctorCode"
+					, e.prename || e.firstname || ' ' || e.lastname as "DoctorNameTH"
+					, e.intername as "DoctorNameEN"
+			from 	attending_physician ap 
+					inner join employee e on ap.employee_id = e.employee_id
+					inner join base_department bd on ap.base_department_id = bd.base_department_id
+			where 	ap.visit_id = oi.visit_id
+--					and ap.employee_id = oi.order_doctor_eid
+					and ap.priority = '1'
+			limit 1
+		)ap3 on true
 		, base_site bs 
 where 	1=1
 		and oi.fix_item_type_id = '0'
-		and v.visit_date = '2026-01-01'
+		and v.visit_date = (current_date-1)::text

@@ -2,12 +2,18 @@ select top 1000 'PLS' as 'BU' , datamst.*
 		from 
 			((
 				select  
-						CONVERT(varchar,vnt.VISITDATE,112)+CONVERT(varchar,vnt.VN)+CONVERT(varchar,vnt.MAKEDATETIME,112)+CONVERT(varchar,vnt.SUBSUFFIX) as 'OrderID'
+						CONVERT(varchar,vnt.VISITDATE,112)+CONVERT(varchar,vnt.VN)+CONVERT(varchar,vnt.SUFFIX)+CONVERT(varchar,vnt.MAKEDATETIME,112)+CONVERT(varchar,vnt.SUBSUFFIX) as 'OrderID' --Modify 27/05/2569
 						,vnm.HN as 'PatientID'
 						,CONVERT(varchar,vnp.VISITDATE,112)+CONVERT(varchar,vnp.VN)+CONVERT(varchar,vnp.SUFFIX) as 'VisitID'
 						,vnt.VISITDATE as 'VisitDate'
 						,vnt.VN
-						,vnt.SUFFIX as 'PrescriptionNo'
+						,vnt.SUFFIX as 'PrescriptionNo' --modify 24/07/2569
+						,vnp.CLINIC as 'ClinicCode' --modify 24/07/2569
+						,dbo.sysconname(vnp.CLINIC,20016,2) as 'ClinicNameTH' --modify 24/07/2569
+						,dbo.sysconname(vnp.CLINIC,20016,1) as 'ClinicNameEN' --modify 24/07/2569
+						,vnp.DOCTOR as 'DoctorCode' --modify 24/07/2569
+						,dbo.Doctorname(vnp.DOCTOR,2) as 'DoctorNameTH' --modify 24/07/2569
+						,dbo.Doctorname(vnp.DOCTOR,1) as 'DoctorNameEN' --modify 24/07/2569
 						,vnt.MAKEDATETIME as 'MakeDateTime'
 						,'Treatment' as 'ItemType'
 						,case when vnt.TREATMENTCODE is null then vnt.CHARGECODE else vnt.TREATMENTCODE end  as 'ItemCode'
@@ -33,6 +39,9 @@ select top 1000 'PLS' as 'BU' , datamst.*
 						,vnt.MAKEDATETIME as 'ChargeDateTime'
 						,dbo.sysconname(vnt.FACILITYRMS,20045,4) as 'EntryByFacility'
 						,vnt.FACILITYREF as 'RefNo'
+						,vnt.ENTRYBYUSERCODE as 'EntryByUserCode' --เพิ่มวันที่ 27/05/2569
+						,dbo.sysconname(vnt.ENTRYBYUSERCODE,10000,2) as 'EntryByUserNameTH' --เพิ่มวันที่ 27/05/2569
+						,dbo.sysconname(vnt.ENTRYBYUSERCODE,10000,1) as 'EntryByUserNameEN' --เพิ่มวันที่ 27/05/2569
 						,vnt.CXLBYUSERCODE as 'CancelByUserCode'
 						,dbo.sysconname(vnt.CXLBYUSERCODE,10000,2) as 'CancelByUserNameTH'
 						,dbo.sysconname(vnt.CXLBYUSERCODE,10000,1) as 'CancelByUserNameEN'
@@ -86,7 +95,7 @@ select top 1000 'PLS' as 'BU' , datamst.*
 						from VNTREAT vnt
 						left join VNPRES vnp on vnt.VN=vnp.VN and vnt.VISITDATE=vnp.VISITDATE and vnt.SUFFIX=vnp.SUFFIX
 						left join VNMST vnm on vnp.VN=vnm.VN and vnp.VISITDATE=vnm.VISITDATE
-						left join VNDIAG vnd on vnp.VN=vnd.VN and vnp.VISITDATE=vnd.VISITDATE and TYPEOFTHISDIAG = 1
+						left join VNDIAG vnd on vnp.VN=vnd.VN and vnp.VISITDATE=vnd.VISITDATE and TYPEOFTHISDIAG = 1 and vnd.SUFFIX=vnp.SUFFIX --Modify 27/05/2569
 						left join ICD_MASTER icd on vnd.ICDCODE=icd.ICDCODE
 						left join SYSCONFIG sc on vnt.TREATMENTCODE=sc.CODE and sc.CTRLCODE = 20051
 						left join SYSCONFIG act on vnt.CHARGECODE=act.CODE and act.CTRLCODE = 20023
@@ -96,12 +105,18 @@ select top 1000 'PLS' as 'BU' , datamst.*
 		union all
 		(
 				select  top 100
-						CONVERT(varchar,vnmed.VISITDATE,112)+CONVERT(varchar,vnmed.VN)+CONVERT(varchar,vnmed.MAKEDATETIME,112)+CONVERT(varchar,vnmed.SUBSUFFIX) as 'OrderID'
+						CONVERT(varchar,vnmed.VISITDATE,112)+CONVERT(varchar,vnmed.VN)+CONVERT(varchar,vnmed.SUFFIX)+CONVERT(varchar,vnmed.MAKEDATETIME,112)+CONVERT(varchar,vnmed.SUBSUFFIX) as 'OrderID' --Modify 27/05/2569
 						,vnm.HN as 'PatientID'
 						,CONVERT(varchar,vnp.VISITDATE,112)+CONVERT(varchar,vnp.VN)+CONVERT(varchar,vnp.SUFFIX) as 'VisitID'
 						,vnmed.VISITDATE as 'VisitDate'
 						,vnmed.VN
 						,vnmed.SUFFIX as 'PrescriptionNo'
+						,vnp.CLINIC as 'ClinicCode' --modify 24/07/2569
+						,dbo.sysconname(vnp.CLINIC,20016,2) as 'ClinicNameTH' --modify 24/07/2569
+						,dbo.sysconname(vnp.CLINIC,20016,1) as 'ClinicNameEN' --modify 24/07/2569
+						,vnp.DOCTOR as 'DoctorCode' --modify 24/07/2569
+						,dbo.Doctorname(vnp.DOCTOR,2) as 'DoctorNameTH' --modify 24/07/2569
+						,dbo.Doctorname(vnp.DOCTOR,1) as 'DoctorNameEN' --modify 24/07/2569
 						,vnmed.MAKEDATETIME as 'MakeDateTime'
 						,case when stm.MEDICALSUPPLY = 1 then 'Usage' else 'Medicine' end as 'ItemType'
 						,vnmed.STOCKCODE  as 'ItemCode'
@@ -127,6 +142,9 @@ select top 1000 'PLS' as 'BU' , datamst.*
 						,vnmed.MAKEDATETIME as 'ChargeDateTime'
 						,'' as 'EntryByFacility'
 						,vnmed.ORDERREF as 'RefNo'
+						,vnmed.ENTRYBYUSERCODE as 'EntryByUserCode' --เพิ่มวันที่ 27/05/2569
+						,dbo.sysconname(vnmed.ENTRYBYUSERCODE,10000,2) as 'EntryByUserNameTH' --เพิ่มวันที่ 27/05/2569
+						,dbo.sysconname(vnmed.ENTRYBYUSERCODE,10000,1) as 'EntryByUserNameEN' --เพิ่มวันที่ 27/05/2569
 						,vnmed.CXLBYUSERCODE as 'CancelByUserCode' 
 						,dbo.sysconname(vnmed.CXLBYUSERCODE,10000,2) as 'CancelByUserNameTH' 
 						,dbo.sysconname(vnmed.CXLBYUSERCODE,10000,1) as 'CancelByUserNameEN' 
@@ -179,7 +197,7 @@ select top 1000 'PLS' as 'BU' , datamst.*
 						from VNMEDICINE vnmed
 						left join VNPRES vnp on vnmed.VN=vnp.VN and vnmed.VISITDATE=vnp.VISITDATE and vnmed.SUFFIX=vnp.SUFFIX
 						left join VNMST vnm on vnp.VN=vnm.VN and vnp.VISITDATE=vnm.VISITDATE
-						left join VNDIAG vnd on vnp.VN=vnd.VN and vnp.VISITDATE=vnd.VISITDATE and TYPEOFTHISDIAG = 1
+						left join VNDIAG vnd on vnp.VN=vnd.VN and vnp.VISITDATE=vnd.VISITDATE and TYPEOFTHISDIAG = 1 and vnp.SUFFIX=vnd.SUFFIX --Modify 27/05/2569
 						left join ICD_MASTER icd on vnd.ICDCODE=icd.ICDCODE
 						left join SSBSTOCK.dbo.STOCK_MASTER stm on vnmed.STOCKCODE=stm.STOCKCODE
 						left join SYSCONFIG act on vnmed.CHARGECODE=act.CODE and act.CTRLCODE = 20023
@@ -187,12 +205,18 @@ select top 1000 'PLS' as 'BU' , datamst.*
 		union all
 		(
 			select  
-						CONVERT(varchar,l.CHARGETOVISITDATE,112)+CONVERT(varchar,l.CHARGETOVN)+CONVERT(varchar,l.ENTRYDATETIME,112)+CONVERT(varchar,vnt.SUBSUFFIX) as 'OrderID'
+						CONVERT(varchar,l.CHARGETOVISITDATE,112)+CONVERT(varchar,l.CHARGETOVN)+CONVERT(varchar,vnt.SUFFIX)+CONVERT(varchar,l.ENTRYDATETIME,112)+CONVERT(varchar,vnt.SUBSUFFIX) as 'OrderID' --Modify 27/05/2569
 						,vnm.HN as 'PatientID'
 						,CONVERT(varchar,vnp.VISITDATE,112)+CONVERT(varchar,vnp.VN)+CONVERT(varchar,vnp.SUFFIX) as 'VisitID'
 						,vnt.VISITDATE as 'VisitDate'
 						,vnt.VN
 						,vnt.SUFFIX as 'PrescriptionNo'
+						,vnp.CLINIC as 'ClinicCode' --modify 24/07/2569
+						,dbo.sysconname(vnp.CLINIC,20016,2) as 'ClinicNameTH' --modify 24/07/2569
+						,dbo.sysconname(vnp.CLINIC,20016,1) as 'ClinicNameEN' --modify 24/07/2569
+						,vnp.DOCTOR as 'DoctorCode' --modify 24/07/2569
+						,dbo.Doctorname(vnp.DOCTOR,2) as 'DoctorNameTH' --modify 24/07/2569
+						,dbo.Doctorname(vnp.DOCTOR,1) as 'DoctorNameEN' --modify 24/07/2569
 						,l.ENTRYDATETIME as 'MakeDateTime'
 						,'Lab' as 'ItemType'
 						,lr.LABCODE as 'ItemCode'
@@ -218,6 +242,9 @@ select top 1000 'PLS' as 'BU' , datamst.*
 						,l.CHARGEDATETIME as 'ChargeDateTime'
 						,dbo.sysconname(lr.FACILITYRMSNO,20045,4) as 'EntryByFacility'
 						,lr.REQUESTNO as 'RefNo'
+						,vnt.ENTRYBYUSERCODE as 'EntryByUserCode' --เพิ่มวันที่ 27/05/2569
+						,dbo.sysconname(vnt.ENTRYBYUSERCODE,10000,2) as 'EntryByUserNameTH' --เพิ่มวันที่ 27/05/2569
+						,dbo.sysconname(vnt.ENTRYBYUSERCODE,10000,1) as 'EntryByUserNameEN' --เพิ่มวันที่ 27/05/2569
 						,lr.CXLBYUSERCODE as 'CancelByUserCode' 
 						,dbo.sysconname(lr.CXLBYUSERCODE,10000,2) as 'CancelByUserNameTH' 
 						,dbo.sysconname(lr.CXLBYUSERCODE,10000,1) as 'CancelByUserNameEN' 
@@ -272,7 +299,7 @@ select top 1000 'PLS' as 'BU' , datamst.*
 						left join VNTREAT vnt on l.CHARGETOVN=vnt.VN and l.CHARGETOVISITDATE=vnt.VISITDATE and l.FACILITYRMSNO=vnt.FACILITYRMS and l.REQUESTNO=vnt.FACILITYREF and vnt.FACILITYSYSTEM = 9
 						left join VNPRES vnp on vnt.VN=vnp.VN and vnt.VISITDATE=vnp.VISITDATE and vnt.SUFFIX=vnp.SUFFIX
 						left join VNMST vnm on vnp.VN=vnm.VN and vnp.VISITDATE=vnm.VISITDATE
-						left join VNDIAG vnd on vnp.VN=vnd.VN and vnp.VISITDATE=vnd.VISITDATE and TYPEOFTHISDIAG = 1
+						left join VNDIAG vnd on vnp.VN=vnd.VN and vnp.VISITDATE=vnd.VISITDATE and TYPEOFTHISDIAG = 1 and vnp.SUFFIX=vnd.SUFFIX --Modify 27/05/2569
 						left join ICD_MASTER icd on vnd.ICDCODE=icd.ICDCODE
 						left join SYSCONFIG act on lr.CHARGECODE=act.CODE and act.CTRLCODE = 20023
 						left join SYSCONFIG fac on vnt.GROUPREQUESTCODE=fac.CODE and fac.CTRLCODE = 20120 --modify 2026-04-03
@@ -281,12 +308,18 @@ select top 1000 'PLS' as 'BU' , datamst.*
 		union all
 		(
 				select 
-						CONVERT(varchar,x.CHARGETOVISITDATE,112)+CONVERT(varchar,x.CHARGETOVN)+CONVERT(varchar,x.ENTRYDATETIME,112)+CONVERT(varchar,vnt.SUBSUFFIX) as 'OrderID'
+						CONVERT(varchar,x.CHARGETOVISITDATE,112)+CONVERT(varchar,x.CHARGETOVN)+CONVERT(varchar,vnt.SUFFIX)+CONVERT(varchar,x.ENTRYDATETIME,112)+CONVERT(varchar,vnt.SUBSUFFIX) as 'OrderID' --Modify 27/05/2569
 						,vnm.HN as 'PatientID'
 						,CONVERT(varchar,vnp.VISITDATE,112)+CONVERT(varchar,vnp.VN)+CONVERT(varchar,vnp.SUFFIX) as 'VisitID'
 						,vnt.VISITDATE as 'VisitDate'
 						,vnt.VN
 						,vnt.SUFFIX as 'PrescriptionNo'
+						,vnp.CLINIC as 'ClinicCode' --modify 24/07/2569
+						,dbo.sysconname(vnp.CLINIC,20016,2) as 'ClinicNameTH' --modify 24/07/2569
+						,dbo.sysconname(vnp.CLINIC,20016,1) as 'ClinicNameEN' --modify 24/07/2569
+						,vnp.DOCTOR as 'DoctorCode' --modify 24/07/2569
+						,dbo.Doctorname(vnp.DOCTOR,2) as 'DoctorNameTH' --modify 24/07/2569
+						,dbo.Doctorname(vnp.DOCTOR,1) as 'DoctorNameEN' --modify 24/07/2569
 						,x.ENTRYDATETIME as 'MakeDateTime'
 						,'Xray' as 'ItemType'
 						,xr.XRAYCODE as 'ItemCode'
@@ -312,6 +345,9 @@ select top 1000 'PLS' as 'BU' , datamst.*
 						,x.CHARGEDATETIME as 'ChargeDateTime'
 						,dbo.sysconname(xr.FACILITYRMSNO,20045,4) as 'EntryByFacility'
 						,xr.REQUESTNO as 'RefNo'
+						,vnt.ENTRYBYUSERCODE as 'EntryByUserCode' --เพิ่มวันที่ 27/05/2569
+						,dbo.sysconname(vnt.ENTRYBYUSERCODE,10000,2) as 'EntryByUserNameTH' --เพิ่มวันที่ 27/05/2569
+						,dbo.sysconname(vnt.ENTRYBYUSERCODE,10000,1) as 'EntryByUserNameEN' --เพิ่มวันที่ 27/05/2569
 						,xr.CXLBYUSERCODE as 'CancelByUserCode' 
 						,dbo.sysconname(xr.CXLBYUSERCODE,10000,2) as 'CancelByUserNameTH' 
 						,dbo.sysconname(xr.CXLBYUSERCODE,10000,1) as 'CancelByUserNameEN' 
@@ -366,7 +402,7 @@ select top 1000 'PLS' as 'BU' , datamst.*
 						left join VNTREAT vnt on x.CHARGETOVN=vnt.VN and x.CHARGETOVISITDATE=vnt.VISITDATE and x.FACILITYRMSNO=vnt.FACILITYRMS and x.REQUESTNO=vnt.FACILITYREF and vnt.FACILITYSYSTEM = 8
 						left join VNPRES vnp on vnt.VN=vnp.VN and vnt.VISITDATE=vnp.VISITDATE and vnt.SUFFIX=vnp.SUFFIX
 						left join VNMST vnm on vnp.VN=vnm.VN and vnp.VISITDATE=vnm.VISITDATE
-						left join VNDIAG vnd on vnp.VN=vnd.VN and vnp.VISITDATE=vnd.VISITDATE and TYPEOFTHISDIAG = 1
+						left join VNDIAG vnd on vnp.VN=vnd.VN and vnp.VISITDATE=vnd.VISITDATE and TYPEOFTHISDIAG = 1 and vnp.SUFFIX=vnd.SUFFIX --Modify 27/05/2569
 						left join ICD_MASTER icd on vnd.ICDCODE=icd.ICDCODE
 						left join SYSCONFIG act on xr.CHARGECODE=act.CODE and act.CTRLCODE = 20023
 						left join SYSCONFIG fac on vnt.GROUPREQUESTCODE=fac.CODE and fac.CTRLCODE = 20120 --modify 2026-04-03
@@ -374,12 +410,18 @@ select top 1000 'PLS' as 'BU' , datamst.*
 		union all
 		(
 						select  
-						CONVERT(varchar,vnt.VISITDATE,112)+CONVERT(varchar,vnt.VN)+CONVERT(varchar,vnt.MAKEDATETIME,112)+CONVERT(varchar,vnt.SUBSUFFIX) as 'OrderID'
+						CONVERT(varchar,vnt.VISITDATE,112)+CONVERT(varchar,vnt.VN)+CONVERT(varchar,vnt.SUFFIX)+CONVERT(varchar,vnt.MAKEDATETIME,112)+CONVERT(varchar,vnt.SUBSUFFIX) as 'OrderID' --Modify 27/05/2569
 						,vnm.HN as 'PatientID'
 						,CONVERT(varchar,vnp.VISITDATE,112)+CONVERT(varchar,vnp.VN)+CONVERT(varchar,vnp.SUFFIX) as 'VisitID'
 						,vnt.VISITDATE as 'VisitDate'
 						,vnt.VN
 						,vnt.SUFFIX as 'PrescriptionNo'
+						,vnp.CLINIC as 'ClinicCode' --modify 24/07/2569
+						,dbo.sysconname(vnp.CLINIC,20016,2) as 'ClinicNameTH' --modify 24/07/2569
+						,dbo.sysconname(vnp.CLINIC,20016,1) as 'ClinicNameEN' --modify 24/07/2569
+						,vnp.DOCTOR as 'DoctorCode' --modify 24/07/2569
+						,dbo.Doctorname(vnp.DOCTOR,2) as 'DoctorNameTH' --modify 24/07/2569
+						,dbo.Doctorname(vnp.DOCTOR,1) as 'DoctorNameEN' --modify 24/07/2569
 						,vnt.MAKEDATETIME as 'MakeDateTime'
 						,case when o1.TREATMENTCODE is not null then 'Treatment' else 'Usage' end as 'ItemType'
 						,case when o1.TREATMENTCODE is not null then o1.TREATMENTCODE else o2.STOCKCODE end as 'ItemCode'
@@ -405,6 +447,9 @@ select top 1000 'PLS' as 'BU' , datamst.*
 						,o1.IPDCHARGEMAKEDATETIME as 'ChargeDateTime'
 						,dbo.sysconname(vnt.FACILITYRMS,20045,4) as 'EntryByFacility'
 						,vnt.FACILITYREF as 'RefNo'
+						,vnt.ENTRYBYUSERCODE as 'EntryByUserCode' --เพิ่มวันที่ 27/05/2569
+						,dbo.sysconname(vnt.ENTRYBYUSERCODE,10000,2) as 'EntryByUserNameTH' --เพิ่มวันที่ 27/05/2569
+						,dbo.sysconname(vnt.ENTRYBYUSERCODE,10000,1) as 'EntryByUserNameEN' --เพิ่มวันที่ 27/05/2569
 						,vnt.CXLBYUSERCODE as 'CancelByUserCode' 
 						,dbo.sysconname(vnt.CXLBYUSERCODE,10000,2) as 'CancelByUserNameTH' 
 						,dbo.sysconname(vnt.CXLBYUSERCODE,10000,1) as 'CancelByUserNameEN' 
@@ -459,7 +504,7 @@ select top 1000 'PLS' as 'BU' , datamst.*
 			LEFT join ORUSAGE o2 on o1.FACILITYRMSNO = o2.FACILITYRMSNO and o1.REQUESTNO = o2.REQUESTNO and /*o1.MAKEDATETIME = o2.CHARGEDATETIME*/ vnt.CHARGEVOUCHERNO=o2.CHARGEVOUCHERNO and o1.CHARGECODE = o2.CHARGECODE
 			left join VNPRES vnp on vnt.VN=vnp.VN and vnt.VISITDATE=vnp.VISITDATE and vnt.SUFFIX=vnp.SUFFIX
 			left join VNMST vnm on vnp.VN=vnm.VN and vnp.VISITDATE=vnm.VISITDATE
-			left join VNDIAG vnd on vnp.VN=vnd.VN and vnp.VISITDATE=vnd.VISITDATE and TYPEOFTHISDIAG = 1
+			left join VNDIAG vnd on vnp.VN=vnd.VN and vnp.VISITDATE=vnd.VISITDATE and TYPEOFTHISDIAG = 1 and vnp.SUFFIX=vnd.SUFFIX --Modify 27/05/2569
 			left join ICD_MASTER icd on vnd.ICDCODE=icd.ICDCODE
 			left join SYSCONFIG act on vnt.CHARGECODE=act.CODE and act.CTRLCODE = 20023
 			left join SYSCONFIG fac on vnt.GROUPREQUESTCODE=fac.CODE and fac.CTRLCODE = 20120 --modify 2026-04-03
@@ -468,12 +513,18 @@ select top 1000 'PLS' as 'BU' , datamst.*
 		union all
 		( ---------------------------PT-----------------------------------------
 				select  
-						CONVERT(varchar,vnt.VISITDATE,112)+CONVERT(varchar,vnt.VN)+CONVERT(varchar,vnt.MAKEDATETIME,112)+CONVERT(varchar,vnt.SUBSUFFIX) as 'OrderID'
+						CONVERT(varchar,vnt.VISITDATE,112)+CONVERT(varchar,vnt.VN)+CONVERT(varchar,vnt.SUFFIX)+CONVERT(varchar,vnt.MAKEDATETIME,112)+CONVERT(varchar,vnt.SUBSUFFIX) as 'OrderID' --Modify 27/05/2569
 						,vnm.HN as 'PatientID'
 						,CONVERT(varchar,vnp.VISITDATE,112)+CONVERT(varchar,vnp.VN)+CONVERT(varchar,vnp.SUFFIX) as 'VisitID'
 						,vnt.VISITDATE as 'VisitDate'
 						,vnt.VN
 						,vnt.SUFFIX as 'PrescriptionNo'
+						,vnp.CLINIC as 'ClinicCode' --modify 24/07/2569
+						,dbo.sysconname(vnp.CLINIC,20016,2) as 'ClinicNameTH' --modify 24/07/2569
+						,dbo.sysconname(vnp.CLINIC,20016,1) as 'ClinicNameEN' --modify 24/07/2569
+						,vnp.DOCTOR as 'DoctorCode' --modify 24/07/2569
+						,dbo.Doctorname(vnp.DOCTOR,2) as 'DoctorNameTH' --modify 24/07/2569
+						,dbo.Doctorname(vnp.DOCTOR,1) as 'DoctorNameEN' --modify 24/07/2569
 						,vnt.MAKEDATETIME as 'MakeDateTime'
 						,'PT' as 'ItemType'
 						,pt.PTMODE  as 'ItemCode'
@@ -499,6 +550,9 @@ select top 1000 'PLS' as 'BU' , datamst.*
 						,vnt.MAKEDATETIME as 'ChargeDateTime'
 						,dbo.sysconname(vnt.FACILITYRMS,20045,4) as 'EntryByFacility'
 						,vnt.FACILITYREF as 'RefNo'
+						,vnt.ENTRYBYUSERCODE as 'EntryByUserCode' --เพิ่มวันที่ 27/05/2569
+						,dbo.sysconname(vnt.ENTRYBYUSERCODE,10000,2) as 'EntryByUserNameTH' --เพิ่มวันที่ 27/05/2569
+						,dbo.sysconname(vnt.ENTRYBYUSERCODE,10000,1) as 'EntryByUserNameEN' --เพิ่มวันที่ 27/05/2569
 						,vnt.CXLBYUSERCODE as 'CancelByUserCode' 
 						,dbo.sysconname(vnt.CXLBYUSERCODE,10000,2) as 'CancelByUserNameTH' 
 						,dbo.sysconname(vnt.CXLBYUSERCODE,10000,1) as 'CancelByUserNameEN' 
@@ -552,7 +606,7 @@ select top 1000 'PLS' as 'BU' , datamst.*
 						left join PTPAYMENT pt on vnt.VN=pt.VN and vnt.VISITDATE=pt.VISITDATE and vnt.FACILITYREF=pt.REQUESTNO and vnt.CHARGECODE=pt.CHARGECODE
 						left join VNPRES vnp on vnt.VN=vnp.VN and vnt.VISITDATE=vnp.VISITDATE and vnt.SUFFIX=vnp.SUFFIX
 						left join VNMST vnm on vnp.VN=vnm.VN and vnp.VISITDATE=vnm.VISITDATE
-						left join VNDIAG vnd on vnp.VN=vnd.VN and vnp.VISITDATE=vnd.VISITDATE and TYPEOFTHISDIAG = 1
+						left join VNDIAG vnd on vnp.VN=vnd.VN and vnp.VISITDATE=vnd.VISITDATE and TYPEOFTHISDIAG = 1 and vnp.SUFFIX=vnd.SUFFIX --Modify 27/05/2569
 						left join ICD_MASTER icd on vnd.ICDCODE=icd.ICDCODE
 						left join SYSCONFIG sc on vnt.TREATMENTCODE=sc.CODE and sc.CTRLCODE = 20051
 						left join SYSCONFIG act on vnt.CHARGECODE=act.CODE and act.CTRLCODE = 20023

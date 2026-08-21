@@ -7,6 +7,12 @@ select	'PT2' as 'BU'
 		,vnd.VisitDate as 'VisitDate'
 		,vnd.VN as 'VN'
 		,vnd.PrescriptionNo as 'PrescriptionNo'
+		, vnp.Clinic as ClinicCode	-->> 2026-08-04 Pay : Add Column
+		, dbo.sysconname(vnp.Clinic,42203,2) as ClinicNameTH	-->> 2026-08-04 Pay : Add Column
+		, dbo.sysconname(vnp.Clinic,42203,1) as ClinicNameEN	-->> 2026-08-04 Pay : Add Column
+		, vnp.Doctor as DoctorCode	-->> 2026-08-04 Pay : Add Column
+		, dbo.Doctorname(vnp.Doctor,2) as DoctorNameTH	-->> 2026-08-04 Pay : Add Column
+		, dbo.Doctorname(vnp.Doctor,1) as DoctorNameEN	-->> 2026-08-04 Pay : Add Column
 		,vnd.SuffixSmall as 'Suffix'
 		,vnp.Clinic as ClinicCode
 		,dbo.sysconname(vnp.Clinic,42203,2) as ClinicNameTH

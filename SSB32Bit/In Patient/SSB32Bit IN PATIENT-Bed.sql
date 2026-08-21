@@ -1,5 +1,6 @@
-select
+select top 1000
 'PLS' as 'BU'
+,CONCAT(b.An,b.BedNo,FORMAT(b.makedatetime, 'yyyyMMddHHmmss')) as 'BedID' --Modify 10/06/69
 ,a.HN as 'PatientID'
 ,CONVERT(varchar,a.ADMDATETIME,112)+a.AN as 'AdmitID'
 ,b.AN as 'AN'
@@ -38,9 +39,12 @@ select
 ,dbo.sysconname(b.OUTBYUSERID,10000,2) as 'OutByUserNameTH'
 ,dbo.sysconname(b.OUTBYUSERID,10000,1) as 'OutByUserNameEN'
 ,CASE
-	WHEN b.Ward = 'W13' THEN 1 ELSE 0
-END as 'Observe'
+	WHEN bi.OBSERVE = 1 THEN 1
+	WHEN bi.TEMPORARYBED = 1 THEN 1
+	ELSE 0
+END as 'Observe' --modify 04/06/2569
 ,b.PATIENTSTAY as 'PatientStay'
 		from ADMBED b
 		inner join ADMMASTER a on b.AN=a.AN
 		inner join HNBEDINV bi on b.BEDNO=bi.BEDNO
+		where b.MakeDateTime > '2026-06-09' and a.AN = '2569/6251'

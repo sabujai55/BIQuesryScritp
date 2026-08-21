@@ -24,6 +24,12 @@ select	'PT2' as BU
 		, dbo.sysconname(a.UnitCode,20021,1) as UnitNameEN
 		, a.UnitPrice
 		, a.ChargeAmt
+		,Case 
+	when A.HNChargeType = 0 then 'Charge' 
+	when A.HNChargeType = 1 then 'Free' 
+	when A.HNChargeType = 2 then 'Refund'
+	when A.HNChargeType = 6 then 'Free Return'
+	end AS 'ChargeType' --เพิ่มวันที่ 27/05/2569
 		, c.HNActivityCode
 		, dbo.sysconname(c.HNActivityCode,42093,2) as HNActivityNameTH
 		, dbo.sysconname(c.HNActivityCode,42093,1) as HNActivityNameEN

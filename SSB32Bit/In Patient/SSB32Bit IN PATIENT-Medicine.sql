@@ -19,6 +19,14 @@ Select
 		, dbo.sysconname(dh.UNITCODE,40016,1) as 'UnitNameEN'
 		, dh.UNITPRICE as 'UnitPrice'
 		, dh.AMT as 'ChargeAmt'
+		,case when dt.TYPEOFCHARGE = 0 then 'Charge'
+							  when dt.TYPEOFCHARGE = 1 then 'Free'
+							  when dt.TYPEOFCHARGE = 2 then 'Refund'
+							  when dt.TYPEOFCHARGE = 3 then 'Cxl'
+							  when dt.TYPEOFCHARGE = 4 then 'Usage FOC'
+							  when dt.TYPEOFCHARGE = 5 then 'Never Charge'
+							  when dt.TYPEOFCHARGE = 6 then 'Adjust'
+							  when dt.TYPEOFCHARGE = 7 then 'Return Usage FOC' end as 'ChargeType'
 		, dh.CHARGECODE as 'HNActivityCode'
 		, dbo.sysconname(dh.CHARGECODE,20023,2) as 'HNActivityNameTH'
 		, dbo.sysconname(dh.CHARGECODE,20023,1) as 'HNActivityNameEN'
@@ -89,3 +97,6 @@ Select
 				inner Join IPDORDDTL dt on dh.ORDERNO=dt.ORDERNO and dh.STOCKCODE=dt.STOCKCODE
 				Where CONVERT(Date,dh.MAKEDATETIME)=CONVERT(Date,Getdate())
 				--and dh.ORDERNO = 'D6904-00531'
+
+
+				
