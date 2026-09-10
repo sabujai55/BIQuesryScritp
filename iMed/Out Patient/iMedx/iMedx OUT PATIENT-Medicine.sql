@@ -24,7 +24,10 @@ select 	bs.site_code as "BU"
 		, bu.description_en as "UnitNameEN"
 		, oi.unit_price_sale::decimal as "UnitPrice"
 		, oi.unit_price_sale::decimal * oi.quantity::decimal as "ChargeAmt"
-		, case when oi.charge_complete = '1' then 'Charge' else 'None' end as "ChargeType"
+		, case 
+		  	when oi.fix_order_status_id = '5' then 'Refund' 
+			else 'Charge' 
+	      end as "ChargeType"  --> 2026-09-09	Edit check Refund and charge
 		, oi.base_order_sub_category_id as "HNActivityCode"
 		, bosc.description as "HNActivityNameTH"
 		, bosc.description as "HNActivityNameEN"
@@ -197,8 +200,8 @@ from 	order_item oi
 					, e.prename || e.firstname || ' ' || e.lastname as "DoctorNameTH"
 					, e.intername as "DoctorNameEN"
 			from 	attending_physician ap 
-					inner join employee e on ap.employee_id = e.employee_id
-					inner join base_department bd on ap.base_department_id = bd.base_department_id
+					left join employee e on ap.employee_id = e.employee_id --> 2026-09-09	Edit Inner join To Left Join
+					left join base_department bd on ap.base_department_id = bd.base_department_id --> 2026-09-09	Edit Inner join To Left Join
 			where 	ap.visit_id = oi.visit_id
 --					and ap.employee_id = oi.order_doctor_eid
 					and ap.priority = '1'
