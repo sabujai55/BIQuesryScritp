@@ -6,6 +6,7 @@ select	top 10
 		,a.HN as 'PatientID'
 		,CONVERT(varchar,a.ADMDATETIME,112)+a.AN as 'AdmitID'
 		,doc.AN
+		, doc.SuffixTiny as Suffix --> 2026-10-14 Edit By Pay : Add New Column
 		,doc.EntryDateTime as 'MakeDateTime'
 		,doc.Doctor as 'DoctorCode'
 		,dbo.CutSortChar(dm.LocalName) as 'DoctorNameTH'
@@ -41,6 +42,7 @@ select	top 10
 		, doc.AdmitDoctor
 		, doc.DischargeDoctor
 		, doc.RemarksMemo
+		, doc.OffFromDateTime as OffDateTime --> 2026-10-12 Edit By Pay : Add New Column
 from	HNIPD_DOCTOR doc
 		left join HNIPD_MASTER a on doc.AN=a.AN
-		left join HNDOCTOR_MASTER dm on doc.Doctor=dm.Doctor
+		left join HNDOCTOR_MASTER dm on doc.Doctor=dm.Doctor --> 2026-10-12 Edit By Pay : Add New Column

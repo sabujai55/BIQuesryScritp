@@ -91,6 +91,12 @@ Select
 		, '' as 'OutsideHospitalDrug'
 		, '' as 'StartDoseDateTime'
 		, '' as 'FinishDoseDateTime'
+		, '' as 'MedicineOrderTypeCode'
+		, '' as 'MedicineOrderTypeName'
+		, med.CXLDATETIME as 'CancelDateTime' --Add Column 26/10/2569
+		, med.CXLBYUSERCODE as 'CancelByUserCode' --Add Column 26/10/2569
+		, dbo.sysconname(CXLBYUSERCODE,10000,2) as 'CancelByUserNameTH' --Add Column 26/10/2569
+		, dbo.sysconname(CXLBYUSERCODE,10000,1) as 'CancelByUserNameEN' --Add Column 26/10/2569
 				From VNMEDICINE med
 				Inner Join VNPRES vnp on med.VN=vnp.VN and med.VISITDATE=vnp.VISITDATE and med.SUFFIX=vnp.SUFFIX
 				Inner Join VNMST vnm on vnp.VN=vnm.VN and vnp.VISITDATE=vnm.VISITDATE

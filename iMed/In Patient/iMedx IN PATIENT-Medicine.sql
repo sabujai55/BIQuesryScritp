@@ -28,38 +28,81 @@ select 	bs.site_code as "BU"
 		, null as "DispendDrugReasonCode"
 		, oi.order_drug_allergy_reason_id as "DispendDrugReasonNameTH"
 		, null as "DispendDrugReasonNameEN"
---		, doi.base_drug_instruction_id as "DoseTypeCode"
-		, split_part(oi.base_drug_usage_code,' ',1) as  "DoseTypeCode"
-		, bdi.description_th as "DoseTypeNameTH"
-		, bdi.description_en as "DoseTypeNameEN"
-		, split_part(oi.base_drug_usage_code,' ',4) as "DoseCode"
+		, case 
+			when isnumeric(split_part(trim(oi.base_drug_usage_code),' ',1)) = '1' then 'take'
+		  	else split_part(trim(oi.base_drug_usage_code),' ',1) 
+		  end as  "DoseTypeCode"	-->> 2026-10-26 Edit By Pay : Trim data and check digit for BU PLD
+		, case 
+			when isnumeric(split_part(trim(oi.base_drug_usage_code),' ',1)) = '1' then 'รับประทานครั้งละ'
+		  	else bdi.description_th 
+		  end as "DoseTypeNameTH"	-->> 2026-10-26 Edit By Pay : Trim data and check digit for BU PLD
+		, case 
+			when isnumeric(split_part(trim(oi.base_drug_usage_code),' ',1)) = '1' then 'take'
+		  	else bdi.description_en 
+		  end as "DoseTypeNameEN"	-->> 2026-10-26 Edit By Pay : Trim data and check digit for BU PLD
+		, case 
+			when isnumeric(split_part(trim(oi.base_drug_usage_code),' ',1)) = '1' then split_part(trim(oi.base_drug_usage_code),' ',3)
+		  	else split_part(trim(oi.base_drug_usage_code),' ',4) 
+		  end as "DoseCode"	-->> 2026-10-26 Edit By Pay : Trim data and check digit for BU PLD
 		, null as "DoseNameTH"
 		, null as "DoseNameEN"
-		, case 
-		  when oi.drug_times_per_day != '' then oi.drug_times_per_day::float
-		  when split_part(oi.base_drug_usage_code,' ',4) like '%qid%' then 4::float
-	      when split_part(oi.base_drug_usage_code,' ',4) like '%tid%' then 3::float
-	      when split_part(oi.base_drug_usage_code,' ',4) like '%bid%' then 2::float
-	      when split_part(oi.base_drug_usage_code,' ',4) like 'once%' then 1::float
-	      when split_part(oi.base_drug_usage_code,' ',4) like 'q' then split_part(oi.base_drug_usage_code,' ',5)::float
-		  else null end as "NumberDosePerDay"
+		, case when isnumeric(split_part(trim(oi.base_drug_usage_code),' ',1)) = '1' then 
+		  (
+		  	case 
+				when oi.drug_times_per_day != '' then oi.drug_times_per_day::float
+				when split_part(trim(oi.base_drug_usage_code),' ',3) like '%qid%' then 4::float
+			    when split_part(trim(oi.base_drug_usage_code),' ',3) like '%tid%' then 3::float
+			    when split_part(trim(oi.base_drug_usage_code),' ',3) like '%bid%' then 2::float
+			    when split_part(trim(oi.base_drug_usage_code),' ',3) like 'once%' then 1::float
+			    when split_part(trim(oi.base_drug_usage_code),' ',3) like 'q' then split_part(trim(oi.base_drug_usage_code),' ',4)::float
+				else null 
+			end 
+		  )else 
+		  (
+		  	case 
+			    when oi.drug_times_per_day != '' then oi.drug_times_per_day::float
+			    when split_part(oi.base_drug_usage_code,' ',4) like '%qid%' then 4::float
+		        when split_part(oi.base_drug_usage_code,' ',4) like '%tid%' then 3::float
+		        when split_part(oi.base_drug_usage_code,' ',4) like '%bid%' then 2::float
+		        when split_part(oi.base_drug_usage_code,' ',4) like 'once%' then 1::float
+		        when split_part(oi.base_drug_usage_code,' ',4) like 'q' then split_part(oi.base_drug_usage_code,' ',5)::float
+			    else null 
+		    end 
+		  ) end as "NumberDosePerDay"	-->> 2026-10-26 Edit By Pay : Trim data and check digit for BU PLD
 		, case 
 		  when bdt.base_drug_time_id is not null then (case when split_part(oi.base_drug_usage_code,' ',4) like 'once%' then split_part(oi.base_drug_usage_code,' ',6) else split_part(oi.base_drug_usage_code,' ',5) end) 
 		  else null end as "BeforeAfterMealType"
-		, bdt.description_th as "BeforeAfterMealTypeName"
 		, case 
-		  when oi.dose_quantity != '' then oi.dose_quantity
-		  when isnumeric(split_part(oi.base_drug_usage_code,' ',2))='1'
-		  then split_part(oi.base_drug_usage_code,' ',2) else null end as "DoseQtyCode"
+			  when bdt.base_drug_time_id is not null and isnumeric(split_part(trim(oi.base_drug_usage_code),' ',1)) = '1' then 
+				  (
+				  	case 
+						when split_part(trim(oi.base_drug_usage_code),' ',3) like 'once%' then split_part(trim(oi.base_drug_usage_code),' ',5) 
+					  	else split_part(trim(oi.base_drug_usage_code),' ',4) 
+				  	end
+				  ) 
+			  when bdt.base_drug_time_id is not null and isnumeric(split_part(trim(oi.base_drug_usage_code),' ',1)) != '1' then
+				  (
+				  	case 
+						when split_part(oi.base_drug_usage_code,' ',4) like 'once%' then split_part(oi.base_drug_usage_code,' ',6) 
+					  	else split_part(oi.base_drug_usage_code,' ',5) 
+				  	end
+				  ) 
+		  else null 
+		  end as "BeforeAfterMealType"	-->> 2026-10-26 Edit By Pay : Trim data and check digit for BU PLD
 		, case 
-		  when oi.dose_quantity != '' then oi.dose_quantity
-		  when isnumeric(split_part(oi.base_drug_usage_code,' ',2))='1'
-		  then split_part(oi.base_drug_usage_code,' ',2) else null end as "DoseQtyNameTH"
+			when isnumeric(split_part(trim(oi.base_drug_usage_code),' ',1))='1' then split_part(trim(oi.base_drug_usage_code),' ',1)
+			when isnumeric(split_part(trim(oi.base_drug_usage_code),' ',2))='1' then split_part(trim(oi.base_drug_usage_code),' ',2)
+			else null 
+		  end as "DoseQtyCode"	-->> 2026-10-26 Edit By Pay : Trim data and check digit for BU PLD
+		, case 
+			when isnumeric(split_part(trim(oi.base_drug_usage_code),' ',1))='1' then split_part(trim(oi.base_drug_usage_code),' ',1)
+			when isnumeric(split_part(trim(oi.base_drug_usage_code),' ',2))='1' then split_part(trim(oi.base_drug_usage_code),' ',2)
+			else null 
+		  end as "DoseQtyNameTH"	-->> 2026-10-26 Edit By Pay : Trim data and check digit for BU PLD
 		, null as "DoseQtyNameEN"
 		, null as "IPDDrugOrderQtyTypeCode"
 		, null as "IPDDrugOrderQtyTypeName"
 		, case 
---		  when oi.base_dose_unit_id != '' then oi.base_dose_unit_id
 		  when bdu.base_dose_unit_id is not null then split_part(oi.base_drug_usage_code,' ',3) 
 		  else null end as "DoseUnitCode"
 		, bdu.description_th as "DoseUnitNameTH"
@@ -120,8 +163,11 @@ select 	bs.site_code as "BU"
 		, split_part(his_func_get_martime(oi.order_item_id,'2'),'|',4) as "MarDateTime4"
 		, split_part(his_func_get_martime(oi.order_item_id,'2'),'|',5) as "MarDateTime5"
 		, split_part(his_func_get_martime(oi.order_item_id,'2'),'|',6) as "MarDateTime6"
+		, '' as "CancelDateTime" --> 2026-10-26 Pay Edit : Add Column
+		, '' as "CancelByUserCode" --> 2026-10-26 Pay Edit : Add Column
+		, '' as "CancelByUserNameTH" --> 2026-10-26 Pay Edit : Add Column
+		, '' as "CancelByUserNameEN" --> 2026-10-26 Pay Edit : Add Column
 from 	order_item oi 
---		inner join visit v on oi.visit_id = v.visit_id and v.fix_visit_type_id = '0'
 		inner join admit a on oi.visit_id = a.visit_id and a.active = '1'
 		inner join item i on oi.item_id = i.item_id
 		left join base_service_point bsp on oi.dispense_spid = bsp.base_service_point_id 
@@ -139,4 +185,190 @@ from 	order_item oi
 where 	1=1
 		and oi.fix_item_type_id = '0'
 		and a.admit_date = '2026-01-01'
-order by a.admit_id
+union all  --> 2026-10-26 Pay Edit : Add Union
+select 	bs.site_code as "BU"
+		, toi.order_item_id as "OrderID"
+		, toi.patient_id as "PatientID"
+		, a.admit_id as "AdmitID"
+		, a.admit_date ||' '|| a.admit_time as "AdmitDateTime"
+		, format_an(a.an) as "AN"
+		, toi.verify_date ||' '|| toi.verify_time as "MakeDateTime"
+		, toi.assigned_ref_no as "DrugOrderNo"
+		, s.stock_id as "StoreCode"
+		, s.stock_name as "StoreNameTH"
+		, s.stock_name as "StoreNameEN"
+		, i.item_code as "ItemCode"
+		, case when i.print_name != '' then i.print_name else i.common_name end as "ItemNameTH"
+		, i.common_name as "ItemNameEN"
+		, toi.quantity as "Qty"
+		, toi.base_unit_id as "UnitCode"
+		, bu.description_th as "UnitNameTH"
+		, bu.description_en as "UnitNameEN"
+		, toi.unit_price_sale::decimal as "UnitPrice"
+		, toi.unit_price_sale::decimal * toi.quantity::decimal as "ChargeAmt"
+		, case when toi.charge_complete = '1' then 'Charge' else 'None' end as "ChargeType"
+		, toi.base_order_sub_category_id as "HNActivityCode"
+		, bosc.description as "HNActivityNameTH"
+		, bosc.description as "HNActivityNameEN"
+		, toi.plan_id as "RightCode"
+		, p.description as "RightNameTH"
+		, null as "RightNameEN"
+		, null as "DispendDrugReasonCode"
+		, toi.order_drug_allergy_reason_id as "DispendDrugReasonNameTH"
+		, null as "DispendDrugReasonNameEN"
+		, case 
+			when isnumeric(split_part(trim(toi.base_drug_usage_code),' ',1)) = '1' then 'take'
+		  	else split_part(trim(toi.base_drug_usage_code),' ',1) 
+		  end as  "DoseTypeCode"	-->> 2026-10-26 Edit By Pay : Trim data and check digit for BU PLD
+		, case 
+			when isnumeric(split_part(trim(toi.base_drug_usage_code),' ',1)) = '1' then 'รับประทานครั้งละ'
+		  	else bdi.description_th 
+		  end as "DoseTypeNameTH"	-->> 2026-10-26 Edit By Pay : Trim data and check digit for BU PLD
+		, case 
+			when isnumeric(split_part(trim(toi.base_drug_usage_code),' ',1)) = '1' then 'take'
+		  	else bdi.description_en 
+		  end as "DoseTypeNameEN"	-->> 2026-10-26 Edit By Pay : Trim data and check digit for BU PLD
+		, case 
+			when isnumeric(split_part(trim(toi.base_drug_usage_code),' ',1)) = '1' then split_part(trim(toi.base_drug_usage_code),' ',3)
+		  	else split_part(trim(toi.base_drug_usage_code),' ',4) 
+		  end as "DoseCode"	-->> 2026-10-26 Edit By Pay : Trim data and check digit for BU PLD
+		, null as "DoseNameTH"
+		, null as "DoseNameEN"
+		, case when isnumeric(split_part(trim(toi.base_drug_usage_code),' ',1)) = '1' then 
+		  (
+		  	case 
+				when toi.drug_times_per_day != '' then toi.drug_times_per_day::float
+				when split_part(trim(toi.base_drug_usage_code),' ',3) like '%qid%' then 4::float
+			    when split_part(trim(toi.base_drug_usage_code),' ',3) like '%tid%' then 3::float
+			    when split_part(trim(toi.base_drug_usage_code),' ',3) like '%bid%' then 2::float
+			    when split_part(trim(toi.base_drug_usage_code),' ',3) like 'once%' then 1::float
+			    when split_part(trim(toi.base_drug_usage_code),' ',3) like 'q' then split_part(trim(toi.base_drug_usage_code),' ',4)::float
+				else null 
+			end 
+		  )else 
+		  (
+		  	case 
+			    when toi.drug_times_per_day != '' then toi.drug_times_per_day::float
+			    when split_part(toi.base_drug_usage_code,' ',4) like '%qid%' then 4::float
+		        when split_part(toi.base_drug_usage_code,' ',4) like '%tid%' then 3::float
+		        when split_part(toi.base_drug_usage_code,' ',4) like '%bid%' then 2::float
+		        when split_part(toi.base_drug_usage_code,' ',4) like 'once%' then 1::float
+		        when split_part(toi.base_drug_usage_code,' ',4) like 'q' then split_part(toi.base_drug_usage_code,' ',5)::float
+			    else null 
+		    end 
+		  ) end as "NumberDosePerDay"	-->> 2026-10-26 Edit By Pay : Trim data and check digit for BU PLD
+		, case 
+			  when bdt.base_drug_time_id is not null and isnumeric(split_part(trim(toi.base_drug_usage_code),' ',1)) = '1' then 
+				  (
+				  	case 
+						when split_part(trim(toi.base_drug_usage_code),' ',3) like 'once%' then split_part(trim(toi.base_drug_usage_code),' ',5) 
+					  	else split_part(trim(toi.base_drug_usage_code),' ',4) 
+				  	end
+				  ) 
+			  when bdt.base_drug_time_id is not null and isnumeric(split_part(trim(toi.base_drug_usage_code),' ',1)) != '1' then
+				  (
+				  	case 
+						when split_part(toi.base_drug_usage_code,' ',4) like 'once%' then split_part(toi.base_drug_usage_code,' ',6) 
+					  	else split_part(toi.base_drug_usage_code,' ',5) 
+				  	end
+				  ) 
+		  else null 
+		  end as "BeforeAfterMealType"	-->> 2026-10-26 Edit By Pay : Trim data and check digit for BU PLD
+		, bdt.description_th as "BeforeAfterMealTypeName"
+		, case 
+			when isnumeric(split_part(trim(toi.base_drug_usage_code),' ',1))='1' then split_part(trim(toi.base_drug_usage_code),' ',1)
+			when isnumeric(split_part(trim(toi.base_drug_usage_code),' ',2))='1' then split_part(trim(toi.base_drug_usage_code),' ',2)
+			else null 
+		  end as "DoseQtyCode"	-->> 2026-10-26 Edit By Pay : Trim data and check digit for BU PLD
+		, case 
+			when isnumeric(split_part(trim(toi.base_drug_usage_code),' ',1))='1' then split_part(trim(toi.base_drug_usage_code),' ',1)
+			when isnumeric(split_part(trim(toi.base_drug_usage_code),' ',2))='1' then split_part(trim(toi.base_drug_usage_code),' ',2)
+			else null 
+		  end as "DoseQtyNameTH"	-->> 2026-10-26 Edit By Pay : Trim data and check digit for BU PLD
+		, null as "DoseQtyNameEN"
+		, null as "IPDDrugOrderQtyTypeCode"
+		, null as "IPDDrugOrderQtyTypeName"
+		, case 
+		  when bdu.base_dose_unit_id is not null then split_part(toi.base_drug_usage_code,' ',3) 
+		  else null end as "DoseUnitCode"
+		, bdu.description_th as "DoseUnitNameTH"
+		, bdu.description_en as "DoseUnitNameEN"
+		, case 
+		  when his_func_string_to_date(toi.cal_qty_start_date) is not null and his_func_string_to_date(toi.cal_qty_end_date) is not null 
+		  then toi.cal_qty_end_date::date - toi.cal_qty_start_date::date else 0 end as "NumberDayDose"
+		, null as "DoseFreqCode"
+		, null as "DoseFreqNameTH"
+		, null as "DoseFreqNameEN"
+		, i.base_drug_description_id as "AuxLabel1Code"
+		, bdd.description_th as "AuxLabel1NameTH"
+		, bdd.description_en as "AuxLabel1NameEN"
+		, i.base_drug_caution_id as "AuxLabel2Code"
+		, bdc.description_th as "AuxLabel2NameTH"
+		, bdc.description_en as "AuxLabel2NameEN"
+		, null as "AuxLabel3Code"
+		, null as "AuxLabel3NameTH"
+		, null as "AuxLabel3NameEN"
+		, toi.instruction_text_line1 || 
+		  (case when toi.instruction_text_line2 != '' then ' ' || toi.instruction_text_line2 else '' end) ||
+		  (case when toi.instruction_text_line3 != '' then ' ' || toi.instruction_text_line3 else '' end) ||
+		  (case when toi.description != '' then ' ' || toi.description else '' end) ||
+		  (case when toi.caution != '' then ' ' || toi.caution else '' end) as "DoseMemo"
+		, null as "ReturnIpdDrugReasonCode"
+		, rd.receive_note as "ReturnIpdDrugReasonnameTH"
+		, null as "ReturnIpdDrugReasonNameEN"
+		, null as "NetPrice"
+		, null as "OutsideHospitalDrug"
+		, case 
+		  when toi.fix_drug_use = '1' then 'TakeHome'
+		  else toi.fix_drug_use
+		  end as "MedicineOrderTypeCode"
+		, case 
+		  when toi.take_home = '1' then 'Take Home'
+		  when toi.fix_drug_use = '' then 'None'
+		  when toi.fix_drug_use = 'O' then 'One Day'
+		  when toi.fix_drug_use = 'S' then 'Stat'
+		  when toi.fix_drug_use = 'P' then 'PRN'
+		  when toi.fix_drug_use = 'C' then 'Continue'
+		  when toi.fix_drug_use = 'STD' then 'Standing Order'
+		  end as "MedicineOrderTypeName"
+		, null as "HNDrugErrorCodeTypeCode"
+		, null as "HNDrugErrorCodeTypeName"
+		, null as "HNAllergicErrorCodeTypeCode"
+		, null as "HNAllergicErrorCodeTypeName"
+		, toi.cal_qty_start_date ||
+		  case when toi.cal_qty_start_date != '' then 
+		  (case when toi.cal_qty_start_time != '' then ' ' || toi.cal_qty_start_time else ' ' || '00:00:00' end)
+		  else '' end as "StartDoseDateTime"
+		, toi.cal_qty_end_date ||
+		  case when toi.cal_qty_end_date != '' then 
+		  (case when toi.cal_qty_end_time != '' then ' ' || toi.cal_qty_end_time else ' ' || '00:00:00' end)
+		  else '' end as "StopDateTime"
+		, split_part(his_func_get_martime(toi.order_item_id,'2'),'|',1) as "MarDateTime1"
+		, split_part(his_func_get_martime(toi.order_item_id,'2'),'|',2) as "MarDateTime2"
+		, split_part(his_func_get_martime(toi.order_item_id,'2'),'|',3) as "MarDateTime3"
+		, split_part(his_func_get_martime(toi.order_item_id,'2'),'|',4) as "MarDateTime4"
+		, split_part(his_func_get_martime(toi.order_item_id,'2'),'|',5) as "MarDateTime5"
+		, split_part(his_func_get_martime(toi.order_item_id,'2'),'|',6) as "MarDateTime6"
+		, toi.track_date || ' ' || toi.track_time as "CancelDateTime" --> 2026-10-26 Pay Edit : Add Column
+		, toi.track_actor as "CancelByUserCode" --> 2026-10-26 Pay Edit : Add Column
+		, e2.prename || e2.firstname || ' ' || e2.lastname as "CancelByUserNameTH" --> 2026-10-26 Pay Edit : Add Column
+		, e2.intername as "CancelByUserNameEN" --> 2026-10-26 Pay Edit : Add Column
+from 	track_order_item toi 
+		inner join admit a on toi.visit_id = a.visit_id and a.active = '1'
+		inner join item i on toi.item_id = i.item_id
+		inner join employee e2 on e2.employee_id = toi.track_actor --> 2026-10-26 Pay Edit : Add Link Table
+		left join base_service_point bsp on toi.dispense_spid = bsp.base_service_point_id 
+		left join stock s on bsp.stock_id = s.stock_id 
+		left join base_unit bu on toi.base_unit_id = bu.base_unit_id 
+		left join base_order_sub_category bosc on toi.base_order_sub_category_id = bosc.base_order_sub_category_id
+		left join plan p on toi.plan_id = p.plan_id 
+		left join base_drug_instruction bdi on split_part(toi.base_drug_usage_code,' ',1) = bdi.base_drug_instruction_id 
+		left join base_drug_time bdt on (case when split_part(toi.base_drug_usage_code,' ',4) like 'once%' then split_part(toi.base_drug_usage_code,' ',6) else split_part(toi.base_drug_usage_code,' ',5) end) = bdt.base_drug_time_id 
+		left join base_dose_unit bdu on split_part(toi.base_drug_usage_code,' ',3) = bdu.base_dose_unit_id 
+		left join return_drug rd on toi.order_item_id = rd.dispense_order_id 
+		left join base_drug_description bdd on i.base_drug_description_id = bdd.base_drug_description_id 
+		left join base_drug_caution bdc on i.base_drug_caution_id = bdc.base_drug_caution_id 
+		, base_site bs 
+where 	1=1
+		and toi.fix_item_type_id = '0'
+		and a.admit_date = '2026-01-01'

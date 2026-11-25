@@ -135,11 +135,16 @@ select	'PT2' as BU
 		, null as MarDateTime4
 		, null as MarDateTime5
 		, null as MarDateTime6
+		, e.VoidDateTime as CancelDateTime --> 2026-10-26 Pay Edit : Add Column
+		, e.VoidByUserCode as CancelByUserCode --> 2026-10-26 Pay Edit : Add Column
+		, dbo.sysconname(e.VoidByUserCode,10031,1) as CancelByUserNameTH --> 2026-10-26 Pay Edit : Add Column
+		, dbo.sysconname(e.VoidByUserCode,10031,2) as CancelByUserNameTH --> 2026-10-26 Pay Edit : Add Column
 from	HNIPD_DRUG_HISTORY a
 		inner join HNIPD_MASTER b on a.AN = b.AN
-		inner join HNIPD_CHARGE_MEDICINE c on a.AN = c.AN and a.IPDChargeDateTime = c.IPDChargeDateTime and a.ChargeMedicineSuffixSmall = c.ChargeMedicineSuffixSmall
+		inner join HNIPD_CHARGE_MEDICINE c on a.AN = c.AN and a.IPDChargeDateTime = c.IPDChargeDateTime and a.ChargeMedicineSuffixSmall = c.ChargeMedicineSuffixSmall and a.StockCode = c.StockCode --> 2026-10-26 Edit By Pay : Add link condition StockCode
 		inner join HNIPDDRUG_ORDER_ITEM d on a.DrugOrderNo = d.DrugOrderNo and a.ChargeMedicineSuffixSmall = d.SuffixSmall
+		inner join HNIPD_CHARGE e on e.AN = c.AN and c.IPDChargeDateTime = e.IPDChargeDateTime and c.IPDChargeSuffixTiny = e.IPDChargeSuffixTiny
 		left join DNSYSCONFIG sys1 on sys1.CtrlCode = 42043 and a.DoseCode = sys1.Code
 where	1=1
-		and a.AN in (select AN from HNIPD_MASTER where AdmDateTime between '2026-01-01 00:00:00' and '2026-01-01 23:59:59')
+		and a.AN in (select AN from HNIPD_MASTER where AdmDateTime between '2026-01-01 00:00:00' and '2026-01-10 23:59:59')
 order by a.AN, a.SuffixDateTime, a. ChargeMedicineSuffixSmall

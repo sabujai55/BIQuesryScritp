@@ -131,6 +131,12 @@ select	'PT2' AS 'BU'
 		, a.OutsideHospitalDrug
 		, a.StartDoseDateTime
 		, a.FinishDoseDateTime
+		, NULL as MedicineOrderTypeCode --> 2026-10-22 Pay Edit : Add Column
+		, NULL as MedicineOrderTypeName --> 2026-10-22 Pay Edit : Add Column
+		, a.CxlDateTime as "CancelDateTime" --> 2026-10-22 Pay Edit : Add Column
+		, a.CxlByUserCode as "CancelByUserCode" --> 2026-10-22 Pay Edit : Add Column
+		, dbo.sysconname(a.CxlByUserCode,10031,2) as "CancelByUserNameTH" --> 2026-10-22 Pay Edit : Add Column
+		, dbo.sysconname(a.CxlByUserCode,10031,1) as "CancelByUserNameEN" --> 2026-10-22 Pay Edit : Add Column
 from	HNOPD_PRESCRIP_MEDICINE a
 		inner join HNOPD_MASTER b on a.VisitDate = b.VisitDate and a.VN = b.VN
 		inner join HNOPD_PRESCRIP p on a.VisitDate = p.VisitDate and a.VN = p.VN and a.PrescriptionNo = p.PrescriptionNo	-->> 2026-08-06 Pay : Add 

@@ -100,8 +100,8 @@ select 'PLC' as "BU"
 		left join employee e on oi.verify_eid = e.employee_id
 		left join item i on oi.item_id = i.item_id 
 		left join base_unit bu  on oi.base_unit_id = bu.base_unit_id 
-		inner join attending_physician ap on oi.visit_id = ap.visit_id and oi.order_doctor_eid = ap.employee_id --เน�เธ�เน�เน�เธ�เธ�เธฒเธ� left เน€เธ�เน�เธ� inner 4-2-69--
-		left join base_department bd on ap.base_department_id = bd.base_department_id and bd.account_product = 'COST'
+--		inner join attending_physician ap on toi.visit_id = ap.visit_id and toi.order_doctor_eid = ap.employee_id --> 2026-10-20 Pay Edit : Remove not to use
+--		left join base_department bd on ap.base_department_id = bd.base_department_id and bd.account_product = 'COST'  --> 2026-10-20 Pay Edit : Remove not to use
 		left join fix_item_type fit on oi.fix_item_type_id = fit.fix_item_type_id 
 		left join base_order_category boc on i.base_order_category_id = boc.base_order_category_id	--Edit 2026-03-04 >> เน€เธ�เธดเน�เธก ActivityCategoryCode, ActivityCategoryNameTH, ActivityCategoryNameEN
 		left join base_order_sub_category bosc on oi.base_order_sub_category_id = bosc.base_order_sub_category_id  
@@ -216,8 +216,8 @@ select 'PLC' as "BU"
 		left join employee e2 on toi.track_actor = e2.employee_id	--เพิ่ม 2/6/69
 		left join item i on toi.item_id = i.item_id 
 		left join base_unit bu  on toi.base_unit_id = bu.base_unit_id 
-		inner join attending_physician ap on toi.visit_id = ap.visit_id and toi.order_doctor_eid = ap.employee_id --เน�เธ�เน�เน�เธ�เธ�เธฒเธ� left เน€เธ�เน�เธ� inner 4-2-69--
-		left join base_department bd on ap.base_department_id = bd.base_department_id and bd.account_product = 'COST'
+--		inner join attending_physician ap on toi.visit_id = ap.visit_id and toi.order_doctor_eid = ap.employee_id --> 2026-10-20 Pay Edit : Remove not to use
+--		left join base_department bd on ap.base_department_id = bd.base_department_id and bd.account_product = 'COST'  --> 2026-10-20 Pay Edit : Remove not to use
 		left join fix_item_type fit on toi.fix_item_type_id = fit.fix_item_type_id 
 		left join base_order_category boc on i.base_order_category_id = boc.base_order_category_id	--Edit 2026-03-04 >> เน€เธ�เธดเน�เธก ActivityCategoryCode, ActivityCategoryNameTH, ActivityCategoryNameEN
 		left join base_order_sub_category bosc on toi.base_order_sub_category_id = bosc.base_order_sub_category_id 

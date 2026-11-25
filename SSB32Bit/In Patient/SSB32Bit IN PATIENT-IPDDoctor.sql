@@ -3,6 +3,7 @@ select
 ,a.HN as 'PatientID'
 ,CONVERT(varchar,a.ADMDATETIME,112)+a.AN as 'AdmitID'
 ,doc.AN
+,ROW_NUMBER() over(partition by doc.AN order by doc.ENTRYDOCDATETIME asc) as Suffix --add 12/10/2569
 ,doc.ENTRYDOCDATETIME as 'MakeDateTime'
 ,doc.Doctor as 'DoctorCode'
 ,dbo.CutSortChar(dm.THAINAME) as 'DoctorNameTH'
@@ -35,6 +36,7 @@ end as 'DoctorTypeName'
 ,doc.THISDOCTORADM as 'AdmitDoctor'
 ,doc.THISDOCTORDISCHARGE as 'DischargeDoctor'
 ,doc.RemarksMemo
+,doc.OFFDATETIME as 'OffDateTime' --add 12/10/2569
 		from IPDDOCTOR doc
 		inner join ADMMASTER a on doc.AN=a.AN
 		left join HNDOCTOR dm on doc.Doctor=dm.Doctor

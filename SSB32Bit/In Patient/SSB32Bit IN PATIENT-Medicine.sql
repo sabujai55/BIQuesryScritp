@@ -1,4 +1,4 @@
-Select
+Select Top 10
 		  'PTP' as 'BU'
 		, convert(varchar(25), adm.AdmDateTime, 112) + replace(replace(adm.AN,'/',''),'-','') + FORMAT(dh.MAKEDATETIME, 'yyyyMMddHHmmss') +  CONVERT(Varchar,ROW_NUMBER()OVER(PARTITION BY dh.ORDERNO ORDER BY dh.makedatetime ASC))  as 'OrderID'
 		, adm.HN as 'PatientID'
@@ -90,13 +90,21 @@ Select
 		, '' as 'MarDateTime4'
 		, '' as 'MarDateTime5'
 		, '' as 'MarDateTime6'
+		, ord.VOIDDATETIME as 'CancelDateTime' --Add 26/10/2569
+		, ord.VOIDBYUSERCODE as 'CancelByUserCode' --Add 26/10/2569
+		, dbo.sysconname(ord.VOIDBYUSERCODE,10000,2) as 'CancelByUserNameTH' --Add 26/10/2569
+		, dbo.sysconname(ord.VOIDBYUSERCODE,10000,1) as 'CancelByUserNameEN' --Add 26/10/2569
 				From IPDDRUGHIST dh
 				Inner Join ADMMASTER adm on dh.AN=adm.AN
 				inner Join SSBSTOCK.dbo.STOCK_MASTER stm on dh.STOCKCODE=stm.STOCKCODE and stm.MAINCATEGORY = 'ME'
 				Left Join SYSCONFIG sys01 on dh.DOSECODE=sys01.CODE and sys01.CTRLCODE=20032
 				inner Join IPDORDDTL dt on dh.ORDERNO=dt.ORDERNO and dh.STOCKCODE=dt.STOCKCODE
-				Where CONVERT(Date,dh.MAKEDATETIME)=CONVERT(Date,Getdate())
-				--and dh.ORDERNO = 'D6904-00531'
+				inner join IPDORD ord on dt.ORDERNO=ord.ORDERNO
+				Where 1=1
+				and CONVERT(Date,dh.MAKEDATETIME)=CONVERT(Date,Getdate())
+				--and ord.VOIDBYUSERCODE is not null
+
+				
 
 
 				

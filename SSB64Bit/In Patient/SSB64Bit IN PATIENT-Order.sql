@@ -1,9 +1,19 @@
 use SSBLIVE
 go
 
+select top 10 --x.*
+x.BU
+, x.OrderID
+, x.PatientID
+, x.MakeDateTime
+, x.ItemCode
+--count(x.orderid)
+--, x.orderid
+from
+(
 --****************************** TREATMENT ******************************
 select	'PT2' as BU 
-		, convert(varchar(25), b.AdmDateTime, 112) + replace(b.AN,'/','') + FORMAT(a.IPDChargeDateTime, 'yyyyMMddHHmmss') + convert(varchar(3),a.IPDChargeSuffixTiny) as OrderID
+		, convert(varchar(25), b.AdmDateTime, 112) + replace(b.AN,'/','') + FORMAT(a.IPDChargeDateTime, 'yyyyMMddHHmmssfff') + convert(varchar(3),a.IPDChargeSuffixTiny) as OrderID --Modify 28/10/2569
 		, b.HN as PatientID
 		, convert(varchar(25), b.AdmDateTime, 112) + replace(b.AN,'/','') as AdmitID
 		, b.AdmDateTime as AdmitDateTime
@@ -11,14 +21,14 @@ select	'PT2' as BU
 		, a.IPDChargeDateTime as MakeDateTime
 		, 'Treatment' as  ItemType
 		, a.TreatmentCode as ItemCode
-		, dbo.CutSortChar(sys01.LocalName) as ItemNameTH --á¡éä¢ÇÑ¹·Õè 03/03/2568
-		, dbo.CutSortChar(sys01.EnglishName) as ItemNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, dbo.CutSortChar(sys01.LocalName) as ItemNameTH --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
+		, dbo.CutSortChar(sys01.EnglishName) as ItemNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, a.HNActivityCode as ActivityCode
-		, dbo.CutSortChar(sys02.LocalName) as ActivityNameTH --á¡éä¢ÇÑ¹·Õè 03/03/2568
-		, dbo.CutSortChar(sys02.EnglishName) as ActivityNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, dbo.CutSortChar(sys02.LocalName) as ActivityNameTH --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
+		, dbo.CutSortChar(sys02.EnglishName) as ActivityNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, '' as UnitCode
-		, '' as UnitNameTH --á¡éä¢ÇÑ¹·Õè 03/03/2568 
-		, '' as UnitNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, '' as UnitNameTH --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568 
+		, '' as UnitNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, case when a.HNChargeType = 2 then a.Qty * (-1) else a.Qty end as QTY
 		, a.ChargeAmt as UnitPrice
 		, case when a.HNChargeType = 2 then a.ChargeAmt * (-1) else a.ChargeAmt end as ChargeAmt
@@ -30,19 +40,19 @@ select	'PT2' as BU
 		, a.ChargeDateTime
 		, a.EntryByFacilityRmsNo as EntryByFacility
 		, case when a.EntryByFacilityRmsNo is not null then a.EntryByFacilityRefNo else a.OrderRef end as RefNo
-		,A.EntryByUserCode --à¾ÔèÁÇÑ¹·Õè 27/05/2569
-		,dbo.sysconname(A.EntryByUserCode,10031,2) AS 'EntryByUserNameTH' --à¾ÔèÁÇÑ¹·Õè 27/05/2569
-		,dbo.sysconname(A.EntryByUserCode,10031,1) AS 'EntryByUserNameEN' --à¾ÔèÁÇÑ¹·Õè 27/05/2569
-		, a.VoidByUserCode as CancelByUserCode --á¡éä¢ÇÑ¹·Õè 03/03/2568 
-		, dbo.sysconname(a.VoidByUserCode,10031,2) as CancelByUserNameTH --à¾ÔèÁÇÑ¹·Õè 03/03/2568
-		, dbo.sysconname(a.VoidByUserCode,10031,1) as CancelByUserNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		,A.EntryByUserCode --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/05/2569
+		,dbo.sysconname(A.EntryByUserCode,10031,2) AS 'EntryByUserNameTH' --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/05/2569
+		,dbo.sysconname(A.EntryByUserCode,10031,1) AS 'EntryByUserNameEN' --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/05/2569
+		, a.VoidByUserCode as CancelByUserCode --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568 
+		, dbo.sysconname(a.VoidByUserCode,10031,2) as CancelByUserNameTH --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
+		, dbo.sysconname(a.VoidByUserCode,10031,1) as CancelByUserNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, a.VoidDateTime as CancelDateTime
 		, a.ForDateTimeFrom as TreatmentDateTimeFrom
 		, a.ForDateTimeTo as TreatmentDateTimeTo
 		, a.DFDoctor
 		, a.RightCode
-		, dbo.CutSortChar(sys03.LocalName) as RightNameTH --á¡éä¢ÇÑ¹·Õè 03/03/2568 
-		, dbo.CutSortChar(sys03.EnglishName) as RightNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, dbo.CutSortChar(sys03.LocalName) as RightNameTH --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568 
+		, dbo.CutSortChar(sys03.EnglishName) as RightNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, null AS StoreCode
 		, null AS StoreNameTH
 		, null AS StoreNameEN
@@ -72,18 +82,18 @@ select	'PT2' as BU
 		, null as AuxLabel3NameEN
 		, null AS DoseMemo
 		, a.FacilityRequestMethod as EntryByFacilityMethodCode
-		, dbo.CutSortChar(sys04.LocalName) as EntryByFacilityMethodNameTH --á¡éä¢ÇÑ¹·Õè 03/03/2568 
-		, dbo.CutSortChar(sys04.EnglishName) as EntryByFacilityMethodNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, dbo.CutSortChar(sys04.LocalName) as EntryByFacilityMethodNameTH --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568 
+		, dbo.CutSortChar(sys04.EnglishName) as EntryByFacilityMethodNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, a.CheckUp as Checkup 
-		, case when a.DFDoctor is not null then 1 else 0 end as FlagDF --à¾ÔèÁÇÑ¹·Õè 03/03/2568
-		, CAST(SUBSTRING(sys02.Com,17,3)as varchar) as ActivityCategoryCode --à¾ÔèÁÇÑ¹·Õè 03/03/2568
-		, dbo.sysconname(CAST(SUBSTRING(sys02.Com,17,3)as varchar),42091,2) as ActivityCategoryNameTH --à¾ÔèÁÇÑ¹·Õè 03/03/2568
-		, dbo.sysconname(CAST(SUBSTRING(sys02.Com,17,3)as varchar),42091,1) as ActivityCategoryNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, case when a.DFDoctor is not null then 1 else 0 end as FlagDF --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
+		, CAST(SUBSTRING(sys02.Com,17,3)as varchar) as ActivityCategoryCode --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
+		, dbo.sysconname(CAST(SUBSTRING(sys02.Com,17,3)as varchar),42091,2) as ActivityCategoryNameTH --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
+		, dbo.sysconname(CAST(SUBSTRING(sys02.Com,17,3)as varchar),42091,1) as ActivityCategoryNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, (select dx.ICDCode from HNIPD_DIAG dx where dx.AN = a.AN and dx.DiagnosisRecordType = 1) as PrimaryDiagnosisCode
 		, dbo.ICDName((select dx.ICDCode from HNIPD_DIAG dx where dx.AN = a.AN and dx.DiagnosisRecordType = 1),2) as PrimaryDiagnosisNameTH
 		, dbo.ICDName((select dx.ICDCode from HNIPD_DIAG dx where dx.AN = a.AN and dx.DiagnosisRecordType = 1),1) as PrimaryDiagnosisNameEN
 from	HNIPD_CHARGE a
-		left join HNIPD_MASTER b on a.AN = b.AN 
+		inner join HNIPD_MASTER b on a.AN = b.AN --Modify 28/10/2569
 		left join DNSYSCONFIG sys01 on sys01.CtrlCode = 42075 and a.TreatmentCode = sys01.Code
 		left join DNSYSCONFIG sys02 on sys02.CtrlCode = 42093 and a.HNActivityCode = sys02.Code
 		left join DNSYSCONFIG sys03 on sys03.CtrlCode = 42086 and a.RightCode = sys03.Code
@@ -92,7 +102,7 @@ where	a.TreatmentCode is not null
 union all 
 --****************************** LAB ******************************
 select	'PT2' as BU 
-		, convert(varchar(25), b.AdmDateTime, 112) + replace(b.AN,'/','') + FORMAT(a.IPDChargeDateTime, 'yyyyMMddHHmmss') + convert(varchar(3),a.IPDChargeSuffixTiny) as OrderID
+		, convert(varchar(25), b.AdmDateTime, 112) + replace(b.AN,'/','') + FORMAT(a.IPDChargeDateTime, 'yyyyMMddHHmmssfff') + convert(varchar(3),a.IPDChargeSuffixTiny) as OrderID --Modify 28/10/2569
 		, b.HN as PatientID
 		, convert(varchar(25), b.AdmDateTime, 112) + replace(b.AN,'/','') as AdmitID
 		, b.AdmDateTime as AdmitDateTime
@@ -100,14 +110,14 @@ select	'PT2' as BU
 		, a.IPDChargeDateTime as MakeDateTime
 		, 'Lab' as  ItemType
 		, a.LabCode as ItemCode
-		, dbo.CutSortChar(sys01.LocalName) as ItemNameTH --á¡éä¢ÇÑ¹·Õè 03/03/2568 
-		, dbo.CutSortChar(sys01.EnglishName) as ItemNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, dbo.CutSortChar(sys01.LocalName) as ItemNameTH --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568 
+		, dbo.CutSortChar(sys01.EnglishName) as ItemNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, a.HNActivityCode as ActivityCode
-		, dbo.CutSortChar(sys02.LocalName) as ActivityNameTH --á¡éä¢ÇÑ¹·Õè 03/03/2568 
-		, dbo.CutSortChar(sys02.EnglishName) as ActivityNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, dbo.CutSortChar(sys02.LocalName) as ActivityNameTH --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568 
+		, dbo.CutSortChar(sys02.EnglishName) as ActivityNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, '' as UnitCode
-		, '' as UnitNameTH --á¡éä¢ÇÑ¹·Õè 03/03/2568 
-		, '' as UnitNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, '' as UnitNameTH --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568 
+		, '' as UnitNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, case when a.HNChargeType = 2 then a.Qty * (-1) else a.Qty end as QTY
 		, a.ChargeAmt as UnitPrice
 		, case when a.HNChargeType = 2 then a.ChargeAmt * (-1) else a.ChargeAmt end as ChargeAmt
@@ -119,19 +129,19 @@ select	'PT2' as BU
 		, a.ChargeDateTime
 		, a.EntryByFacilityRmsNo as EntryByFacility
 		, case when a.EntryByFacilityRmsNo is not null then a.EntryByFacilityRefNo else a.OrderRef end as RefNo
-		,A.EntryByUserCode --à¾ÔèÁÇÑ¹·Õè 27/05/2569
-		,dbo.sysconname(A.EntryByUserCode,10031,2) AS 'EntryByUserNameTH' --à¾ÔèÁÇÑ¹·Õè 27/05/2569
-		,dbo.sysconname(A.EntryByUserCode,10031,1) AS 'EntryByUserNameEN' --à¾ÔèÁÇÑ¹·Õè 27/05/2569
-		, a.VoidByUserCode as CancelByUserCode --á¡éä¢ÇÑ¹·Õè 03/03/2568 
-		, dbo.sysconname(a.VoidByUserCode,10031,2) as CancelByUserNameTH --à¾ÔèÁÇÑ¹·Õè 03/03/2568
-		, dbo.sysconname(a.VoidByUserCode,10031,1) as CancelByUserNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		,A.EntryByUserCode --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/05/2569
+		,dbo.sysconname(A.EntryByUserCode,10031,2) AS 'EntryByUserNameTH' --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/05/2569
+		,dbo.sysconname(A.EntryByUserCode,10031,1) AS 'EntryByUserNameEN' --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/05/2569
+		, a.VoidByUserCode as CancelByUserCode --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568 
+		, dbo.sysconname(a.VoidByUserCode,10031,2) as CancelByUserNameTH --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
+		, dbo.sysconname(a.VoidByUserCode,10031,1) as CancelByUserNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, a.VoidDateTime as CancelDateTime
 		, a.ForDateTimeFrom as TreatmentDateTimeFrom
 		, a.ForDateTimeTo as TreatmentDateTimeTo
 		, a.DFDoctor
 		, a.RightCode
-		, dbo.CutSortChar(sys03.LocalName) as RightNameTH --á¡éä¢ÇÑ¹·Õè 03/03/2568 
-		, dbo.CutSortChar(sys03.EnglishName) as RightNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, dbo.CutSortChar(sys03.LocalName) as RightNameTH --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568 
+		, dbo.CutSortChar(sys03.EnglishName) as RightNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, null AS StoreCode
 		, null AS StoreNameTH
 		, null AS StoreNameEN
@@ -161,18 +171,18 @@ select	'PT2' as BU
 		, null as AuxLabel3NameEN
 		, null AS DoseMemo
 		, a.FacilityRequestMethod as EntryByFacilityMethodCode
-		, dbo.CutSortChar(sys04.LocalName) as EntryByFacilityMethodNameTH --á¡éä¢ÇÑ¹·Õè 03/03/2568 
-		, dbo.CutSortChar(sys04.EnglishName) as EntryByFacilityMethodNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, dbo.CutSortChar(sys04.LocalName) as EntryByFacilityMethodNameTH --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568 
+		, dbo.CutSortChar(sys04.EnglishName) as EntryByFacilityMethodNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, a.CheckUp as Checkup 
-		, case when a.DFDoctor is not null then 1 else 0 end as FlagDF --à¾ÔèÁÇÑ¹·Õè 03/03/2568
-		, CAST(SUBSTRING(sys02.Com,17,3)as varchar) as ActivityCategoryCode --à¾ÔèÁÇÑ¹·Õè 03/03/2568
-		, dbo.sysconname(CAST(SUBSTRING(sys02.Com,17,3)as varchar),42091,2) as ActivityCategoryNameTH --à¾ÔèÁÇÑ¹·Õè 03/03/2568
-		, dbo.sysconname(CAST(SUBSTRING(sys02.Com,17,3)as varchar),42091,1) as ActivityCategoryNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, case when a.DFDoctor is not null then 1 else 0 end as FlagDF --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
+		, CAST(SUBSTRING(sys02.Com,17,3)as varchar) as ActivityCategoryCode --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
+		, dbo.sysconname(CAST(SUBSTRING(sys02.Com,17,3)as varchar),42091,2) as ActivityCategoryNameTH --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
+		, dbo.sysconname(CAST(SUBSTRING(sys02.Com,17,3)as varchar),42091,1) as ActivityCategoryNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, (select dx.ICDCode from HNIPD_DIAG dx where dx.AN = a.AN and dx.DiagnosisRecordType = 1) as PrimaryDiagnosisCode
 		, dbo.ICDName((select dx.ICDCode from HNIPD_DIAG dx where dx.AN = a.AN and dx.DiagnosisRecordType = 1),2) as PrimaryDiagnosisNameTH
 		, dbo.ICDName((select dx.ICDCode from HNIPD_DIAG dx where dx.AN = a.AN and dx.DiagnosisRecordType = 1),1) as PrimaryDiagnosisNameEN
 from	HNIPD_CHARGE a
-		left join HNIPD_MASTER b on a.AN = b.AN 
+		inner join HNIPD_MASTER b on a.AN = b.AN --Modify 28/10/2569
 		left join DNSYSCONFIG sys01 on sys01.CtrlCode = 42136 and a.LabCode = sys01.Code
 		left join DNSYSCONFIG sys02 on sys02.CtrlCode = 42093 and a.HNActivityCode = sys02.Code
 		left join DNSYSCONFIG sys03 on sys03.CtrlCode = 42086 and a.RightCode = sys03.Code
@@ -181,7 +191,7 @@ where	a.LabCode is not null
 union all 
 --****************************** XRAY ******************************
 select	'PT2' as BU 
-		, convert(varchar(25), b.AdmDateTime, 112) + replace(b.AN,'/','') + FORMAT(a.IPDChargeDateTime, 'yyyyMMddHHmmss') + convert(varchar(3),a.IPDChargeSuffixTiny) as OrderID
+		, convert(varchar(25), b.AdmDateTime, 112) + replace(b.AN,'/','') + FORMAT(a.IPDChargeDateTime, 'yyyyMMddHHmmssfff') + convert(varchar(3),a.IPDChargeSuffixTiny) as OrderID --Modify 28/10/2569
 		, b.HN as PatientID
 		, convert(varchar(25), b.AdmDateTime, 112) + replace(b.AN,'/','') as AdmitID
 		, b.AdmDateTime as AdmitDateTime
@@ -189,14 +199,14 @@ select	'PT2' as BU
 		, a.IPDChargeDateTime as MakeDateTime
 		, 'Xray' as  ItemType
 		, a.XrayCode as ItemCode
-		, dbo.CutSortChar(sys01.LocalName) as ItemNameTH --á¡éä¢ÇÑ¹·Õè 03/03/2568 
-		, dbo.CutSortChar(sys01.EnglishName) as ItemNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, dbo.CutSortChar(sys01.LocalName) as ItemNameTH --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568 
+		, dbo.CutSortChar(sys01.EnglishName) as ItemNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, a.HNActivityCode as ActivityCode
-		, dbo.CutSortChar(sys02.LocalName) as ActivityNameTH --á¡éä¢ÇÑ¹·Õè 03/03/2568 
-		, dbo.CutSortChar(sys02.EnglishName) as ActivityNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, dbo.CutSortChar(sys02.LocalName) as ActivityNameTH --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568 
+		, dbo.CutSortChar(sys02.EnglishName) as ActivityNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, '' as UnitCode
-		, '' as UnitNameTH --á¡éä¢ÇÑ¹·Õè 03/03/2568 
-		, '' as UnitNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, '' as UnitNameTH --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568 
+		, '' as UnitNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, case when a.HNChargeType = 2 then a.Qty * (-1) else a.Qty end as QTY
 		, a.ChargeAmt as UnitPrice
 		, case when a.HNChargeType = 2 then a.ChargeAmt * (-1) else a.ChargeAmt end as ChargeAmt
@@ -208,19 +218,19 @@ select	'PT2' as BU
 		, a.ChargeDateTime
 		, a.EntryByFacilityRmsNo as EntryByFacility
 		, case when a.EntryByFacilityRmsNo is not null then a.EntryByFacilityRefNo else a.OrderRef end as RefNo
-		,A.EntryByUserCode --à¾ÔèÁÇÑ¹·Õè 27/05/2569
-		,dbo.sysconname(A.EntryByUserCode,10031,2) AS 'EntryByUserNameTH' --à¾ÔèÁÇÑ¹·Õè 27/05/2569
-		,dbo.sysconname(A.EntryByUserCode,10031,1) AS 'EntryByUserNameEN' --à¾ÔèÁÇÑ¹·Õè 27/05/2569
-		, a.VoidByUserCode as CancelByUserCode --á¡éä¢ÇÑ¹·Õè 03/03/2568 
-		, dbo.sysconname(a.VoidByUserCode,10031,2) as CancelByUserNameTH --à¾ÔèÁÇÑ¹·Õè 03/03/2568
-		, dbo.sysconname(a.VoidByUserCode,10031,1) as CancelByUserNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		,A.EntryByUserCode --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/05/2569
+		,dbo.sysconname(A.EntryByUserCode,10031,2) AS 'EntryByUserNameTH' --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/05/2569
+		,dbo.sysconname(A.EntryByUserCode,10031,1) AS 'EntryByUserNameEN' --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/05/2569
+		, a.VoidByUserCode as CancelByUserCode --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568 
+		, dbo.sysconname(a.VoidByUserCode,10031,2) as CancelByUserNameTH --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
+		, dbo.sysconname(a.VoidByUserCode,10031,1) as CancelByUserNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, a.VoidDateTime as CancelDateTime
 		, a.ForDateTimeFrom as TreatmentDateTimeFrom
 		, a.ForDateTimeTo as TreatmentDateTimeTo
 		, a.DFDoctor
 		, a.RightCode
-		, dbo.CutSortChar(sys03.LocalName) as RightNameTH --á¡éä¢ÇÑ¹·Õè 03/03/2568 
-		, dbo.CutSortChar(sys03.EnglishName) as RightNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, dbo.CutSortChar(sys03.LocalName) as RightNameTH --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568 
+		, dbo.CutSortChar(sys03.EnglishName) as RightNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, null AS StoreCode
 		, null AS StoreNameTH
 		, null AS StoreNameEN
@@ -250,18 +260,18 @@ select	'PT2' as BU
 		, null as AuxLabel3NameEN
 		, null AS DoseMemo
 		, a.FacilityRequestMethod as EntryByFacilityMethodCode 
-		, dbo.CutSortChar(sys04.LocalName) as EntryByFacilityMethodNameTH --á¡éä¢ÇÑ¹·Õè 03/03/2568 
-		, dbo.CutSortChar(sys04.EnglishName) as EntryByFacilityMethodNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, dbo.CutSortChar(sys04.LocalName) as EntryByFacilityMethodNameTH --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568 
+		, dbo.CutSortChar(sys04.EnglishName) as EntryByFacilityMethodNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, a.CheckUp as Checkup 
-		, case when a.DFDoctor is not null then 1 else 0 end as FlagDF --à¾ÔèÁÇÑ¹·Õè 03/03/2568
-		, CAST(SUBSTRING(sys02.Com,17,3)as varchar) as ActivityCategoryCode --à¾ÔèÁÇÑ¹·Õè 03/03/2568
-		, dbo.sysconname(CAST(SUBSTRING(sys02.Com,17,3)as varchar),42091,2) as ActivityCategoryNameTH --à¾ÔèÁÇÑ¹·Õè 03/03/2568
-		, dbo.sysconname(CAST(SUBSTRING(sys02.Com,17,3)as varchar),42091,1) as ActivityCategoryNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, case when a.DFDoctor is not null then 1 else 0 end as FlagDF --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
+		, CAST(SUBSTRING(sys02.Com,17,3)as varchar) as ActivityCategoryCode --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
+		, dbo.sysconname(CAST(SUBSTRING(sys02.Com,17,3)as varchar),42091,2) as ActivityCategoryNameTH --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
+		, dbo.sysconname(CAST(SUBSTRING(sys02.Com,17,3)as varchar),42091,1) as ActivityCategoryNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, (select dx.ICDCode from HNIPD_DIAG dx where dx.AN = a.AN and dx.DiagnosisRecordType = 1) as PrimaryDiagnosisCode
 		, dbo.ICDName((select dx.ICDCode from HNIPD_DIAG dx where dx.AN = a.AN and dx.DiagnosisRecordType = 1),2) as PrimaryDiagnosisNameTH
 		, dbo.ICDName((select dx.ICDCode from HNIPD_DIAG dx where dx.AN = a.AN and dx.DiagnosisRecordType = 1),1) as PrimaryDiagnosisNameEN
 from	HNIPD_CHARGE a
-		left join HNIPD_MASTER b on a.AN = b.AN 
+		inner join HNIPD_MASTER b on a.AN = b.AN --Modify 28/10/2569
 		left join DNSYSCONFIG sys01 on sys01.CtrlCode = 42179 and a.XrayCode = sys01.Code
 		left join DNSYSCONFIG sys02 on sys02.CtrlCode = 42093 and a.HNActivityCode = sys02.Code
 		left join DNSYSCONFIG sys03 on sys03.CtrlCode = 42086 and a.RightCode = sys03.Code
@@ -270,7 +280,7 @@ where	 a.XrayCode is not null
 union all 
 --****************************** PT ******************************
 select	'PT2' as BU 
-		, convert(varchar(25), b.AdmDateTime, 112) + replace(b.AN,'/','') + FORMAT(a.IPDChargeDateTime, 'yyyyMMddHHmmss') + convert(varchar(3),a.IPDChargeSuffixTiny) as OrderID
+		, convert(varchar(25), b.AdmDateTime, 112) + replace(b.AN,'/','') + FORMAT(a.IPDChargeDateTime, 'yyyyMMddHHmmssfff') + convert(varchar(3),a.IPDChargeSuffixTiny) as OrderID --Modify 28/10/2569
 		, b.HN as PatientID
 		, convert(varchar(25), b.AdmDateTime, 112) + replace(b.AN,'/','') as AdmitID
 		, b.AdmDateTime as AdmitDateTime
@@ -278,14 +288,14 @@ select	'PT2' as BU
 		, a.IPDChargeDateTime as MakeDateTime
 		, 'PT' as  ItemType
 		, a.PTModeCode as ItemCode
-		, dbo.CutSortChar(sys01.LocalName) as ItemNameTH --á¡éä¢ÇÑ¹·Õè 03/03/2568 
-		, dbo.CutSortChar(sys01.EnglishName) as ItemNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, dbo.CutSortChar(sys01.LocalName) as ItemNameTH --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568 
+		, dbo.CutSortChar(sys01.EnglishName) as ItemNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, a.HNActivityCode as ActivityCode
-		, dbo.CutSortChar(sys02.LocalName) as ActivityNameTH --á¡éä¢ÇÑ¹·Õè 03/03/2568 
-		, dbo.CutSortChar(sys02.EnglishName) as ActivityNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, dbo.CutSortChar(sys02.LocalName) as ActivityNameTH --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568 
+		, dbo.CutSortChar(sys02.EnglishName) as ActivityNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, '' as UnitCode
-		, '' as UnitNameTH --á¡éä¢ÇÑ¹·Õè 03/03/2568 
-		, '' as UnitNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, '' as UnitNameTH --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568 
+		, '' as UnitNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, case when a.HNChargeType = 2 then a.Qty * (-1) else a.Qty end as QTY
 		, a.ChargeAmt as UnitPrice
 		, case when a.HNChargeType = 2 then a.ChargeAmt * (-1) else a.ChargeAmt end as ChargeAmt
@@ -297,19 +307,19 @@ select	'PT2' as BU
 		, a.ChargeDateTime
 		, a.EntryByFacilityRmsNo as EntryByFacility
 		, case when a.EntryByFacilityRmsNo is not null then a.EntryByFacilityRefNo else a.OrderRef end as RefNo
-		,A.EntryByUserCode --à¾ÔèÁÇÑ¹·Õè 27/05/2569
-		,dbo.sysconname(A.EntryByUserCode,10031,2) AS 'EntryByUserNameTH' --à¾ÔèÁÇÑ¹·Õè 27/05/2569
-		,dbo.sysconname(A.EntryByUserCode,10031,1) AS 'EntryByUserNameEN' --à¾ÔèÁÇÑ¹·Õè 27/05/2569
-		, a.VoidByUserCode as CancelByUserCode --á¡éä¢ÇÑ¹·Õè 03/03/2568 
-		, dbo.sysconname(a.VoidByUserCode,10031,2) as CancelByUserNameTH --à¾ÔèÁÇÑ¹·Õè 03/03/2568
-		, dbo.sysconname(a.VoidByUserCode,10031,1) as CancelByUserNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		,A.EntryByUserCode --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/05/2569
+		,dbo.sysconname(A.EntryByUserCode,10031,2) AS 'EntryByUserNameTH' --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/05/2569
+		,dbo.sysconname(A.EntryByUserCode,10031,1) AS 'EntryByUserNameEN' --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/05/2569
+		, a.VoidByUserCode as CancelByUserCode --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568 
+		, dbo.sysconname(a.VoidByUserCode,10031,2) as CancelByUserNameTH --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
+		, dbo.sysconname(a.VoidByUserCode,10031,1) as CancelByUserNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, a.VoidDateTime as CancelDateTime
 		, a.ForDateTimeFrom as TreatmentDateTimeFrom
 		, a.ForDateTimeTo as TreatmentDateTimeTo
 		, a.DFDoctor
 		, a.RightCode
-		, dbo.CutSortChar(sys03.LocalName) as RightNameTH --á¡éä¢ÇÑ¹·Õè 03/03/2568 
-		, dbo.CutSortChar(sys03.EnglishName) as RightNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, dbo.CutSortChar(sys03.LocalName) as RightNameTH --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568 
+		, dbo.CutSortChar(sys03.EnglishName) as RightNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, null AS StoreCode
 		, null AS StoreNameTH
 		, null AS StoreNameEN
@@ -339,18 +349,18 @@ select	'PT2' as BU
 		, null as AuxLabel3NameEN
 		, null AS DoseMemo
 		, a.FacilityRequestMethod as EntryByFacilityMethodCode
-		, dbo.CutSortChar(sys04.LocalName) as EntryByFacilityMethodNameTH --á¡éä¢ÇÑ¹·Õè 03/03/2568
-		, dbo.CutSortChar(sys04.EnglishName) as EntryByFacilityMethodNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, dbo.CutSortChar(sys04.LocalName) as EntryByFacilityMethodNameTH --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
+		, dbo.CutSortChar(sys04.EnglishName) as EntryByFacilityMethodNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, a.CheckUp as Checkup 
-		, case when a.DFDoctor is not null then 1 else 0 end as FlagDF --à¾ÔèÁÇÑ¹·Õè 03/03/2568
-		, CAST(SUBSTRING(sys02.Com,17,3)as varchar) as ActivityCategoryCode --à¾ÔèÁÇÑ¹·Õè 03/03/2568
-		, dbo.sysconname(CAST(SUBSTRING(sys02.Com,17,3)as varchar),42091,2) as ActivityCategoryNameTH --à¾ÔèÁÇÑ¹·Õè 03/03/2568
-		, dbo.sysconname(CAST(SUBSTRING(sys02.Com,17,3)as varchar),42091,1) as ActivityCategoryNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, case when a.DFDoctor is not null then 1 else 0 end as FlagDF --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
+		, CAST(SUBSTRING(sys02.Com,17,3)as varchar) as ActivityCategoryCode --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
+		, dbo.sysconname(CAST(SUBSTRING(sys02.Com,17,3)as varchar),42091,2) as ActivityCategoryNameTH --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
+		, dbo.sysconname(CAST(SUBSTRING(sys02.Com,17,3)as varchar),42091,1) as ActivityCategoryNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, (select dx.ICDCode from HNIPD_DIAG dx where dx.AN = a.AN and dx.DiagnosisRecordType = 1) as PrimaryDiagnosisCode
 		, dbo.ICDName((select dx.ICDCode from HNIPD_DIAG dx where dx.AN = a.AN and dx.DiagnosisRecordType = 1),2) as PrimaryDiagnosisNameTH
 		, dbo.ICDName((select dx.ICDCode from HNIPD_DIAG dx where dx.AN = a.AN and dx.DiagnosisRecordType = 1),1) as PrimaryDiagnosisNameEN
 from	HNIPD_CHARGE a
-		left join HNIPD_MASTER b on a.AN = b.AN 
+		inner join HNIPD_MASTER b on a.AN = b.AN --Modify 28/10/2569
 		left join DNSYSCONFIG sys01 on sys01.CtrlCode = 42632 and a.PTModeCode = sys01.Code
 		left join DNSYSCONFIG sys02 on sys02.CtrlCode = 42093 and a.HNActivityCode = sys02.Code
 		left join DNSYSCONFIG sys03 on sys03.CtrlCode = 42086 and a.RightCode = sys03.Code
@@ -359,7 +369,7 @@ where	a.PTModeCode is not null
 union all 
 --****************************** Medicine ******************************
 select	'PT2' as BU 
-		, convert(varchar(25), b.AdmDateTime, 112) + replace(b.AN,'/','') + FORMAT(a.IPDChargeDateTime, 'yyyyMMddHHmmss') + convert(varchar(3),c.ChargeMedicineSuffixSmall) as OrderID
+		, convert(varchar(25), b.AdmDateTime, 112) + replace(b.AN,'/','') + FORMAT(a.IPDChargeDateTime, 'yyyyMMddHHmmssfff') + convert(varchar(3),a.IPDChargeSuffixTiny)  + convert(varchar(3),c.ChargeMedicineSuffixSmall) as OrderID --Modify 28/10/2569
 		, b.HN as PatientID
 		, convert(varchar(25), b.AdmDateTime, 112) + replace(b.AN,'/','') as AdmitID
 		, b.AdmDateTime as AdmitDateTime
@@ -367,14 +377,14 @@ select	'PT2' as BU
 		, a.IPDChargeDateTime as MakeDateTime
 		, case when sk.StockComposeCategory like 'ME.%' then 'Medicine' else 'Usage' end as  ItemType
 		, c.StockCode as ItemCode
-		, dbo.CutSortChar(sk.LocalName) as ItemNameTH --á¡éä¢ÇÑ¹·Õè 03/03/2568
-		, dbo.CutSortChar(sk.EnglishName) as ItemNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, dbo.CutSortChar(sk.LocalName) as ItemNameTH --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
+		, dbo.CutSortChar(sk.EnglishName) as ItemNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, a.HNActivityCode as ActivityCode
-		, dbo.CutSortChar(sys02.LocalName) as ActivityNameTH --á¡éä¢ÇÑ¹·Õè 03/03/2568
-		, dbo.CutSortChar(sys02.EnglishName) as ActivityNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, dbo.CutSortChar(sys02.LocalName) as ActivityNameTH --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
+		, dbo.CutSortChar(sys02.EnglishName) as ActivityNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, d.UnitCode as UnitCode
-		, coalesce(dbo.CutSortChar(sys14.LocalName),'') as UnitNameTH --á¡éä¢ÇÑ¹·Õè 03/03/2568
-		, coalesce(dbo.CutSortChar(sys14.EnglishName),'') as UnitNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, coalesce(dbo.CutSortChar(sys14.LocalName),'') as UnitNameTH --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
+		, coalesce(dbo.CutSortChar(sys14.EnglishName),'') as UnitNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, case when d.HNChargeType = 2 then d.Qty * (-1) else d.Qty end as QTY
 		, d.UnitPrice as UnitPrice
 		, case when d.HNChargeType = 2 then d.ChargeAmt * (-1) else d.ChargeAmt end as ChargeAmt
@@ -386,22 +396,22 @@ select	'PT2' as BU
 		, a.ChargeDateTime
 		, a.EntryByFacilityRmsNo as EntryByFacility
 		, case when a.EntryByFacilityRmsNo is not null then a.EntryByFacilityRefNo else a.OrderRef end as RefNo
-		,A.EntryByUserCode --à¾ÔèÁÇÑ¹·Õè 27/05/2569
-		,dbo.sysconname(A.EntryByUserCode,10031,2) AS 'EntryByUserNameTH' --à¾ÔèÁÇÑ¹·Õè 27/05/2569
-		,dbo.sysconname(A.EntryByUserCode,10031,1) AS 'EntryByUserNameEN' --à¾ÔèÁÇÑ¹·Õè 27/05/2569
-		, a.VoidByUserCode as CancelByUserCode --á¡éä¢ÇÑ¹·Õè 03/03/2568 
-		, dbo.sysconname(a.VoidByUserCode,10031,2) as CancelByUserNameTH --à¾ÔèÁÇÑ¹·Õè 03/03/2568
-		, dbo.sysconname(a.VoidByUserCode,10031,1) as CancelByUserNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		,A.EntryByUserCode --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/05/2569
+		,dbo.sysconname(A.EntryByUserCode,10031,2) AS 'EntryByUserNameTH' --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/05/2569
+		,dbo.sysconname(A.EntryByUserCode,10031,1) AS 'EntryByUserNameEN' --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/05/2569
+		, a.VoidByUserCode as CancelByUserCode --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568 
+		, dbo.sysconname(a.VoidByUserCode,10031,2) as CancelByUserNameTH --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
+		, dbo.sysconname(a.VoidByUserCode,10031,1) as CancelByUserNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, a.VoidDateTime as CancelDateTime
 		, a.ForDateTimeFrom as TreatmentDateTimeFrom
 		, a.ForDateTimeTo as TreatmentDateTimeTo
 		, a.DFDoctor
 		, a.RightCode
-		, dbo.CutSortChar(sys03.LocalName) as RightNameTH --á¡éä¢ÇÑ¹·Õè 03/03/2568 
-		, dbo.CutSortChar(sys03.EnglishName) as RightNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, dbo.CutSortChar(sys03.LocalName) as RightNameTH --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568 
+		, dbo.CutSortChar(sys03.EnglishName) as RightNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, c.Store as StoreCode
-		, coalesce(dbo.CutSortChar(sys05.LocalName),'') as StoreNameTH --á¡éä¢ÇÑ¹·Õè 03/03/2568 
-		, coalesce(dbo.CutSortChar(sys05.EnglishName),'') as StoreNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, coalesce(dbo.CutSortChar(sys05.LocalName),'') as StoreNameTH --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568 
+		, coalesce(dbo.CutSortChar(sys05.EnglishName),'') as StoreNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, e.DoseType AS DoseTypeCode
 		, dbo.sysconname(e.DoseType,42042,2) AS DoseTypeNameTH
 		, dbo.sysconname(e.DoseType,42042,1) AS DoseTypeNameEN
@@ -428,20 +438,20 @@ select	'PT2' as BU
 		, dbo.sysconname(e.AuxLabel3,42046,1) AS AuxLabel3NameEN
 		, e.DoseMemo AS DoseMemo
 		, a.FacilityRequestMethod as EntryByFacilityMethodCode
-		, dbo.CutSortChar(sys04.LocalName) as EntryByFacilityMethodNameTH --á¡éä¢ÇÑ¹·Õè 03/03/2568 
-		, dbo.CutSortChar(sys04.EnglishName) as EntryByFacilityMethodNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, dbo.CutSortChar(sys04.LocalName) as EntryByFacilityMethodNameTH --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568 
+		, dbo.CutSortChar(sys04.EnglishName) as EntryByFacilityMethodNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, a.CheckUp as Checkup  
-		, case when a.DFDoctor is not null then 1 else 0 end as FlagDF --à¾ÔèÁÇÑ¹·Õè 03/03/2568
-		, CAST(SUBSTRING(sys02.Com,17,3)as varchar) as ActivityCategoryCode --à¾ÔèÁÇÑ¹·Õè 03/03/2568
-		, dbo.sysconname(CAST(SUBSTRING(sys02.Com,17,3)as varchar),42091,2) as ActivityCategoryNameTH --à¾ÔèÁÇÑ¹·Õè 03/03/2568
-		, dbo.sysconname(CAST(SUBSTRING(sys02.Com,17,3)as varchar),42091,1) as ActivityCategoryNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, case when a.DFDoctor is not null then 1 else 0 end as FlagDF --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
+		, CAST(SUBSTRING(sys02.Com,17,3)as varchar) as ActivityCategoryCode --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
+		, dbo.sysconname(CAST(SUBSTRING(sys02.Com,17,3)as varchar),42091,2) as ActivityCategoryNameTH --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
+		, dbo.sysconname(CAST(SUBSTRING(sys02.Com,17,3)as varchar),42091,1) as ActivityCategoryNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, (select dx.ICDCode from HNIPD_DIAG dx where dx.AN = a.AN and dx.DiagnosisRecordType = 1) as PrimaryDiagnosisCode
 		, dbo.ICDName((select dx.ICDCode from HNIPD_DIAG dx where dx.AN = a.AN and dx.DiagnosisRecordType = 1),2) as PrimaryDiagnosisNameTH
 		, dbo.ICDName((select dx.ICDCode from HNIPD_DIAG dx where dx.AN = a.AN and dx.DiagnosisRecordType = 1),1) as PrimaryDiagnosisNameEN
 from	HNIPD_CHARGE a
 		inner join HNIPD_MASTER b on a.AN = b.AN 
 		inner join HNIPD_CHARGE_MEDICINE c on a.AN = c.AN and a.IPDChargeDateTime = c.IPDChargeDateTime and a.IPDChargeSuffixTiny = c.IPDChargeSuffixTiny
-		LEFT join HNIPD_DRUG_HISTORY d on c.AN = d.AN and c.IPDChargeDateTime = d.IPDChargeDateTime and c.ChargeMedicineSuffixSmall = d.ChargeMedicineSuffixSmall
+		LEFT join HNIPD_DRUG_HISTORY d on c.AN = d.AN and c.IPDChargeDateTime = d.IPDChargeDateTime and c.ChargeMedicineSuffixSmall = d.ChargeMedicineSuffixSmall and c.StockCode = d.StockCode and c.Store = d.Store --> 2026-10-28 Edit By Snook : Add link condition StoreCode
 		left join  HNIPDDRUG_ORDER_ITEM e on d.DrugOrderNo = e.DrugOrderNo and d.ChargeMedicineSuffixSmall = e.SuffixSmall and d.StockCode = e.StockCode
 		left join STOCKMASTER sk on c.StockCode = sk.StockCode 
 		left join DNSYSCONFIG sys02 on sys02.CtrlCode = 42093 and a.HNActivityCode = sys02.Code
@@ -452,7 +462,7 @@ from	HNIPD_CHARGE a
 union all 
 --****************************** OR ******************************
 select	'PT2' as BU 
-		, convert(varchar(25), b.AdmDateTime, 112) + replace(b.AN,'/','') + FORMAT(a.IPDChargeDateTime, 'yyyyMMddHHmmss') + convert(varchar(3),d.SuffixSmall) as OrderID
+		, convert(varchar(25), b.AdmDateTime, 112) + replace(b.AN,'/','') + FORMAT(a.IPDChargeDateTime, 'yyyyMMddHHmmssfff') + convert(varchar(3),d.SuffixSmall) as OrderID --Modify 28/10/2569
 		, b.HN as PatientID
 		, convert(varchar(25), b.AdmDateTime, 112) + replace(b.AN,'/','') as AdmitID
 		, b.AdmDateTime as AdmitDateTime
@@ -460,14 +470,14 @@ select	'PT2' as BU
 		, a.IPDChargeDateTime as MakeDateTime
 		, case when sk.StockComposeCategory like 'ME.%' then 'Medicine' else 'Usage' end as  ItemType
 		, a.StockCode as ItemCode
-		, dbo.CutSortChar(sk.LocalName) as ItemNameTH --á¡éä¢ÇÑ¹·Õè 03/03/2568 
-		, dbo.CutSortChar(sk.EnglishName) as ItemNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, dbo.CutSortChar(sk.LocalName) as ItemNameTH --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568 
+		, dbo.CutSortChar(sk.EnglishName) as ItemNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, a.HNActivityCode as ActivityCode
-		, dbo.CutSortChar(sys02.LocalName) as ActivityNameTH --á¡éä¢ÇÑ¹·Õè 03/03/2568 
-		, dbo.CutSortChar(sys02.EnglishName) as ActivityNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, dbo.CutSortChar(sys02.LocalName) as ActivityNameTH --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568 
+		, dbo.CutSortChar(sys02.EnglishName) as ActivityNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, a.UnitCode as UnitCode
-		, coalesce(dbo.CutSortChar(sys14.LocalName),'') as UnitNameTH --á¡éä¢ÇÑ¹·Õè 03/03/2568 
-		, coalesce(dbo.CutSortChar(sys14.EnglishName),'') as UnitNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, coalesce(dbo.CutSortChar(sys14.LocalName),'') as UnitNameTH --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568 
+		, coalesce(dbo.CutSortChar(sys14.EnglishName),'') as UnitNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, case when d.HNChargeType = 2 then d.Qty * (-1) else d.Qty end as QTY
 		, d.UnitPrice as UnitPrice
 		, case when d.HNChargeType = 2 then d.ChargeAmt * (-1) else d.ChargeAmt end as ChargeAmt
@@ -479,22 +489,22 @@ select	'PT2' as BU
 		, a.ChargeDateTime
 		, a.EntryByFacilityRmsNo as EntryByFacility
 		, case when a.EntryByFacilityRmsNo is not null then a.EntryByFacilityRefNo else a.OrderRef end as RefNo
-		,A.EntryByUserCode --à¾ÔèÁÇÑ¹·Õè 27/05/2569
-		,dbo.sysconname(A.EntryByUserCode,10031,2) AS 'EntryByUserNameTH' --à¾ÔèÁÇÑ¹·Õè 27/05/2569
-		,dbo.sysconname(A.EntryByUserCode,10031,1) AS 'EntryByUserNameEN' --à¾ÔèÁÇÑ¹·Õè 27/05/2569
-		, a.VoidByUserCode as CancelByUserCode --á¡éä¢ÇÑ¹·Õè 03/03/2568 
-		, dbo.sysconname(a.VoidByUserCode,10031,2) as CancelByUserNameTH --à¾ÔèÁÇÑ¹·Õè 03/03/2568
-		, dbo.sysconname(a.VoidByUserCode,10031,1) as CancelByUserNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		,A.EntryByUserCode --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/05/2569
+		,dbo.sysconname(A.EntryByUserCode,10031,2) AS 'EntryByUserNameTH' --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/05/2569
+		,dbo.sysconname(A.EntryByUserCode,10031,1) AS 'EntryByUserNameEN' --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/05/2569
+		, a.VoidByUserCode as CancelByUserCode --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568 
+		, dbo.sysconname(a.VoidByUserCode,10031,2) as CancelByUserNameTH --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
+		, dbo.sysconname(a.VoidByUserCode,10031,1) as CancelByUserNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, a.VoidDateTime as CancelDateTime
 		, a.ForDateTimeFrom as TreatmentDateTimeFrom
 		, a.ForDateTimeTo as TreatmentDateTimeTo
 		, a.DFDoctor
 		, a.RightCode
-		, dbo.CutSortChar(sys03.LocalName) as RightNameTH --á¡éä¢ÇÑ¹·Õè 03/03/2568 
-		, dbo.CutSortChar(sys03.EnglishName) as RightNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, dbo.CutSortChar(sys03.LocalName) as RightNameTH --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568 
+		, dbo.CutSortChar(sys03.EnglishName) as RightNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, d.Store as StoreCode
-		, coalesce(dbo.CutSortChar(sys05.LocalName),'') as StoreNameTH --á¡éä¢ÇÑ¹·Õè 03/03/2568 
-		, coalesce(dbo.CutSortChar(sys05.EnglishName),'') as StoreNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, coalesce(dbo.CutSortChar(sys05.LocalName),'') as StoreNameTH --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568 
+		, coalesce(dbo.CutSortChar(sys05.EnglishName),'') as StoreNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, null AS DoseTypeCode
 		, null as DoseTypeNameTH
 		, null as DoseTypeNameEN
@@ -521,18 +531,18 @@ select	'PT2' as BU
 		, null as AuxLabel3NameEN
 		, null AS DoseMemo
 		, a.FacilityRequestMethod as EntryByFacilityMethodCode
-		, dbo.CutSortChar(sys04.LocalName) as EntryByFacilityMethodNameTH --á¡éä¢ÇÑ¹·Õè 03/03/2568 
-		, dbo.CutSortChar(sys04.EnglishName) as EntryByFacilityMethodNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, dbo.CutSortChar(sys04.LocalName) as EntryByFacilityMethodNameTH --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568 
+		, dbo.CutSortChar(sys04.EnglishName) as EntryByFacilityMethodNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, a.CheckUp as Checkup  
-		, case when a.DFDoctor is not null then 1 else 0 end as FlagDF --à¾ÔèÁÇÑ¹·Õè 03/03/2568
-		, CAST(SUBSTRING(sys02.Com,17,3)as varchar) as ActivityCategoryCode --à¾ÔèÁÇÑ¹·Õè 03/03/2568
-		, dbo.sysconname(CAST(SUBSTRING(sys02.Com,17,3)as varchar),42091,2) as ActivityCategoryNameTH --à¾ÔèÁÇÑ¹·Õè 03/03/2568
-		, dbo.sysconname(CAST(SUBSTRING(sys02.Com,17,3)as varchar),42091,1) as ActivityCategoryNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, case when a.DFDoctor is not null then 1 else 0 end as FlagDF --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
+		, CAST(SUBSTRING(sys02.Com,17,3)as varchar) as ActivityCategoryCode --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
+		, dbo.sysconname(CAST(SUBSTRING(sys02.Com,17,3)as varchar),42091,2) as ActivityCategoryNameTH --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
+		, dbo.sysconname(CAST(SUBSTRING(sys02.Com,17,3)as varchar),42091,1) as ActivityCategoryNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, (select dx.ICDCode from HNIPD_DIAG dx where dx.AN = a.AN and dx.DiagnosisRecordType = 1) as PrimaryDiagnosisCode
 		, dbo.ICDName((select dx.ICDCode from HNIPD_DIAG dx where dx.AN = a.AN and dx.DiagnosisRecordType = 1),2) as PrimaryDiagnosisNameTH
 		, dbo.ICDName((select dx.ICDCode from HNIPD_DIAG dx where dx.AN = a.AN and dx.DiagnosisRecordType = 1),1) as PrimaryDiagnosisNameEN
 from	HNIPD_CHARGE a
-		left join HNIPD_MASTER b on a.AN = b.AN 
+		inner join HNIPD_MASTER b on a.AN = b.AN --Modify 28/10/2569
 		left join HNIPD_CHARGE_MEDICINE c on a.AN = c.AN and a.IPDChargeDateTime = c.IPDChargeDateTime and a.IPDChargeSuffixTiny = c.IPDChargeSuffixTiny
 		left join HNORREQ_USAGE d on a.EntryByFacilityRmsNo = d.FacilityRmsNo and a.EntryByFacilityRefNo = d.RequestNo and a.HNActivityCode = d.HNActivityCode and a.StockCode = d.StockCode
 		LEFT join STOCKMASTER sk on a.StockCode = sk.StockCode 
@@ -546,7 +556,7 @@ where	a.StockCode is not null
 union all 
 --****************************** Activity ******************************
 select	'PT2' as BU 
-		, convert(varchar(25), b.AdmDateTime, 112) + replace(b.AN,'/','') + FORMAT(a.IPDChargeDateTime, 'yyyyMMddHHmmss') + convert(varchar(3),a.IPDChargeSuffixTiny) as OrderID
+		, convert(varchar(25), b.AdmDateTime, 112) + replace(b.AN,'/','') + FORMAT(a.IPDChargeDateTime, 'yyyyMMddHHmmssfff') + convert(varchar(3),a.IPDChargeSuffixTiny) as OrderID --Modify 28/10/2569
 		, b.HN as PatientID
 		, convert(varchar(25), b.AdmDateTime, 112) + replace(b.AN,'/','') as AdmitID
 		, b.AdmDateTime as AdmitDateTime
@@ -554,14 +564,14 @@ select	'PT2' as BU
 		, a.IPDChargeDateTime as MakeDateTime
 		, case when a.HNEntryFromSystemType = 6 then 'Food' else 'ServiceCharge' end as  ItemType
 		, a.HNActivityCode as ItemCode
-		, dbo.CutSortChar(sys02.LocalName) as ItemNameTH --á¡éä¢ÇÑ¹·Õè 03/03/2568 
-		,  dbo.CutSortChar(sys02.EnglishName) as ItemNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568 
+		, dbo.CutSortChar(sys02.LocalName) as ItemNameTH --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568 
+		,  dbo.CutSortChar(sys02.EnglishName) as ItemNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568 
 		, a.HNActivityCode as ActivityCode
-		, dbo.CutSortChar(sys02.LocalName) as ActivityNameTH --á¡éä¢ÇÑ¹·Õè 03/03/2568
-		, dbo.CutSortChar(sys02.EnglishName) as ActivityNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, dbo.CutSortChar(sys02.LocalName) as ActivityNameTH --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
+		, dbo.CutSortChar(sys02.EnglishName) as ActivityNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, a.UnitCode as UnitCode
-		, coalesce(dbo.CutSortChar(sys14.LocalName),'') as UnitNameTH --á¡éä¢ÇÑ¹·Õè 03/03/2568
-		, coalesce(dbo.CutSortChar(sys14.EnglishName),'') as UnitNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, coalesce(dbo.CutSortChar(sys14.LocalName),'') as UnitNameTH --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
+		, coalesce(dbo.CutSortChar(sys14.EnglishName),'') as UnitNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, case when a.HNChargeType = 2 then a.Qty * (-1) else a.Qty end as QTY
 		, a.ChargeAmt as UnitPrice
 		, case when a.HNChargeType = 2 then a.ChargeAmt * (-1) else a.ChargeAmt end as ChargeAmt
@@ -573,19 +583,19 @@ select	'PT2' as BU
 		, a.ChargeDateTime
 		, a.EntryByFacilityRmsNo as EntryByFacility
 		, case when a.EntryByFacilityRmsNo is not null then a.EntryByFacilityRefNo else a.OrderRef end as RefNo
-		,A.EntryByUserCode --à¾ÔèÁÇÑ¹·Õè 27/05/2569
-		,dbo.sysconname(A.EntryByUserCode,10031,2) AS 'EntryByUserNameTH' --à¾ÔèÁÇÑ¹·Õè 27/05/2569
-		,dbo.sysconname(A.EntryByUserCode,10031,1) AS 'EntryByUserNameEN' --à¾ÔèÁÇÑ¹·Õè 27/05/2569
-		, a.VoidByUserCode as CancelByUserCode --á¡éä¢ÇÑ¹·Õè 03/03/2568 
-		, dbo.sysconname(a.VoidByUserCode,10031,2) as CancelByUserNameTH --à¾ÔèÁÇÑ¹·Õè 03/03/2568
-		, dbo.sysconname(a.VoidByUserCode,10031,1) as CancelByUserNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		,A.EntryByUserCode --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/05/2569
+		,dbo.sysconname(A.EntryByUserCode,10031,2) AS 'EntryByUserNameTH' --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/05/2569
+		,dbo.sysconname(A.EntryByUserCode,10031,1) AS 'EntryByUserNameEN' --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/05/2569
+		, a.VoidByUserCode as CancelByUserCode --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568 
+		, dbo.sysconname(a.VoidByUserCode,10031,2) as CancelByUserNameTH --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
+		, dbo.sysconname(a.VoidByUserCode,10031,1) as CancelByUserNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, a.VoidDateTime as CancelDateTime
 		, a.ForDateTimeFrom as TreatmentDateTimeFrom
 		, a.ForDateTimeTo as TreatmentDateTimeTo
 		, a.DFDoctor
 		, a.RightCode
-		, dbo.CutSortChar(sys03.LocalName) as RightNameTH --á¡éä¢ÇÑ¹·Õè 03/03/2568
-		, dbo.CutSortChar(sys03.EnglishName) as RightNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, dbo.CutSortChar(sys03.LocalName) as RightNameTH --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
+		, dbo.CutSortChar(sys03.EnglishName) as RightNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, null AS StoreCode
 		, null AS StoreNameTH
 		, null AS StoreNameEN
@@ -615,20 +625,31 @@ select	'PT2' as BU
 		, null as AuxLabel3NameEN
 		, null AS DoseMemo
 		, a.FacilityRequestMethod as EntryByFacilityMethodCode
-		, dbo.CutSortChar(sys04.LocalName) as EntryByFacilityMethodNameTH --á¡éä¢ÇÑ¹·Õè 03/03/2568
-		, dbo.CutSortChar(sys04.EnglishName) as EntryByFacilityMethodNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, dbo.CutSortChar(sys04.LocalName) as EntryByFacilityMethodNameTH --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
+		, dbo.CutSortChar(sys04.EnglishName) as EntryByFacilityMethodNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, a.CheckUp as Checkup  
-		, case when a.DFDoctor is not null then 1 else 0 end as FlagDF --à¾ÔèÁÇÑ¹·Õè 03/03/2568
-		, CAST(SUBSTRING(sys02.Com,17,3)as varchar) as ActivityCategoryCode --à¾ÔèÁÇÑ¹·Õè 03/03/2568
-		, dbo.sysconname(CAST(SUBSTRING(sys02.Com,17,3)as varchar),42091,2) as ActivityCategoryNameTH --à¾ÔèÁÇÑ¹·Õè 03/03/2568
-		, dbo.sysconname(CAST(SUBSTRING(sys02.Com,17,3)as varchar),42091,1) as ActivityCategoryNameEN --à¾ÔèÁÇÑ¹·Õè 03/03/2568
+		, case when a.DFDoctor is not null then 1 else 0 end as FlagDF --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
+		, CAST(SUBSTRING(sys02.Com,17,3)as varchar) as ActivityCategoryCode --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
+		, dbo.sysconname(CAST(SUBSTRING(sys02.Com,17,3)as varchar),42091,2) as ActivityCategoryNameTH --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
+		, dbo.sysconname(CAST(SUBSTRING(sys02.Com,17,3)as varchar),42091,1) as ActivityCategoryNameEN --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 03/03/2568
 		, (select dx.ICDCode from HNIPD_DIAG dx where dx.AN = a.AN and dx.DiagnosisRecordType = 1) as PrimaryDiagnosisCode
 		, dbo.ICDName((select dx.ICDCode from HNIPD_DIAG dx where dx.AN = a.AN and dx.DiagnosisRecordType = 1),2) as PrimaryDiagnosisNameTH
 		, dbo.ICDName((select dx.ICDCode from HNIPD_DIAG dx where dx.AN = a.AN and dx.DiagnosisRecordType = 1),1) as PrimaryDiagnosisNameEN
 from	HNIPD_CHARGE a
-		left join HNIPD_MASTER b on a.AN = b.AN 
+		inner join HNIPD_MASTER b on a.AN = b.AN --Modify 28/10/2569
 		left join DNSYSCONFIG sys02 on sys02.CtrlCode = 42093 and a.HNActivityCode = sys02.Code
 		left join DNSYSCONFIG sys03 on sys03.CtrlCode = 42086 and a.RightCode = sys03.Code
 		left join DNSYSCONFIG sys04 on sys04.CtrlCode = 42161 and a.FacilityRequestMethod = sys04.Code
 		left join DNSYSCONFIG sys14 on sys14.CtrlCode = 20021 and a.UnitCode = sys14.Code
 where	a.HNEntryFromSystemType in (6,7)
+) x
+where x.OrderID = '200711011754250200711011408225231'
+and x.AN = '17542/50'
+Group By 
+x.BU
+, x.OrderID
+, x.PatientID
+, x.MakeDateTime
+, x.ItemCode
+--Group By x.orderid
+--Having count(x.orderid) > 1
