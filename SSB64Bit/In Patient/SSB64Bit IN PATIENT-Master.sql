@@ -7,11 +7,11 @@ select 'PT2' as 'BU'
 		,a.ADMDATETIME as 'AdmitDateTime'
 		,a.AN as 'AN'
 		,a.ADMWARD as 'WardCode'
-		,dbo.sysconname(a.ADMWARD,42201,2) as 'WardNameTH' --á¡éä¢ÇÑ¹·Õè 27/02/2568
-		,dbo.sysconname(a.ADMWARD,42201,1) as 'WardNameEN' --à¾ÔèÁÇÑ¹·Õè 27/02/2568
-		,CAST(SUBSTRING(syw.Com,36,13)as varchar) as 'WardDepartmentCode'  --á¡éä¢ÇÑ¹·Õè 27/02/2568
-		,dbo.sysconname(CAST(SUBSTRING(syw.Com,36,13)as varchar),10145,2) as 'WardDepartmentNameTH' --à¾ÔèÁÇÑ¹·Õè 27/02/2568
-		,dbo.sysconname(CAST(SUBSTRING(syw.Com,36,13)as varchar),10145,1) as 'WardDepartmentNameEN' --à¾ÔèÁÇÑ¹·Õè 27/02/2568
+		,dbo.sysconname(a.ADMWARD,42201,2) as 'WardNameTH' --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/02/2568
+		,dbo.sysconname(a.ADMWARD,42201,1) as 'WardNameEN' --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/02/2568
+		,CAST(SUBSTRING(syw.Com,36,13)as varchar) as 'WardDepartmentCode'  --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/02/2568
+		,dbo.sysconname(CAST(SUBSTRING(syw.Com,36,13)as varchar),10145,2) as 'WardDepartmentNameTH' --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/02/2568
+		,dbo.sysconname(CAST(SUBSTRING(syw.Com,36,13)as varchar),10145,1) as 'WardDepartmentNameEN' --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/02/2568
 		, dm.DoctorMasterCode
 		, dm.DoctorMasterNameTH
 		, dm.DoctorMasterNameEN
@@ -25,31 +25,31 @@ select 'PT2' as 'BU'
 		, dm.DoctorMasterSpecialtyCode
 		, dm.DoctorMasterSpecialtyNameTH
 		, dm.DoctorMasterSpecialtyNameEN
-		,a.DischargeCode as 'DischargeCode'
-		,dbo.sysconname(a.DischargeCode,42262,2) as 'DischargeNameTH' --á¡éä¢ÇÑ¹·Õè 27/02/2568
-		,dbo.sysconname(a.DischargeCode,42262,1) as 'DischargeNameEN' --à¾ÔèÁÇÑ¹·Õè 27/02/2568
-		,case when a.DISCHARGEDATETIME is null then 'Active' else 'Inactive' end as 'Status'
-		,a.AdmCount --à¾ÔèÁÇÑ¹·Õè 27/02/2568
-		,a.AdmCode as AdmType --à¾ÔèÁÇÑ¹·Õè 27/02/2568
-		,dbo.sysconname(a.AdmCode,42396,2) as 'AdmTypeNameTH' --à¾ÔèÁÇÑ¹·Õè 27/02/2568
-		,dbo.sysconname(a.AdmCode,42396,1) as 'AdmTypeNameEN' --à¾ÔèÁÇÑ¹·Õè 27/02/2568
-		,a.AdmHNBedNo as 'HNBedNo' --à¾ÔèÁÇÑ¹·Õè 27/02/2568
-		,dbo.sysconname(a.AdmHNBedNo,42421,2) as 'HNBedNameTH' --à¾ÔèÁÇÑ¹·Õè 27/02/2568
-		,dbo.sysconname(a.AdmHNBedNo,42421,1) as 'HNBedNameEN' --à¾ÔèÁÇÑ¹·Õè 27/02/2568
-		,a.ActiveWard as 'ActiveWardCode' --à¾ÔèÁÇÑ¹·Õè 27/02/2568
-		,dbo.sysconname(a.ActiveWard,42201,2) as 'ActiveWardNameTH' --à¾ÔèÁÇÑ¹·Õè 27/02/2568
-		,dbo.sysconname(a.ActiveWard,42201,1) as 'ActiveWardNameEN' --à¾ÔèÁÇÑ¹·Õè 27/02/2568
-		,a.ActiveHNBedNo as 'ActiveHNBedNo' --à¾ÔèÁÇÑ¹·Õè 27/02/2568
-		,dbo.sysconname(a.ActiveHNBedNo,42421,2) as 'ActiveHNBedNameTH' --à¾ÔèÁÇÑ¹·Õè 27/02/2568
-		,dbo.sysconname(a.ActiveHNBedNo,42421,1) as 'ActiveHNBedNameEN' --à¾ÔèÁÇÑ¹·Õè 27/02/2568
+		, a.DischargeCode as 'DischargeCode'
+		, dbo.sysconname(a.DischargeCode,42262,2) as 'DischargeNameTH' --à¹à¸à¹‰à¹„à¸‚à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/02/2568
+		, dbo.sysconname(a.DischargeCode,42262,1) as 'DischargeNameEN' --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/02/2568
+		, case when cast(SUBSTRING(sys01.Com,17,1) as int) = 1 then 'Inactive' else 'Active' end as [Status] --> 2026-11-19 Pay Edit : change logic
+		, a.AdmCount --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/02/2568
+		, a.AdmCode as AdmType --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/02/2568
+		, dbo.sysconname(a.AdmCode,42396,2) as 'AdmTypeNameTH' --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/02/2568
+		, dbo.sysconname(a.AdmCode,42396,1) as 'AdmTypeNameEN' --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/02/2568
+		, a.AdmHNBedNo as 'HNBedNo' --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/02/2568
+		, dbo.sysconname(a.AdmHNBedNo,42421,2) as 'HNBedNameTH' --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/02/2568
+		, dbo.sysconname(a.AdmHNBedNo,42421,1) as 'HNBedNameEN' --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/02/2568
+		, a.ActiveWard as 'ActiveWardCode' --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/02/2568
+		, dbo.sysconname(a.ActiveWard,42201,2) as 'ActiveWardNameTH' --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/02/2568
+		, dbo.sysconname(a.ActiveWard,42201,1) as 'ActiveWardNameEN' --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/02/2568
+		, a.ActiveHNBedNo as 'ActiveHNBedNo' --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/02/2568
+		, dbo.sysconname(a.ActiveHNBedNo,42421,2) as 'ActiveHNBedNameTH' --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/02/2568
+		, dbo.sysconname(a.ActiveHNBedNo,42421,1) as 'ActiveHNBedNameEN' --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/02/2568
 		, a.PlanDischargeDateTime as DoctorDischargeDateTime
 		, case when a.DischargeDateTime is null then null else a.MedicalTakeHomeDateTime end as DrugTakeHomeDateTime --modify 08/06/2569
 		, case when a.dischargedatetime is null then null else (select top 1 c.IPDChargeDateTime From HNIPD_CHARGE c where c.AN = a.AN and c.VoidDateTime is null order by c.IPDChargeDateTime) end as LastOrderDateTime --modify 08/06/2569
 		, a.WardAllowDischargeDateTime
 		, a.AccountAllowReleaseDateTime as FinancialDateTime
 		, a.DischargeDateTime as WardDischargeDateTime
-		,a.DiagnosisStatusType --à¾ÔèÁÇÑ¹·Õè 27/02/2568
-		,case 
+		, a.DiagnosisStatusType --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/02/2568
+		, case 
 			when a.DiagnosisStatusType = 0 then 'None' 
 			when a.DiagnosisStatusType = 1 then 'Recovery' 
 			when a.DiagnosisStatusType = 2 then 'Improved' 
@@ -61,22 +61,23 @@ select 'PT2' as 'BU'
 			when a.DiagnosisStatusType = 8 then 'Un_Deliver' 
 			when a.DiagnosisStatusType = 9 then 'Normal_Child_DC_With_Mother' 
 			when a.DiagnosisStatusType = 10 then 'Normal_Child_DC_Separate' 
-		end as 'DiagnosisStatusName'
-		,a.DefaultRightCode --à¾ÔèÁÇÑ¹·Õè 27/02/2568
-		,dbo.sysconname(a.DefaultRightCode,42086,2) as 'DefaultRightNameTH' --à¾ÔèÁÇÑ¹·Õè 27/02/2568
-		,dbo.sysconname(a.DefaultRightCode,42086,1) as 'DefaultRightNameEN' --à¾ÔèÁÇÑ¹·Õè 27/02/2568
-		,a.ReAdmCode as ReAdmitCode --à¾ÔèÁÇÑ¹·Õè 27/02/2568
-		,dbo.sysconname(a.ReAdmCode,43583,2) as 'ReAdmitNameTH' --à¾ÔèÁÇÑ¹·Õè 27/02/2568
-		,dbo.sysconname(a.ReAdmCode,43583,1) as 'ReAdmitNameEN' --à¾ÔèÁÇÑ¹·Õè 27/02/2568
-		,a.FromClinic as 'AdmitLocationCode' --à¾ÔèÁÇÑ¹·Õè 27/02/2568
-		,dbo.sysconname(a.FromClinic,42203,2) as 'AdmitLocationNameTH' --à¾ÔèÁÇÑ¹·Õè 27/02/2568
-		,dbo.sysconname(a.FromClinic,42203,1) as 'AdmitLocationNameEN' --à¾ÔèÁÇÑ¹·Õè 27/02/2568
+		 end as 'DiagnosisStatusName'
+		, a.DefaultRightCode --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/02/2568
+		, dbo.sysconname(a.DefaultRightCode,42086,2) as 'DefaultRightNameTH' --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/02/2568
+		, dbo.sysconname(a.DefaultRightCode,42086,1) as 'DefaultRightNameEN' --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/02/2568
+		, a.ReAdmCode as ReAdmitCode --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/02/2568
+		, dbo.sysconname(a.ReAdmCode,43583,2) as 'ReAdmitNameTH' --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/02/2568
+		, dbo.sysconname(a.ReAdmCode,43583,1) as 'ReAdmitNameEN' --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/02/2568
+		, a.FromClinic as 'AdmitLocationCode' --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/02/2568
+		, dbo.sysconname(a.FromClinic,42203,2) as 'AdmitLocationNameTH' --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/02/2568
+		, dbo.sysconname(a.FromClinic,42203,1) as 'AdmitLocationNameEN' --à¹€à¸žà¸´à¹ˆà¸¡à¸§à¸±à¸™à¸—à¸µà¹ˆ 27/02/2568
 		, a.InsuranceSalesAgent as AgencyCode
 		, dbo.sysconname(a.InsuranceSalesAgent,43961,2) as AgencyNameTH
 		, dbo.sysconname(a.InsuranceSalesAgent,43961,1) as AgencyNameEN
 from	HNIPD_MASTER a
 		left join HNDOCTOR_MASTER doc on a.AdmDoctor=doc.Doctor
 		left join DNSYSCONFIG syw on a.AdmWard = syw.Code and syw.CtrlCode = 42201
+		left join DNSYSCONFIG sys01 on sys01.CtrlCode = 42262 and sys01.Com = a.DischargeCode --> 2026-11-19 Pay Edit : Add table
 		left join 
 		(
 			select	a.AN

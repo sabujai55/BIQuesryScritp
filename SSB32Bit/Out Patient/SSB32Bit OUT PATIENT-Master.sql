@@ -1,4 +1,4 @@
-select top 10
+select top 10000
   opd.BU
 , opd.PatientID
 , opd.VisitID
@@ -181,8 +181,23 @@ select top 10
 				left join HNAPPMNT apm on vnp.APPOINTMENTNO=apm.APPOINTMENTNO
 				left join HNDOCTOR doc on vnp.DOCTOR=doc.DOCTOR
 				left join SYSCONFIG ssp on doc.SPECIALTY+doc.SUBSPECIALTY = REPLACE(ssp.CODE,' ','') and ssp.CTRLCODE = 20015
-				left join ADMMASTER adm on vnm.HN=adm.HN and CONVERT(date,vnm.VISITDATE,101) = CONVERT(date,adm.ADMDATETIME,101)
+				left join (
+							select row_number() Over( partition by a.an order by bed.indatetime desc) as seq
+							, HN
+							, a.AN
+							, ADMDATETIME
+								from ADMMASTER a
+								left join SYSCONFIG b on a.DISCHARGETYPE=b.CODE and b.CTRLCODE = 20044
+								left join ADMBED bed on a.AN=bed.AN
+								left join HNBEDINV hnb on bed.BEDNO=hnb.BEDNO
+								where CAST(SUBSTRING(COM,4,1)as int) != 1 --No Cxl Admit
+								and OBSERVE != 1 --No Observe
+								and TEMPORARYBED != 1 --No Temporary
+							) adm on vnm.HN=adm.HN and CONVERT(date,vnm.VISITDATE,101) = CONVERT(date,adm.ADMDATETIME,101) and adm.seq = 1 --Modify 2026-11-19
 				left join PATIENT_CLINIC ptc on vnm.HN=ptc.HN and vnp.CLINIC=ptc.CLINIC
 				left join SYSCONFIG cv on vnp.CLOSEVISITTYPE = cv.CODE and cv.CTRLCODE = 20043 --modify 2026-04-02
-				--where vnp.VISITDATE = '2026-04-01'
+				where 1=1
+				--and vnp.VISITDATE >= '2026-04-01'
 		) opd
+
+

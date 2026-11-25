@@ -47,15 +47,15 @@ select
 		case 
 			when treat.FacilityRequestMethod is not null then treat.FacilityRequestMethod
 			when med.FacilityRequestMethod is not null then med.FacilityRequestMethod
-		end as 'FacilityReqMethodCode', --‡æ‘Ë∑¡«—π∑’Ë 05/02/2568
+		end as 'FacilityReqMethodCode', --‡πÄ‡∏û‡∏¥‡πà‡∏ó‡∏°‡∏ß‡∏±‡∏ô‡∏ó‡∏µ‡πà 05/02/2568
 		case 
 			when treat.FacilityRequestMethod is not null then dbo.sysconname(treat.FacilityRequestMethod,42161,2)
 			when med.FacilityRequestMethod is not null then dbo.sysconname(med.FacilityRequestMethod,42161,2)
-		end as 'FacilityReqMethodNameTH', --‡æ‘Ë∑¡«—π∑’Ë 05/02/2568
+		end as 'FacilityReqMethodNameTH', --‡πÄ‡∏û‡∏¥‡πà‡∏ó‡∏°‡∏ß‡∏±‡∏ô‡∏ó‡∏µ‡πà 05/02/2568
 		case 
 			when treat.FacilityRequestMethod is not null then dbo.sysconname(treat.FacilityRequestMethod,42161,1)
 			when med.FacilityRequestMethod is not null then dbo.sysconname(med.FacilityRequestMethod,42161,1)
-		end as 'FacilityReqMethodNameEN' --‡æ‘Ë∑¡«—π∑’Ë 05/02/2568
+		end as 'FacilityReqMethodNameEN' --‡πÄ‡∏û‡∏¥‡πà‡∏ó‡∏°‡∏ß‡∏±‡∏ô‡∏ó‡∏µ‡πà 05/02/2568
 				from HNOPD_RECEIVE_HEADER a
 				left join HNOPD_MASTER opd on a.VN=opd.VN and a.VisitDate=opd.VisitDate
 				left join HNOPD_RECEIVE_ITEM b on a.VN=b.VN and a.VisitDate=b.VisitDate and a.ReceiptSuffixTiny=b.ReceiptSuffixTiny

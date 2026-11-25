@@ -26,7 +26,7 @@ select top 1000
 		,a.DISCHARGETYPE as 'DischargeCode'
 		,dbo.sysconname(a.DISCHARGETYPE,20044,2) as 'DischargeNameTH' 
 		,dbo.sysconname(a.DISCHARGETYPE,20044,1) as 'DischargeNameEN' 
-		,case when a.DISCHARGEDATETIME is null then 'Active' else 'Inactive' end as 'Status'
+		,case when CAST(SUBSTRING(dct.COM,4,1)as int) = 0 then 'Active' else 'Inactive' end as 'Status' --Modify 19/11/2569
 		,'' as 'AdmCount' 
 		,a.ADMTYPE as 'AdmType' 
 		,dbo.sysconname(a.ADMTYPE,20048,2) as 'AdmTypeNameTH'
@@ -126,5 +126,6 @@ select top 1000
 					inner join ADMMASTER b on a.AN=b.AN and b.DISCHARGEDATETIME is not null --modify 04/06/2569
 				) lord on a.AN=lord.AN and lord.seq=1 --LastOrder --modify 04/06/2569
 				left join SYSCONFIG ssp on doc.SPECIALTY+doc.SUBSPECIALTY = REPLACE(ssp.CODE,' ','') and ssp.CTRLCODE = 20015
+				left join SYSCONFIG dct on a.DISCHARGETYPE = dct.CODE and dct.CTRLCODE = 20044 --Add 19/11/2569
 
 				

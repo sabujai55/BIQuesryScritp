@@ -80,7 +80,7 @@ select	'PTS' as BU
 		, dbo.ICDName((select dx.ICDCode from HNIPD_DIAG dx where dx.AN = a.AN and dx.DiagnosisRecordType = 1),2) as PrimaryDiagnosisNameTH
 		, dbo.ICDName((select dx.ICDCode from HNIPD_DIAG dx where dx.AN = a.AN and dx.DiagnosisRecordType = 1),1) as PrimaryDiagnosisNameEN
 from	HNIPD_CHARGE a
-		left join HNIPD_MASTER b on a.AN = b.AN 
+		inner join HNIPD_MASTER b on a.AN = b.AN --Modify 02/11/2569
 		left join DNSYSCONFIG sys01 on sys01.CtrlCode = 42075 and a.TreatmentCode = sys01.Code
 		left join DNSYSCONFIG sys02 on sys02.CtrlCode = 42093 and a.HNActivityCode = sys02.Code
 		left join DNSYSCONFIG sys03 on sys03.CtrlCode = 42086 and a.RightCode = sys03.Code
@@ -170,7 +170,7 @@ select	'PTS' as BU
 		, dbo.ICDName((select dx.ICDCode from HNIPD_DIAG dx where dx.AN = a.AN and dx.DiagnosisRecordType = 1),2) as PrimaryDiagnosisNameTH
 		, dbo.ICDName((select dx.ICDCode from HNIPD_DIAG dx where dx.AN = a.AN and dx.DiagnosisRecordType = 1),1) as PrimaryDiagnosisNameEN
 from	HNIPD_CHARGE a
-		left join HNIPD_MASTER b on a.AN = b.AN 
+		inner join HNIPD_MASTER b on a.AN = b.AN --Modify 02/11/2569
 		left join DNSYSCONFIG sys01 on sys01.CtrlCode = 42136 and a.LabCode = sys01.Code
 		left join DNSYSCONFIG sys02 on sys02.CtrlCode = 42093 and a.HNActivityCode = sys02.Code
 		left join DNSYSCONFIG sys03 on sys03.CtrlCode = 42086 and a.RightCode = sys03.Code
@@ -260,7 +260,7 @@ select	'PTS' as BU
 		, dbo.ICDName((select dx.ICDCode from HNIPD_DIAG dx where dx.AN = a.AN and dx.DiagnosisRecordType = 1),2) as PrimaryDiagnosisNameTH
 		, dbo.ICDName((select dx.ICDCode from HNIPD_DIAG dx where dx.AN = a.AN and dx.DiagnosisRecordType = 1),1) as PrimaryDiagnosisNameEN
 from	HNIPD_CHARGE a
-		left join HNIPD_MASTER b on a.AN = b.AN 
+		inner join HNIPD_MASTER b on a.AN = b.AN --Modify 02/11/2569
 		left join DNSYSCONFIG sys01 on sys01.CtrlCode = 42179 and a.XrayCode = sys01.Code
 		left join DNSYSCONFIG sys02 on sys02.CtrlCode = 42093 and a.HNActivityCode = sys02.Code
 		left join DNSYSCONFIG sys03 on sys03.CtrlCode = 42086 and a.RightCode = sys03.Code
@@ -350,7 +350,7 @@ select	'PTS' as BU
 		, dbo.ICDName((select dx.ICDCode from HNIPD_DIAG dx where dx.AN = a.AN and dx.DiagnosisRecordType = 1),2) as PrimaryDiagnosisNameTH
 		, dbo.ICDName((select dx.ICDCode from HNIPD_DIAG dx where dx.AN = a.AN and dx.DiagnosisRecordType = 1),1) as PrimaryDiagnosisNameEN
 from	HNIPD_CHARGE a
-		left join HNIPD_MASTER b on a.AN = b.AN 
+		inner join HNIPD_MASTER b on a.AN = b.AN --Modify 02/11/2569
 		left join DNSYSCONFIG sys01 on sys01.CtrlCode = 42632 and a.PTModeCode = sys01.Code
 		left join DNSYSCONFIG sys02 on sys02.CtrlCode = 42093 and a.HNActivityCode = sys02.Code
 		left join DNSYSCONFIG sys03 on sys03.CtrlCode = 42086 and a.RightCode = sys03.Code
@@ -454,7 +454,7 @@ from	HNIPD_CHARGE a
 union all 
 --****************************** OR ******************************
 select	'PTS' as BU 
-		, convert(varchar(25), b.AdmDateTime, 112) + replace(b.AN,'/','') + FORMAT(a.IPDChargeDateTime, 'yyyyMMddHHmmss') + convert(varchar(3),d.SuffixSmall) as OrderID
+		, convert(varchar(25), b.AdmDateTime, 112) + replace(b.AN,'/','') + FORMAT(a.IPDChargeDateTime, 'yyyyMMddHHmmssfff') + convert(varchar(3),coalesce(d.SuffixSmall,a.IPDChargeSuffixTiny)) as OrderID --> 2026-11-02 Edit By Pay : Add coalesce(d.SuffixSmall,a.IPDChargeSuffixTiny)
 		, b.HN as PatientID
 		, convert(varchar(25), b.AdmDateTime, 112) + replace(b.AN,'/','') as AdmitID
 		, b.AdmDateTime as AdmitDateTime
@@ -534,7 +534,7 @@ select	'PTS' as BU
 		, dbo.ICDName((select dx.ICDCode from HNIPD_DIAG dx where dx.AN = a.AN and dx.DiagnosisRecordType = 1),2) as PrimaryDiagnosisNameTH
 		, dbo.ICDName((select dx.ICDCode from HNIPD_DIAG dx where dx.AN = a.AN and dx.DiagnosisRecordType = 1),1) as PrimaryDiagnosisNameEN
 from	HNIPD_CHARGE a
-		left join HNIPD_MASTER b on a.AN = b.AN 
+		inner join HNIPD_MASTER b on a.AN = b.AN --Modify 02/11/2569
 		left join HNIPD_CHARGE_MEDICINE c on a.AN = c.AN and a.IPDChargeDateTime = c.IPDChargeDateTime and a.IPDChargeSuffixTiny = c.IPDChargeSuffixTiny
 		left join HNORREQ_USAGE d on a.EntryByFacilityRmsNo = d.FacilityRmsNo and a.EntryByFacilityRefNo = d.RequestNo and a.HNActivityCode = d.HNActivityCode and a.StockCode = d.StockCode
 		LEFT join STOCKMASTER sk on a.StockCode = sk.StockCode 
@@ -629,7 +629,7 @@ select	'PTS' as BU
 		, dbo.ICDName((select dx.ICDCode from HNIPD_DIAG dx where dx.AN = a.AN and dx.DiagnosisRecordType = 1),2) as PrimaryDiagnosisNameTH
 		, dbo.ICDName((select dx.ICDCode from HNIPD_DIAG dx where dx.AN = a.AN and dx.DiagnosisRecordType = 1),1) as PrimaryDiagnosisNameEN
 from	HNIPD_CHARGE a
-		left join HNIPD_MASTER b on a.AN = b.AN 
+		inner join HNIPD_MASTER b on a.AN = b.AN --Modify 02/11/2569
 		left join DNSYSCONFIG sys02 on sys02.CtrlCode = 42093 and a.HNActivityCode = sys02.Code
 		left join DNSYSCONFIG sys03 on sys03.CtrlCode = 42086 and a.RightCode = sys03.Code
 		left join DNSYSCONFIG sys04 on sys04.CtrlCode = 42161 and a.FacilityRequestMethod = sys04.Code

@@ -1,10 +1,11 @@
-select top 10
+select top 100
 'PLS' as 'BU'
 ,vnm.HN as 'PatientID' --modify 29/4/69
 ,convert(varchar,vnp.VISITDATE,112)+convert(varchar,vnp.VN)+convert(varchar,vnp.SUFFIX) as 'VisitID'
 ,vnp.VISITDATE as 'VisitDate'
 ,vnp.VN as 'VN'
 ,vnp.SUFFIX as 'PrescriptionNo'
+,1 as 'Suffix' --Add Column 19/11/2569
 ,vnp.RIGHTCODE as 'RightCode'
 ,dbo.sysconname(vnp.RIGHTCODE,20019,2) as 'RightNameTH' --แก้ไขวันที่ 26/02/2568
 ,dbo.sysconname(vnp.RIGHTCODE,20019,1) as 'RightNameEN' --เพิ่มวันที่ 26/02/2568
@@ -26,3 +27,4 @@ select top 10
 			left join VNMST vnm on vnp.VISITDATE=vnm.VISITDATE and vnp.VN=vnm.VN
 			left join PATIENT_RIGHT ptr on vnm.HN=ptr.HN and vnp.RIGHTCODE=ptr.RIGHTCODE
 			left join SSBBACKOFFICE.dbo.ARMASTER ar on vnp.SPONSOR=ar.ARCODE
+			where vnp.VISITDATE = '2026-11-19'

@@ -462,7 +462,7 @@ from	HNIPD_CHARGE a
 union all 
 --****************************** OR ******************************
 select	'PT2' as BU 
-		, convert(varchar(25), b.AdmDateTime, 112) + replace(b.AN,'/','') + FORMAT(a.IPDChargeDateTime, 'yyyyMMddHHmmssfff') + convert(varchar(3),d.SuffixSmall) as OrderID --Modify 28/10/2569
+		, convert(varchar(25), b.AdmDateTime, 112) + replace(b.AN,'/','') + FORMAT(a.IPDChargeDateTime, 'yyyyMMddHHmmssfff') + convert(varchar(3),coalesce(d.SuffixSmall,a.IPDChargeSuffixTiny)) as OrderID --> 2026-11-02 Edit By Pay : Add coalesce(d.SuffixSmall,a.IPDChargeSuffixTiny)
 		, b.HN as PatientID
 		, convert(varchar(25), b.AdmDateTime, 112) + replace(b.AN,'/','') as AdmitID
 		, b.AdmDateTime as AdmitDateTime

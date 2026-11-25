@@ -1,4 +1,4 @@
-select 'PLR' as "BU"
+select 'PTW' as "BU"
 , a.patient_id as "PatientID"
 , a.admit_id as "AdmitID"
 , a.admit_date as "AdmitDate"
@@ -6,7 +6,7 @@ select 'PLR' as "BU"
 , '' as "Suffix"
 , his_func_get_wardbed(a.admit_id,1) as "WardCode"
 , his_func_get_wardbed(a.admit_id,2) as "WardNameTH"
-, bsp.description_en as "WardNameEN"
+, his_func_get_wardbed(a.admit_id,4) as "WardNameEN" --modify 25/11/69
 , di.diagnosis_date ||' '|| di.diagnosis_time as "DiagDateTime"
 , di.icd10_code as "PrimaryDiagnosisCode"
 , di.icd10_description as "PrimaryDiagnosisNameTH"
@@ -42,24 +42,24 @@ select 'PLR' as "BU"
 , split_part(his_func_get_icd9(a.visit_id,'2'),'|',10) as "ICDCm10NameTH"
 , '' as "ICDCm10NameEN"
 , di.modify_eid as "EntryByUserCode"
-, e2.prename || e2.firstname || ' ' || e2.lastname as "EntryByUserNameTH"
-, e2.intername as "EntryByUserNameEN"
+--, e2.prename || e2.firstname || ' ' || e2.lastname as "EntryByUserNameTH"
+--, e2.intername as "EntryByUserNameEN"
 , di.modify_date as "RegisterDate"
 , '' as "ChronicCreteriaCode"
 , '' as "ChronicCreteriaNameTH"
 , '' as "ChronicCreteriaNameEN"
-, e2.employee_id as "DoctorCode"
-, e2.prename || e2.firstname || ' ' || e2.lastname as "DoctorNameTH"
-, e2.intername as "DoctorNameEN"
-, e2.profession_code as "DoctorCertificate"
-, bd3.base_department_id as "DoctorClinicCode"
-, bd3.description as "DoctorClinicNameTH"
-, '' as "DoctorClinicNameEN"
-, e2.base_med_department_id as "DoctorDepartmentCode"
-, bmd.description as "DoctorDepartmentNameTH"
-, '' as "DoctorDepartmentNameEN"
-, e2.base_clinic_id as "DoctorSpecialtyCode"
-, bmd.description as "DoctorSpecialtyNameTH"
+--, e2.employee_id as "DoctorCode"
+--, e2.prename || e2.firstname || ' ' || e2.lastname as "DoctorNameTH"
+--, e2.intername as "DoctorNameEN"
+--, e2.profession_code as "DoctorCertificate"
+--, bd3.base_department_id as "DoctorClinicCode"
+--, bd3.description as "DoctorClinicNameTH"
+--, '' as "DoctorClinicNameEN"
+--, e2.base_med_department_id as "DoctorDepartmentCode"
+--, bmd.description as "DoctorDepartmentNameTH"
+--, '' as "DoctorDepartmentNameEN"
+--, e2.base_clinic_id as "DoctorSpecialtyCode"
+--, bmd.description as "DoctorSpecialtyNameTH"
 , '' as "DoctorSpecialtyNameEN"
 --***************************************** ECode ***************************************** 
 , split_part(his_func_get_diagnosis(a.visit_id,'5','1'),'|',1) as "ECode"
@@ -199,7 +199,7 @@ left join base_clinic bc on bc.base_clinic_id = e2.base_clinic_id
 left join base_department bmd on bmd.base_department_id = e2.base_med_department_id
 left join base_service_point bsp2 on e2.base_service_point_id = bsp2.base_service_point_id 
 left join base_department bd3 on bsp2.base_department_id = bd3.base_department_id 
-left join bed_management bm on bm.admit_id = a.admit_id
-left join base_service_point bsp on bsp.base_service_point_id = bm.base_service_point_id
+--left join bed_management bm on bm.admit_id = a.admit_id --ตัดออก Modify 25/11/69
+--left join base_service_point bsp on bsp.base_service_point_id = bm.base_service_point_id --ตัดออก Modify 25/11/69
 limit 10
 

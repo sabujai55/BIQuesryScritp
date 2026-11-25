@@ -199,7 +199,6 @@ left join base_clinic bc on bc.base_clinic_id = e2.base_clinic_id
 left join base_department bmd on bmd.base_department_id = e2.base_med_department_id
 left join base_service_point bsp2 on e2.base_service_point_id = bsp2.base_service_point_id 
 left join base_department bd3 on bsp2.base_department_id = bd3.base_department_id 
-left join bed_management bm on bm.admit_id = a.admit_id
-left join base_service_point bsp on bsp.base_service_point_id = bm.base_service_point_id
+--left join bed_management bm on bm.admit_id = a.admit_id --ตัดออก Modify 25/11/69
+--left join base_service_point bsp on bsp.base_service_point_id = bm.base_service_point_id --ตัดออก Modify 25/11/69
 limit 10
-

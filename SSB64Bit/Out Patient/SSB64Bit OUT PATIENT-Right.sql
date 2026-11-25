@@ -4,6 +4,7 @@ select 	'PT2' as 'BU'
 		,vnr.VISITDATE as 'VisitDate'
 		,vnr.VN as 'VN'
 		,vnr.PrescriptionNo as 'PrescriptionNo'
+		, vnr.SuffixTiny as Suffix --> 2026-11-19 Pay Edit : Add Column
 		,vnr.RightCode as 'RightCode'
 		,dbo.sysconname(vnr.RIGHTCODE,42086,2) as 'RightNameTH' --แก้ไขวันที่ 26/02/2568
 		,dbo.sysconname(vnr.RIGHTCODE,42086,1) as 'RightNameEN' --เพิ่ม 26/02/2568
@@ -33,6 +34,7 @@ select 'PT2' as 'BU'
 		,vnr.VISITDATE as 'VisitDate'
 		,vnr.VN as 'VN'
 		, 1 as 'PrescriptionNo'
+		, vnr.SuffixTiny as Suffix --> 2026-11-19 Pay Edit : Add Column
 		,vnr.RightCode as 'RightCode'
 		,dbo.sysconname(vnr.RIGHTCODE,42086,2) as 'RightNameTH'
 		,dbo.sysconname(vnr.RIGHTCODE,42086,1) as 'RightNameEN'

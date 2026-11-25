@@ -8,11 +8,11 @@ select top 10
 		a.ReceiptSuffixTiny as 'InvoiceSuffixSmall',
 		a.ReceiveDateTime as 'ReceiveDateTime',
 		a.ARCode as 'ARCode',
-		dbo.CutSortChar(ar.LocalName) as 'ARNameTH', --·°È‰¢«—π∑’Ë 05/03/2568
-		dbo.CutSortChar(ar.EnglishName) as 'ARNameEN', --‡æ‘Ë¡«—π∑’Ë 05/03/2568
+		dbo.CutSortChar(ar.LocalName) as 'ARNameTH', --‡πÅ‡∏Å‡πâ‡πÑ‡∏Ç‡∏ß‡∏±‡∏ô‡∏ó‡∏µ‡πà 05/03/2568
+		dbo.CutSortChar(ar.EnglishName) as 'ARNameEN', --‡πÄ‡∏û‡∏¥‡πà‡∏°‡∏ß‡∏±‡∏ô‡∏ó‡∏µ‡πà 05/03/2568
 		a.RightCode as 'RightCode',
-		dbo.sysconname(a.RightCode,42086,2) as 'RightNameTH', --·°È‰¢«—π∑’Ë 05/03/2568
-		dbo.sysconname(a.RightCode,42086,1) as 'RightNameEN', --‡æ‘Ë¡«—π∑’Ë 05/03/2568
+		dbo.sysconname(a.RightCode,42086,2) as 'RightNameTH', --‡πÅ‡∏Å‡πâ‡πÑ‡∏Ç‡∏ß‡∏±‡∏ô‡∏ó‡∏µ‡πà 05/03/2568
+		dbo.sysconname(a.RightCode,42086,1) as 'RightNameEN', --‡πÄ‡∏û‡∏¥‡πà‡∏°‡∏ß‡∏±‡∏ô‡∏ó‡∏µ‡πà 05/03/2568
 		a.HNReceiptFormCode as 'HNReceiptFormCode',
 		dbo.sysconname(a.HNReceiptFormCode,42101,2) as 'HNReceiptFormLocalName',
 		dbo.sysconname(a.HNReceiptFormCode,42101,1) as 'HNReceiptFormEnglishName',
@@ -22,20 +22,20 @@ select top 10
 		a.FromChargeAmt as 'FromChargeAmt',
 		a.DiscountAmt as 'DiscountAmt',
 		a.ReceiveDateTime as 'PrintDateTime',
-		a.CxlByUserCode as 'CancelByUserCode', --·°È‰¢«—π∑’Ë 05/03/2568
-		dbo.sysconname(a.CxlByUserCode,10031,2) as 'CancelByUserNameTH', --‡æ‘Ë¡«—π∑’Ë 05/03/2568
-		dbo.sysconname(a.CxlByUserCode,10031,1) as 'CancelByUserNameEN', --‡æ‘Ë¡«—π∑’Ë 05/03/2568
+		a.CxlByUserCode as 'CancelByUserCode', --‡πÅ‡∏Å‡πâ‡πÑ‡∏Ç‡∏ß‡∏±‡∏ô‡∏ó‡∏µ‡πà 05/03/2568
+		dbo.sysconname(a.CxlByUserCode,10031,2) as 'CancelByUserNameTH', --‡πÄ‡∏û‡∏¥‡πà‡∏°‡∏ß‡∏±‡∏ô‡∏ó‡∏µ‡πà 05/03/2568
+		dbo.sysconname(a.CxlByUserCode,10031,1) as 'CancelByUserNameEN', --‡πÄ‡∏û‡∏¥‡πà‡∏°‡∏ß‡∏±‡∏ô‡∏ó‡∏µ‡πà 05/03/2568
 		a.CxlDateTime as 'CancelDateTime',
-		a.HNPackageCode as 'HNPackage' , --‡æ‘Ë¡«—π∑’Ë 05/03/2568
-		dbo.sysconname(a.HNPackageCode,43541,2) as 'HNPackageNameTH', --‡æ‘Ë¡«—π∑’Ë 05/03/2568
-		dbo.sysconname(a.HNPackageCode,43541,2) as 'HNPackageNameEN', --‡æ‘Ë¡«—π∑’Ë 05/03/2568
-		a.EntryByUserCode as 'ReceiveByUserCode', --‡æ‘Ë¡«—π∑’Ë 05/03/2568
-		dbo.sysconname(a.EntryByUserCode,10031,2) as 'ReceiveByUserNameTH', --‡æ‘Ë¡«—π∑’Ë 05/03/2568
-		dbo.sysconname(a.EntryByUserCode,10031,1) as 'ReceiveByUserNameEN', --‡æ‘Ë¡«—π∑’Ë 05/03/2568
-		rb.HNReceiveCode as 'HNReceiveCode', --‡æ‘Ë¡«—π∑’Ë 05/03/2568
-		dbo.sysconname(rb.HNReceiveCode,42077,2) as 'HNReceiveNameTH', --‡æ‘Ë¡«—π∑’Ë 05/03/2568
-		dbo.sysconname(rb.HNReceiveCode,42077,1) as 'HNReceiveNameEN', --‡æ‘Ë¡«—π∑’Ë 05/03/2568
-		a.HereStatement --‡æ‘Ë¡«—π∑’Ë 27/05/2569
+		a.HNPackageCode as 'HNPackage' , --‡πÄ‡∏û‡∏¥‡πà‡∏°‡∏ß‡∏±‡∏ô‡∏ó‡∏µ‡πà 05/03/2568
+		dbo.sysconname(a.HNPackageCode,43541,2) as 'HNPackageNameTH', --‡πÄ‡∏û‡∏¥‡πà‡∏°‡∏ß‡∏±‡∏ô‡∏ó‡∏µ‡πà 05/03/2568
+		dbo.sysconname(a.HNPackageCode,43541,2) as 'HNPackageNameEN', --‡πÄ‡∏û‡∏¥‡πà‡∏°‡∏ß‡∏±‡∏ô‡∏ó‡∏µ‡πà 05/03/2568
+		a.EntryByUserCode as 'ReceiveByUserCode', --‡πÄ‡∏û‡∏¥‡πà‡∏°‡∏ß‡∏±‡∏ô‡∏ó‡∏µ‡πà 05/03/2568
+		dbo.sysconname(a.EntryByUserCode,10031,2) as 'ReceiveByUserNameTH', --‡πÄ‡∏û‡∏¥‡πà‡∏°‡∏ß‡∏±‡∏ô‡∏ó‡∏µ‡πà 05/03/2568
+		dbo.sysconname(a.EntryByUserCode,10031,1) as 'ReceiveByUserNameEN', --‡πÄ‡∏û‡∏¥‡πà‡∏°‡∏ß‡∏±‡∏ô‡∏ó‡∏µ‡πà 05/03/2568
+		rb.HNReceiveCode as 'HNReceiveCode', --‡πÄ‡∏û‡∏¥‡πà‡∏°‡∏ß‡∏±‡∏ô‡∏ó‡∏µ‡πà 05/03/2568
+		dbo.sysconname(rb.HNReceiveCode,42077,2) as 'HNReceiveNameTH', --‡πÄ‡∏û‡∏¥‡πà‡∏°‡∏ß‡∏±‡∏ô‡∏ó‡∏µ‡πà 05/03/2568
+		dbo.sysconname(rb.HNReceiveCode,42077,1) as 'HNReceiveNameEN', --‡πÄ‡∏û‡∏¥‡πà‡∏°‡∏ß‡∏±‡∏ô‡∏ó‡∏µ‡πà 05/03/2568
+		a.HereStatement --‡πÄ‡∏û‡∏¥‡πà‡∏°‡∏ß‡∏±‡∏ô‡∏ó‡∏µ‡πà 27/05/2569
 				from HNOPD_RECEIVE_HEADER a
 				left join HNOPD_MASTER b on a.VN=b.VN and a.VisitDate=b.VisitDate
 				left join ARMASTER ar on a.ARCode=ar.ARCode

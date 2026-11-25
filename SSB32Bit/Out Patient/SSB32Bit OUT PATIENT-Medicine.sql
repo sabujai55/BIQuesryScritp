@@ -3,7 +3,7 @@ go
 
 Select
 		  'PTP' as 'BU'
-		, CONCAT(format(med.VISITDATE,'yyyyMMdd'),med.VN,med.SUFFIX,format(med.MAKEDATETIME,'yyyyMMddHHmmssffff'),med.SUBSUFFIX) as 'OrderID'
+		, CONVERT(varchar,med.VISITDATE,112)+CONVERT(varchar,med.VN)+CONVERT(varchar,med.SUFFIX)+CONVERT(varchar,med.MAKEDATETIME,112)+CONVERT(varchar,med.SUBSUFFIX) as 'OrderID' --Modify 02/11/2569
 		, vnm.HN as 'PatientID'
 		, CONCAT(format(med.VISITDATE,'yyyyMMdd'),med.VN,med.SUFFIX) as 'VisitID'
 		, med.VISITDATE as 'VisitDate'
